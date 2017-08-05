@@ -1,0 +1,493 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="./../../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+
+                <h:form id="formFacturas"  style="text-align: center;">
+                    <p:panel header="FACTURAS">
+                        <p:growl id="msgs" showDetail="true"/>
+                        <h:panelGrid id="gridFacturas" columns="3" width="100%">
+                            <h:panelGrid  columns="7">
+                                <p:outputLabel for="feDesde" value="Desde:" />
+                                <p:calendar id="feDesde" value="#{facturaBean.feDesde}" 
+                                            pattern="dd/MM/yyyy" />
+                                <p:column style="width: 30px;" >
+                                    <p:spacer width="30" />
+                                </p:column>
+                                <p:outputLabel for="feHasta" value="Hasta:" />
+                                <p:calendar id="feHasta" value="#{facturaBean.feHasta}" 
+                                            pattern="dd/MM/yyyy" />
+                                <p:column style="width: 30px;" >
+                                    <p:spacer width="30" />
+                                </p:column>
+                                <p:commandButton value="Procesar" icon="ui-icon-play"
+                                                 process="formFacturas" 
+                                                 actionListener="#{facturaBean.consultarPorFechas()}" 
+                                                 update=":formFacturas:tablaFacturas"/>
+                            </h:panelGrid>
+
+                            <h:column/>
+                        </h:panelGrid>
+                        <p:dataTable id="tablaFacturas" paginator="true" paginatorPosition="bottom" rows="10"
+                                     var="f" value="#{facturaBean.listaFactura}"  selectionMode="single"
+                                     selection="#{facturaBean.factura}" rowKey="#{f.idFacturaCab}" 
+                                     emptyMessage="No hay datos de factura"   >
+
+                            <f:facet name="header">
+                                <p:commandButton   process="tablaFacturas" icon="ui-icon-plus" value="Nueva Factura" 
+                                                   actionListener="#{facturaBean.listarNDPendientes()}"
+                                                   update=":formSeleccionND"
+                                                   oncomplete="PF('dialogSeleccionND').show();"/>
+
+                            </f:facet>
+
+                            <p:column   filterBy="#{f.numSerie}-#{f.numFactura}" headerText="N. Factura"  
+                                        filterMatchMode="contains" filterStyle="width:60px" 
+                                        width="60" style="text-align: center;" >
+                                <h:outputText value="#{f.numSerie}-#{f.numFactura}"/>
+                            </p:column>
+
+                            <p:column   filterBy="#{ f.fecFactura}" headerText="Fecha"  
+                                        filterMatchMode="contains"  filterStyle="width:60px" 
+                                        width="60" style="text-align: center;" >
+                                <h:outputText value="#{ f.fecFactura}" />
+                            </p:column>
+
+                            <p:column  filterBy="#{ f.zrucPersona}" headerText="Ruc Cliente"  
+                                       filterMatchMode="contains"  filterStyle="width:60px" 
+                                       width="60" style="text-align: center;" >
+                                <h:outputText value="#{ f.zrucPersona}"/>
+                            </p:column>
+                            <p:column filterBy="#{ f.znomPersona}" headerText="Cliente" 
+                                      filterMatchMode="contains"  filterStyle="width:220px" 
+                                      width="220">
+                                <h:outputText value="#{ f.znomPersona}"/>
+                            </p:column>
+                            <p:column headerText="Ruc Compañia"  width="60" style="text-align: center;"  >
+                                <h:outputText value="#{ f.rucCompanyia}"/>
+                            </p:column>
+                            <p:column headerText="Nombre Compañia"  width="160"  >
+                                <h:outputText value="#{ f.znomCompanya.toUpperCase()}"/>
+                            </p:column>
+                            <p:column headerText="Moneda"  width="60" >
+                                <h:outputText value="#{ f.znomMoneda.toUpperCase()}"/>
+                            </p:column>
+                            <p:column headerText="Importe Total"   width="50"   >
+                                <h:outputText value="#{f.numImporteTotal}" style="text-align: right; display: block;">
+                                    <f:convertNumber pattern="##0.00" type="currency"  />
+                                </h:outputText>
+
+                            </p:column>
+                            <p:column headerText="Prioridad"   width="50" >
+                                <h:outputText value="#{f.znomPrioridad}"/>
+                            </p:column>
+                            <p:column headerText="Estado"   width="50" >
+
+
+                                <h:outputText value="#{f.znomEstado}"/>
+                            </p:column>
+                            <!--                            
+                                                        <p:column headerText="Localidad"  width="50"  >
+                                                            <h:outputText value="#{ f.ZNomEstablecimiento}"/>
+                                                        </p:column>
+                                                        <p:column headerText="C. Costo"   width="40" >
+                                                            <h:outputText value="#{ f.ZNomCentro}"/>
+                                                        </p:column>
+                                                        <p:column headerText="Area"   width="40" >
+                                                            <h:outputText value="#{ f.ZNomArea}"/>
+                                                        </p:column>
+                                                        <p:column headerText="Almacen"   width="100" >
+                                                            <h:outputText value="#{ f.ZNomAlmacen}"/>
+                                                        </p:column>-->
+                            <p:column headerText="Opciones" width="80" style="text-align: center;" >
+                                <p:commandButton id="vieButton" process="tablaFacturas" 
+                                                 icon="ui-icon-print" title="Imprimir" 
+                                                 disabled="#{f.zestadoImprimir}"
+                                                 style="width: 17px; height:  17px;" 
+                                                 ajax="false"  actionListener="#{facturaBean.verReporteFacturaNotaDespacho(f)}"
+                                                 onclick="form.target = '_blank'"/>
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="ediButton"   process="tablaFacturas" 
+                                                 icon="ui-icon-pencil" title="Editar" 
+                                                 disabled="#{f.zestadoEditar}"
+                                                 style="width: 17px; height:  17px;" 
+                                                 actionListener="#{facturaBean.prepararEditarFactura(f)}" 
+                                                 update=":formNuevaFactura"
+                                                 oncomplete="PF('dialogNuevaFactura').show();"/>
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="delButton" process="tablaFacturas"
+                                                 icon="ui-icon-trash" title="Anular"
+                                                 disabled="#{f.zestadoImprimir}"
+                                                 style="width: 17px; height:  17px; "
+                                                 actionListener="#{facturaBean.anularFactura(f)}"
+                                                 update=":formFacturas:tablaFacturas :formFacturas:msgs" >
+                                    <p:confirm header="Confirmación" message="Seguro que desea anular la factura ##{f.numFactura}?" icon="ui-icon-alert"  />
+                                </p:commandButton>
+                                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" style="font-size: 14px;"  >
+                                    <p:commandButton id="buttonNo" value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close"  />
+                                    <p:commandButton id="buttonYes" value="Si" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                                </p:confirmDialog>
+                            </p:column>
+                            <p:column headerText="Generar" width="30" style="text-align: center;" >
+
+                                <p:commandButton id="grButton"   process="tablaFacturas" 
+                                                 icon="ui-icon-tag" title="Guia de Remision" 
+                                                 disabled="#{f.zestadoGuiaRemision}"
+                                                 style="width: 17px; height:  17px;" 
+                                                 actionListener="#{facturaBean.prepararEditarFactura(f)}" 
+                                                 update=":formNuevaFactura"
+                                                 oncomplete="PF('dialogNuevaFactura').show();"/>
+
+
+                            </p:column>
+
+                        </p:dataTable>
+                    </p:panel>
+                </h:form>
+
+                <h:form  id="formSeleccionND">
+                    <p:growl id="msgs" showDetail="true"/>
+                    <p:dialog id="dlgSeleccionND" widgetVar="dialogSeleccionND" resizable="false"  modal="true" width="1100"  header="Despachos pendientes de facturar">
+
+                        <p:dataTable id="tablaSeleccionND"  paginator="true"   rows="10"
+                                     paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                     widgetVar="wvTablaSeleccionND"
+                                     var="nd" value="#{facturaBean.listaNotaDespachoPendientes}" 
+                                     emptyMessage="No hay datos de Notas de despacho pendientes de facturacion" >
+
+                            <p:column headerText="Fecha" filterBy="#{nd.fecVale}"  filterMatchMode="contains"  filterStyle="width:95%"  width="40">
+                                <h:outputText value="#{nd.fecVale}"/>
+                            </p:column>
+
+                            <p:column headerText="N Despacho" filterBy="#{nd.numVale}"  filterMatchMode="contains"  filterStyle="width:95%" filterValue="#{facturaBean.filtroNroND}"  width="40">
+                                <h:outputText value="#{nd.numVale}"/>
+                            </p:column>
+
+                            <p:column headerText="Ruc Cliente" filterBy="#{nd.ZRucPersona}"  filterMatchMode="contains"  filterStyle="width:95%" width="45" >
+                                <h:outputText value="#{nd.ZRucPersona}"/>
+                            </p:column>
+
+                            <p:column headerText="Nombre Cliente" filterBy="#{nd.ZNomPersona}"  filterMatchMode="contains"  filterStyle="width:95%" width="120">
+                                <h:outputText value="#{nd.ZNomPersona.toUpperCase()}"/>
+                            </p:column>
+
+                            <p:column headerText="Ruc Compañia" filterBy="#{nd.rucCompanyia}"  filterMatchMode="contains"  filterStyle="width:95%" width="45" >
+                                <h:outputText value="#{nd.rucCompanyia}"/>
+                            </p:column>
+
+                            <p:column headerText="Nombre Compañia" filterBy="#{nd.ZNomCompanya}"  filterMatchMode="contains"  filterStyle="width:95%" width="120">
+                                <h:outputText value="#{nd.ZNomCompanya.toUpperCase()}"/>
+                            </p:column>
+                            <p:column headerText="Estado" filterBy="#{nd.zdesEstadoFactura}"  filterMatchMode="contains"  filterStyle="width:95%" width="50">
+                                <h:outputText value="#{nd.zdesEstadoFactura}"/>
+                            </p:column>
+
+                            <p:column headerText="Facturar" width="70" style="text-align: center;" >
+                                <p:commandButton id="factDButton" process="tablaSeleccionND" 
+                                                 value="Facturar" icon="ui-icon-play"
+                                                 actionListener="#{facturaBean.prepararNuevaFactura(nd)}"
+                                                 update=":formNuevaFactura"
+                                                 oncomplete="PF('dialogNuevaFactura').show(); PF('dialogSeleccionND').hide();"
+                                                 disabled="#{nd.znomEstadoFactura}"
+                                                 />
+                            </p:column>
+                        </p:dataTable>
+                    </p:dialog>
+
+
+                </h:form>
+
+                <h:form  id="formNuevaFactura">
+                    <p:growl id="msgs" showDetail="true"/>
+                    <p:dialog id="dlgNuevaFactura" widgetVar="dialogNuevaFactura" focus="#{facturaBean.nameFocus}"
+                              resizable="false"  
+                              modal="true" width="1170" height="530"  header="Registro de Factura Ventas" styleClass=".ui-dialog-title-dialog{ margin:0px;}"  >
+
+<!--#{facturaBean.factura.rucCompanyia} - #{facturaBean.factura.znomCompanya.toUpperCase()}-->
+
+                        <h:panelGrid id="gridFacturaCab" columns="1" style="vertical-align: top;  "  >
+                            <p:panelGrid>
+
+                                <p:row>
+                                    <p:column >
+                                        <p:outputLabel  value="N° Serie: " style="display: block; width: 45px;"  />
+                                    </p:column>
+                                    <p:remoteCommand name="generarNroFactura" actionListener="#{facturaBean.generarNroFactura()}" update=":formNuevaFactura:numFactura :formNuevaFactura:numSerie" />
+                                    <p:column >
+
+                                        <p:inputText id="numSerie" value="#{facturaBean.factura.numSerie}" maxlength="3" 
+                                                     style="width: 45px; font-weight: bold;" 
+                                                     onkeypress="if (event.keyCode === 13) {
+                                                                 generarNroFactura();
+                                                                 return false;
+                                                             }" disabled="#{facturaBean.estadoNumeroSerie}"/>
+                                    </p:column> 
+
+                                    <p:column>
+                                        <p:outputLabel  value="N° Factura:" style="display: block; width: 60px;"  />    
+                                    </p:column>
+
+                                    <p:column>
+
+
+                                        <p:inputText id="numFactura" value="#{facturaBean.factura.numFactura}" 
+                                                     style="width: 80px; font-weight: bold;" disabled="true"  />
+
+                                    </p:column>
+
+
+                                    <p:column>
+                                        <p:outputLabel for="fecha" value="Fecha: "  />
+                                    </p:column>
+                                    <p:column >
+                                        <p:calendar id="fecha" value="#{facturaBean.factura.fecFactura}"  pattern="dd/MM/yyyy" size="8"  />
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Moneda: "  />
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu  value="#{facturaBean.factura.flgTipoFactura}" style="width: 70px; "  >
+                                            <f:selectItem itemLabel="Soles" itemValue="S" />
+                                            <f:selectItem itemLabel="Dolares" itemValue="D" />
+                                            <p:ajax event="valueChange" listener="#{facturaBean.cambioTipoFactura()}" update=":formNuevaFactura:gridFaturaTotal :formNuevaFactura:tablaFacturaDetalle" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Prioridad: "  />
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu value="#{facturaBean.factura.flgPrioridad}" style="width: 70px;"  >
+                                            <f:selectItem itemLabel="Normal" itemValue="1" />
+                                            <f:selectItem itemLabel="Baja" itemValue="0" />
+                                            <f:selectItem itemLabel="Alta" itemValue="2" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+
+
+                                    <p:column>
+                                        <p:outputLabel for="estado" value="Estado: "   style="display: block; width: 45px;"  />
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="estado" value="#{facturaBean.factura.flgEstado}" style="width: 70px;"  >
+                                            <f:selectItem itemLabel="Pendiente" itemValue="P" />
+                                            <f:selectItem itemLabel="Cancelado" itemValue="C" />
+                                            <f:selectItem itemLabel="Anulado" itemValue="A" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+
+                                    <p:column>
+                                        <p:outputLabel value="Cliente: " style="display: block; width: 45px;"/>
+                                    </p:column>
+                                    <p:column colspan="7" >
+                                        <p:outputLabel  value="#{facturaBean.factura.zrucPersona} - #{facturaBean.factura.znomPersona}" />
+                                    </p:column>
+
+                                </p:row>
+
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Direccion: "  />
+                                    </p:column>
+                                    <p:column colspan="5">
+                                        <p:outputLabel value="#{facturaBean.factura.zdirPersona.toUpperCase()} - #{facturaBean.factura.zdisPersona.toUpperCase()}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <p:outputLabel value="Nº Despacho: " style="display: block; width: 70px;"  />
+                                    </p:column>
+                                    <p:column >
+                                        <p:outputLabel  value="#{facturaBean.factura.numNotaDespacho}" />
+                                    </p:column>
+                                    <p:remoteCommand name="generarNroGuia" actionListener="#{facturaBean.generarNroGuia()}" update=":formNuevaFactura:guiaRemision :formNuevaFactura:numSerieGR" />
+                                    <p:column>
+                                        <p:outputLabel  value="N° Serie GR:" style="display: block; width: 65px;"  />    
+                                    </p:column>
+
+                                    <p:column>
+                                        <p:inputText id="numSerieGR" value="#{facturaBean.factura.numSerieGuiaRemision}" maxlength="3" style="width: 70px"
+                                                     onkeypress="if (event.keyCode === 13) {
+                                                                 generarNroGuia();
+                                                                 return false;
+                                                             }" />
+
+                                    </p:column>
+
+                                    <p:column>
+                                        <p:outputLabel for="guiaRemision" value="N° Guia: " style="display: block; width: 45px;"  />
+                                    </p:column>
+                                    <p:column >
+                                        <p:inputText id="guiaRemision" value="#{facturaBean.factura.numGuiaRemision}" style="width: 90px; " disabled="true" />
+                                    </p:column>
+
+                                </p:row>
+
+                            </p:panelGrid>
+                            <p:dataTable id="tablaFacturaDetalle"
+                                         var="fd" value="#{facturaBean.listaFacturaDetalle}" rowIndexVar="rowIndex"
+                                         emptyMessage="No hay datos de detalle"  scrollable="true" scrollHeight="270"
+                                         >
+
+                                <f:facet name="header">
+                                    <p:commandButton   process="formNuevaFactura" icon="ui-icon-plus" 
+                                                       value="Agregar Producto"
+                                                       actionListener="#{facturaBean.prepararAgregarProducto()}"
+                                                       oncomplete="PF('dialogAgregarProducto').show();" 
+                                                       update=":formAgregarProducto" />
+                                </f:facet>
+
+                                <p:column headerText="No" width="15" >
+                                    <h:outputText value="#{rowIndex+1}"/>
+                                </p:column>
+
+                                <p:column headerText="Cod. producto" width="60">
+                                    <h:outputText value="#{fd.codProducto}"/>
+                                </p:column>
+                                <p:column headerText="Nombre del producto" width="200">
+                                    <h:outputText value="#{fd.znomProducto}"/>
+                                </p:column>
+
+                                <p:column headerText="Cantidad" width="50" style="text-align: center;">                                
+                                    <h:outputText value="#{fd.numCntdProducto}" />
+                                </p:column>
+
+                                <p:column headerText="P. Unitario" width="50">                                
+                                    <h:outputText value="#{fd.numPrecioUnitario}"  style="text-align: right; display: block;">
+                                        <f:convertNumber pattern="##0.00" type="currency"  />
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Total" width="50">                                
+                                    <h:outputText value="#{fd.numImporteProducto}"  style="text-align: right; display: block; font-weight: bold;">
+                                        <f:convertNumber pattern="##0.00" type="currency"  />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Opciones" width="20" style="text-align: center;" >
+                                    <p:commandButton id="delButton" icon="ui-icon-trash" title="Eliminar" 
+                                                     style="width: 17px; height:  17px; "  
+                                                     actionListener="#{facturaBean.quitarFacturaDetalle(fd)}" 
+                                                     update=":formNuevaFactura:tablaFacturaDetalle :formNuevaFactura:gridFacturaCab"/>
+                                </p:column>    
+
+                            </p:dataTable>    
+
+                            <h:panelGrid id="gridFaturaTotal" width="100%" bgcolor="#ebedf0" >
+                                <p:row>
+
+                                    <table border="0"  align="right" width="100%">
+                                        <tr>
+                                            <td >
+                                                <h:outputLabel value="SON: #{facturaBean.factura.desImporteTotal}" style="width: auto; text-align: left; display: block; font-size: 15px; font-weight: bold;"  />
+                                            </td>
+                                            <td width="220px">
+                                                <table border="0" style="font-weight: bold;  border-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;"  >
+                                                    <tr>
+                                                        <td width="110px">
+                                                            <h:outputLabel value="Sub Total: " style="width: auto; text-align: left;font-size: 12px;  display: block;"  />    
+                                                        </td>
+                                                        <td width="100px">
+                                                            <p:outputLabel value="#{facturaBean.factura.numImporteSubtotal}" style="width: auto; text-align: right;font-size: 12px;  display: block; " >
+                                                                <f:convertNumber pattern="##0.00" type="currency"  />
+                                                            </p:outputLabel>    
+                                                        </td>
+                                                        <td width="10px"></td>
+                                                    </tr><tr>
+                                                        <td width="110px" style="border-bottom: 1px solid #ccc;">
+                                                            <p:outputLabel value="IGV(% #{facturaBean.factura.valIgv}): " style="width: auto; text-align: left;font-size: 12px;  display: block;"  />    
+                                                        </td>
+
+                                                        <td width="100px" style="border-bottom: 1px solid #ccc;">
+                                                            <p:outputLabel value="#{facturaBean.factura.numImporteIgv}" style="width: auto; text-align: right;font-size: 12px;  display: block;" >
+                                                                <f:convertNumber pattern="##0.00" type="currency"  />
+                                                            </p:outputLabel>
+                                                        </td>
+                                                        <td width="10px"></td>
+                                                    </tr><tr>
+                                                        <td width="110px">
+                                                            <p:outputLabel value="Total: "  style="width: auto; text-align: left;font-size: 12px;  display: block;" />     
+                                                        </td>
+                                                        <td width="100px" >
+                                                            <p:outputLabel value="#{facturaBean.factura.numImporteTotal}" style="width: auto; text-align: right;font-size: 12px;  display: block;" >
+                                                                <f:convertNumber pattern="##0.00" type="currency"  />
+                                                            </p:outputLabel>
+                                                        </td>
+                                                        <td width="10px"></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td width="55px"></td>
+                                        </tr> 
+                                    </table>
+
+
+                                </p:row>
+                            </h:panelGrid>
+                        </h:panelGrid>
+
+
+                        <center>
+
+                            <p:commandButton value="#{facturaBean.nameBtnSave}"  actionListener="#{facturaBean.guardarFactura()}"
+                                             update=":formSeleccionND :formSeleccionND:msgs :formFacturas:tablaFacturas" />
+
+
+                            <p:spacer width="30"/>
+                            <p:commandButton value="Cancelar" oncomplete="PF('dialogNuevaFactura').hide();" />    
+                        </center>
+
+                    </p:dialog>
+                </h:form>
+
+
+                <h:form  id="formAgregarProducto">
+
+                    <p:dialog id="dlgAgregarProducto" widgetVar="dialogAgregarProducto" resizable="false"  modal="true" width="800"  header="Agregar producto">
+                        <p:panel>
+                            <p:dataTable id="tablaProductoPendiente"  paginator="true"   rows="10"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+
+                                         var="fd" value="#{facturaBean.listaProductosPendientes}" selection="#{facturaBean.seleccionProducto}" rowKey="#{fd.idNotaDespachoDet}" 
+                                         emptyMessage="No hay datos de productos pendietes en la nota de despacho" >
+
+                                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                <p:column headerText="Codigo" filterBy="#{fd.codProducto}"  filterMatchMode="contains"  filterStyle="width:70px"  width="80">
+                                    <h:outputText value="#{fd.codProducto}"/>
+                                </p:column>
+
+                                <p:column headerText="Nombre del producto" filterBy="#{fd.znomProducto}"  filterMatchMode="contains"  filterStyle="width:230px" width="250">
+                                    <h:outputText value="#{fd.znomProducto}"  />
+                                </p:column>
+                                <p:column headerText="Cantidad"  width="40" >
+                                    <h:outputText value="#{fd.numCntdProducto}"/>
+                                </p:column>
+
+                                <f:facet name="footer">
+                                    <p:commandButton process="tablaProductoPendiente" update=":formNuevaFactura:gridFacturaCab :formNuevaFactura:tablaFacturaDetalle :formNuevaFactura:msgs" icon="ui-icon-add" value="Agregar"  action="#{facturaBean.agregarFacturaDetalle()}" oncomplete="PF('dialogAgregarProducto').hide();"/>
+                                </f:facet>
+
+                            </p:dataTable>
+
+
+                        </p:panel>
+                    </p:dialog>
+
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

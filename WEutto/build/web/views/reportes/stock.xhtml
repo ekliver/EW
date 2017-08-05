@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h2>Stock de Productos</h2>
+                
+                 <h:form id="formMostrarProductoStocks">
+                     <p:growl id="msgs" showDetail="true" showSummary="false"/>
+
+                    <p:dataTable id="tablaStock"  paginator="true"   rows="10"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,15,20"
+                                 var="st" value="#{productoStockBean.listaProductoStocks}" 
+                                 emptyMessage="No hay datos de productos" >
+
+                        <p:column headerText="Codigo" width="80">
+                            <h:outputText value="#{st.codAiProduc}"/>
+                        </p:column>
+
+                        <p:column headerText="Nombre del producto">
+                            <h:outputText value="#{st.codAiProduc}"/>
+                        </p:column>
+
+                        <p:column headerText="Stock Actual">
+                            <h:outputText value="#{st.stockActual}"/>
+                        </p:column>
+
+                        <p:column headerText="Stock Inicial">
+                            <h:outputText value="#{st.stockInicial}"/>
+                        </p:column>
+
+                        <p:column headerText="Compañia">
+                            <h:outputText value="#{st.rucCompanyia}"/>
+                        </p:column>
+
+                        <p:column headerText="Establecimiento">
+                            <h:outputText value="#{st.codEstablecimiento}"/>
+                        </p:column>
+
+                        <p:column headerText="Centro">
+                            <h:outputText value="#{st.codCentroc}"/>
+                        </p:column>
+
+                        <p:column headerText="Almacen">
+                            <h:outputText value="#{st.codAiAlmacen}"/>
+                        </p:column>
+
+                        <p:column headerText="Area">
+                            <h:outputText value="#{st.codArea}"/>
+                        </p:column>
+
+                        <p:column headerText="Fecha creacion" >
+                            <h:outputText value="#{st.fecCreacion}"/>
+                        </p:column>
+                        <p:column headerText="Hora creacion" >
+                            <h:outputText value="#{st.horCreacion}"/>
+                        </p:column>
+                        <p:column headerText="Usuario creacion" >
+                            <h:outputText value="#{st.codUsuarioCreacion}"/>
+                        </p:column>
+<!--                        <p:column headerText="Fecha actualizacion" >
+                            <h:outputText value="#{st.fecActualizacion}"/>
+                        </p:column>
+                        <p:column headerText="Hora actualizacion" >
+                            <h:outputText value="#{st.horActualizacion}"/>
+                        </p:column>
+                        <p:column headerText="Usuario actualizacion" >
+                            <h:outputText value="#{st.codUsuarioActualizacion}"/>
+                        </p:column>
+
+                      -->
+                    </p:dataTable>
+                </h:form>
+
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

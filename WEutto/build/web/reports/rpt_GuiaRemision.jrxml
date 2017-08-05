@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_GuiaRemision" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4241c71d-5180-4965-873b-b85d9bec7213">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="58"/>
+	<style name="tahoma7" fontName="Tahoma" fontSize="8"/>
+	<style name="conBorde" fill="Solid" fontName="Tahoma">
+		<pen lineWidth="1.0" lineColor="#000000"/>
+		<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+			<pen lineWidth="1.0" lineColor="#333333"/>
+			<topPen lineWidth="1.0" lineColor="#333333"/>
+			<leftPen lineWidth="1.0" lineColor="#333333"/>
+			<bottomPen lineWidth="1.0" lineColor="#333333"/>
+			<rightPen lineWidth="1.0" lineColor="#333333"/>
+		</box>
+	</style>
+	<style name="tahoma7border" style="conBorde" fontName="Tahoma" fontSize="8"/>
+	<parameter name="idGR" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT AVMOV_GUIA_REMISION_CAB.Id_guia_remision_cab AS idGR, AVMOV_GUIA_REMISION_CAB.nro_serie AS nroSerie, AVMOV_GUIA_REMISION_CAB.nro_guia AS nroGuia, AVMOV_GUIA_REMISION_CAB.ruc_companyia AS rucCompanyia, agmae_companyias.des_companyia AS nomCompanyia, AVMOV_GUIA_REMISION_CAB.des_punto_partida AS desPartida, AVMOV_GUIA_REMISION_CAB.fec_emision AS fecEmision, AVMOV_GUIA_REMISION_CAB.fec_inicio_traslado AS fecTraslado, AVMOV_GUIA_REMISION_CAB.num_costo_minimo AS numCosto, AVMOV_GUIA_REMISION_CAB.des_punto_llegada AS desLLegada, AVMOV_GUIA_REMISION_CAB.cod_persona AS codPersona, agmae_persona.num_identificacion AS rucPersona, agmae_persona.Nom_Razon_Social AS nomPersona, AVMOV_GUIA_REMISION_CAB.num_placa AS numPlaca, AIMAR_Unidad_Transporte.Mar_udt AS nomMarca, AIMAR_Unidad_Transporte.Nco_udt AS nomConstancia, AVMOV_GUIA_REMISION_CAB.dni_conductor AS dniConductor, AIMAR_Conductores.Des_con AS nomConductor, AIMAR_Conductores.Bre_con AS licConductor, AVMOV_GUIA_REMISION_CAB.cod_emptransporte AS codEmptransporte, AIMAR_EMPRESA_TRANSPORTE.ruc_emptransporte AS rucEmptransporte, AIMAR_EMPRESA_TRANSPORTE.nom_emptransporte AS nomEmptransporte, AIMAR_EMPRESA_TRANSPORTE.num_telefono AS tlfEmptransporte, AVMOV_GUIA_REMISION_CAB.cod_motivo AS codMotivo, AVMOV_GUIA_REMISION_CAB.cod_tipo_documento AS codTipoDocumento, AVMOV_GUIA_REMISION_CAB.flg_estado AS flgEstado, AVMOV_GUIA_REMISION_DET.num_cantidad_producto AS ctdProducto, AVMOV_GUIA_REMISION_DET.cod_producto AS codProducto, AIMAR_Productos.Des_Ai_Produc AS nomProducto
+FROM AIMAR_Productos RIGHT JOIN (((AIMAR_Conductores RIGHT JOIN (AIMAR_Unidad_Transporte RIGHT JOIN ((AVMOV_GUIA_REMISION_CAB LEFT JOIN agmae_persona ON AVMOV_GUIA_REMISION_CAB.cod_persona = agmae_persona.cod_persona) LEFT JOIN agmae_companyias ON AVMOV_GUIA_REMISION_CAB.ruc_companyia = agmae_companyias.ruc_companyia) ON AIMAR_Unidad_Transporte.Pla_udt = AVMOV_GUIA_REMISION_CAB.num_placa) ON AIMAR_Conductores.Dni_con = AVMOV_GUIA_REMISION_CAB.dni_conductor) LEFT JOIN AIMAR_EMPRESA_TRANSPORTE ON AVMOV_GUIA_REMISION_CAB.cod_emptransporte = AIMAR_EMPRESA_TRANSPORTE.cod_emptransporte) LEFT JOIN AVMOV_GUIA_REMISION_DET ON AVMOV_GUIA_REMISION_CAB.Id_guia_remision_cab = AVMOV_GUIA_REMISION_DET.Id_guia_remision_cab) ON AIMAR_Productos.Cod_Ai_Produc = AVMOV_GUIA_REMISION_DET.cod_producto
+WHERE (((AVMOV_GUIA_REMISION_CAB.Id_guia_remision_cab)=$P{idGR}));]]>
+	</queryString>
+	<field name="idGR" class="java.lang.Integer"/>
+	<field name="nroSerie" class="java.lang.String"/>
+	<field name="nroGuia" class="java.lang.String"/>
+	<field name="rucCompanyia" class="java.lang.String"/>
+	<field name="nomCompanyia" class="java.lang.String"/>
+	<field name="desPartida" class="java.lang.String"/>
+	<field name="fecEmision" class="java.sql.Timestamp"/>
+	<field name="fecTraslado" class="java.sql.Timestamp"/>
+	<field name="numCosto" class="java.lang.Double"/>
+	<field name="desLLegada" class="java.lang.String"/>
+	<field name="codPersona" class="java.lang.Integer"/>
+	<field name="rucPersona" class="java.lang.String"/>
+	<field name="nomPersona" class="java.lang.String"/>
+	<field name="numPlaca" class="java.lang.String"/>
+	<field name="nomMarca" class="java.lang.String"/>
+	<field name="nomConstancia" class="java.lang.String"/>
+	<field name="dniConductor" class="java.lang.String"/>
+	<field name="nomConductor" class="java.lang.String"/>
+	<field name="licConductor" class="java.lang.String"/>
+	<field name="codEmptransporte" class="java.lang.Integer"/>
+	<field name="rucEmptransporte" class="java.lang.String"/>
+	<field name="nomEmptransporte" class="java.lang.String"/>
+	<field name="tlfEmptransporte" class="java.lang.String"/>
+	<field name="codMotivo" class="java.lang.Integer"/>
+	<field name="codTipoDocumento" class="java.lang.String"/>
+	<field name="flgEstado" class="java.lang.String"/>
+	<field name="ctdProducto" class="java.lang.Integer"/>
+	<field name="codProducto" class="java.lang.String"/>
+	<field name="nomProducto" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="231" splitType="Stretch">
+			<textField>
+				<reportElement x="389" y="81" width="136" height="20" uuid="cd4c4fbe-7c82-497d-95ea-b70d93304cbd"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N° "+$F{nroGuia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="124" width="216" height="11" uuid="71f41efe-3868-4545-b540-cbb2fe085b11"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desPartida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="359" y="124" width="181" height="11" uuid="8743ec7e-5873-41fc-98e1-33f3473523e7"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{desLLegada}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="85" y="145" width="100" height="11" uuid="586b67c4-5b59-4238-8699-40deaa0de7fe"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecEmision}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="214" y="145" width="87" height="11" uuid="b48ecd03-8c27-4739-85ee-c3444633c2a5"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecTraslado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="85" y="165" width="100" height="11" uuid="98e06e0c-6641-4b49-8db6-0b8bf545a14e"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numCosto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="145" width="199" height="11" uuid="9ccc5f82-2371-4b95-99be-abaf94d2c694"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomPersona}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="165" width="199" height="11" uuid="e3b5f021-bdf1-4ba3-8df0-4c47137b16e5"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rucPersona}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="191" width="200" height="11" uuid="cb77ee41-d448-435d-a4c1-2c0954ce2f00"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numPlaca}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="119" y="203" width="182" height="11" uuid="901c1950-53fc-44c0-b5b1-bec06a2c9a9e"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomConstancia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="119" y="215" width="182" height="11" uuid="d86f1be4-7736-4b8c-8376-9bf6a05b85a7"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{licConductor}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="359" y="191" width="100" height="11" uuid="92a856c0-b048-4d06-9941-0be9770dc020"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nomEmptransporte}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="315" y="203" width="100" height="11" uuid="3890c017-f42a-4a36-9999-f315cd5a39ef"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tlfEmptransporte}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="341" y="215" width="100" height="11" uuid="8cb00d59-3fd2-4ae1-8113-884ce3e19045"/>
+				<textElement>
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rucEmptransporte}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="7" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="19" y="4" width="61" height="15" uuid="8bf0de1d-45a1-46f1-a2d4-dcddd6b6e542"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ctdProducto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="86" y="4" width="454" height="15" uuid="496f8a60-9968-4663-818c-27323c2a2a2b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codProducto}+" - "+$F{nomProducto}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band>
+			<printWhenExpression><![CDATA[]]></printWhenExpression>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="108" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

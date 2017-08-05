@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_NotaDespacho" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4241c71d-5180-4965-873b-b85d9bec7213">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="58"/>
+	<style name="tahoma7" fontName="Tahoma" fontSize="8"/>
+	<style name="conBorde" fill="Solid" fontName="Tahoma">
+		<pen lineWidth="1.0" lineColor="#000000"/>
+		<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+			<pen lineWidth="1.0" lineColor="#333333"/>
+			<topPen lineWidth="1.0" lineColor="#333333"/>
+			<leftPen lineWidth="1.0" lineColor="#333333"/>
+			<bottomPen lineWidth="1.0" lineColor="#333333"/>
+			<rightPen lineWidth="1.0" lineColor="#333333"/>
+		</box>
+	</style>
+	<style name="tahoma7border" style="conBorde" fontName="Tahoma" fontSize="8"/>
+	<parameter name="idFac" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT AVMOV_Factura_ND_CAB.idFacturaCab, AVMOV_Factura_ND_CAB.num_factura, agmae_persona.Nom_Razon_Social, AVMOV_Factura_ND_CAB.fec_factura, agmae_persona.num_identificacion, AVMOV_Factura_ND_CAB.num_guia_remision, AVMOV_Factura_ND_DET.num_cntd_producto, AVMOV_Factura_ND_DET.cod_producto, AIMAR_Productos.Des_Ai_Produc, AVMOV_Factura_ND_DET.num_precio_unitario, AVMOV_Factura_ND_DET.num_importe_producto, AVMOV_Factura_ND_CAB.num_importe_subtotal, AVMOV_Factura_ND_CAB.val_IGV, AVMOV_Factura_ND_CAB.num_importe_IGV, AVMOV_Factura_ND_CAB.num_importe_Total, AVMOV_Factura_ND_CAB.des_importe_total
+FROM AIMAR_Productos INNER JOIN ((AVMOV_Factura_ND_CAB INNER JOIN AVMOV_Factura_ND_DET ON AVMOV_Factura_ND_CAB.idFacturaCab = AVMOV_Factura_ND_DET.idFacturaCab) INNER JOIN agmae_persona ON AVMOV_Factura_ND_CAB.cod_persona = agmae_persona.cod_persona) ON AIMAR_Productos.Cod_Ai_Produc = AVMOV_Factura_ND_DET.cod_producto
+WHERE AVMOV_Factura_ND_CAB.idFacturaCab=$P{idFac};]]>
+	</queryString>
+	<field name="idFacturaCab" class="java.lang.Integer"/>
+	<field name="num_factura" class="java.lang.String"/>
+	<field name="Nom_Razon_Social" class="java.lang.String"/>
+	<field name="fec_factura" class="java.sql.Timestamp"/>
+	<field name="num_identificacion" class="java.lang.String"/>
+	<field name="num_guia_remision" class="java.lang.String"/>
+	<field name="num_cntd_producto" class="java.lang.Integer"/>
+	<field name="cod_producto" class="java.lang.String"/>
+	<field name="Des_Ai_Produc" class="java.lang.String"/>
+	<field name="num_precio_unitario" class="java.lang.Double"/>
+	<field name="num_importe_producto" class="java.lang.Double"/>
+	<field name="num_importe_subtotal" class="java.lang.Double"/>
+	<field name="val_IGV" class="java.lang.Double"/>
+	<field name="num_importe_IGV" class="java.lang.Double"/>
+	<field name="num_importe_Total" class="java.lang.Double"/>
+	<field name="des_importe_total" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="192" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="86" y="173" width="240" height="15" uuid="48972316-6874-4509-8ab1-803e854b2b3a"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_identificacion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="445" y="173" width="95" height="15" uuid="8b737fd3-a1b5-4670-9389-49979818ed94"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_guia_remision}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd           MM           yyyy" isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="445" y="131" width="95" height="15" uuid="0ee6ea0e-eace-4e68-8fa4-96a4176ebf82"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fec_factura}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="85" y="130" width="240" height="15" uuid="87a8a81d-9247-47a7-8f64-ffe5e084668d"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Nom_Razon_Social}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="85" y="151" width="455" height="16" uuid="31461960-f610-4da6-bf19-b3ea49a5edeb"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["DIRECCION"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="404" y="88" width="136" height="20" uuid="cd4c4fbe-7c82-497d-95ea-b70d93304cbd"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["N° "+$F{num_factura}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="7" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="19" y="4" width="61" height="15" uuid="8bf0de1d-45a1-46f1-a2d4-dcddd6b6e542"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_cntd_producto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="86" y="4" width="293" height="15" uuid="496f8a60-9968-4663-818c-27323c2a2a2b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cod_producto}+" - "+ $F{Des_Ai_Produc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="392" y="4" width="61" height="15" uuid="38114a6b-6efd-4b08-b04b-9c98a9510c38"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_precio_unitario}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="467" y="4" width="61" height="15" uuid="15eb5652-8678-4070-a030-a6190a1b3f4a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_importe_producto}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band>
+			<printWhenExpression><![CDATA[]]></printWhenExpression>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="108" splitType="Stretch">
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="467" y="21" width="61" height="15" uuid="62da1a12-c9b3-45d8-93f7-7508cd28a90b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_importe_subtotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="467" y="41" width="61" height="15" uuid="61b3ef40-09d9-4bc4-ad37-3be25e4ba217"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_importe_IGV}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="467" y="61" width="61" height="15" uuid="51b264dc-8c87-48a1-b443-b900af960255"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{num_importe_Total}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="438" y="41" width="17" height="15" uuid="cc82da03-c2e3-48e0-a48f-1cbc7b9140df"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{val_IGV}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="70" y="2" width="458" height="15" uuid="eda03dbd-1609-445a-8d9c-8fbe7af6fc8f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{des_importe_total}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="0" y="92" width="50" height="12" uuid="3894a8d1-0181-445d-8c07-78434d7282f6"/>
+				<textElement verticalAlignment="Middle">
+					<font size="4"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{idFacturaCab}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

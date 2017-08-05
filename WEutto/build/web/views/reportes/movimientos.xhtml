@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <body>
+
+        <ui:composition template="./../../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+                <h2>Datos de Movimientos</h2>
+                
+                
+                 <h:form id="formMostrarProductoStocks">
+                     <p:growl id="msgs" showDetail="true" showSummary="false"/>
+
+                    <p:dataTable id="tablaStock"  paginator="true"   rows="10"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,15,20"
+                                 var="mv" value="#{movimientoAlmacenBean.listaMovimientosAlmacen}" 
+                                 emptyMessage="No hay datos de productos" >
+
+                        <p:column headerText="Codigo" width="50">
+                            <h:outputText value="#{mv.idMovAlmCab}"/>
+                        </p:column>
+                        <p:column headerText="Tipo">
+                            <h:outputText value="#{mv.codTipoConcepto}"/>
+                        </p:column>
+                        <p:column headerText="Compañia">
+                            <h:outputText value="#{mv.rucCompanyia}"/>
+                        </p:column>
+
+                        <p:column headerText="Numero de factura" >
+                            <h:outputText value="#{mv.numFactura}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Establecimiento" >
+                            <h:outputText value="#{mv.codEstablecimiento}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Centro" >
+                            <h:outputText value="#{mv.codCentroc}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Area" >
+                            <h:outputText value="#{mv.codArea}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Almacen" >
+                            <h:outputText value="#{mv.codAlmacen}"/>
+                        </p:column>
+                        
+                        
+                        
+                        <p:column headerText="Fecha Movimiento" >
+                            <h:outputText value="#{mv.fecMovimiento}"/>
+                        </p:column>
+
+                        <p:column headerText="Fecha creacion" >
+                            <h:outputText value="#{mv.fecCreacion}"/>
+                        </p:column>
+                        <p:column headerText="Hora creacion" >
+                            <h:outputText value="#{mv.horCreacion}"/>
+                        </p:column>
+                        <p:column headerText="Usuario creacion" >
+                            <h:outputText value="#{mv.codUsuarioCreacion}"/>
+                        </p:column>
+<!--                        <p:column headerText="Fecha actualizacion" >
+                            <h:outputText value="#{mv.fecActualizacion}"/>
+                        </p:column>
+                        <p:column headerText="Hora actualizacion" >
+                            <h:outputText value="#{mv.horActualizacion}"/>
+                        </p:column>
+                        <p:column headerText="Usuario actualizacion" >
+                            <h:outputText value="#{mv.codUsuarioActualizacion}"/>
+                        </p:column>
+
+                      -->
+                    </p:dataTable>
+                </h:form>
+
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

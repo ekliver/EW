@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="rpt_NotaDespacho" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4241c71d-5180-4965-873b-b85d9bec7213">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="70"/>
+	<style name="tahoma7" fontName="Tahoma" fontSize="8"/>
+	<style name="conBorde" fill="Solid" fontName="Tahoma">
+		<pen lineWidth="1.0" lineColor="#000000"/>
+		<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+			<pen lineWidth="1.0" lineColor="#333333"/>
+			<topPen lineWidth="1.0" lineColor="#333333"/>
+			<leftPen lineWidth="1.0" lineColor="#333333"/>
+			<bottomPen lineWidth="1.0" lineColor="#333333"/>
+			<rightPen lineWidth="1.0" lineColor="#333333"/>
+		</box>
+	</style>
+	<style name="tahoma7border" style="conBorde" fontName="Tahoma" fontSize="8"/>
+	<parameter name="numVale" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT AVMOV_MovNotaDespachoCab.num_vale, AVMOV_MovNotaDespachoCab.fec_vale, AgmaeVendedor.nomVendedor, agmae_companyias.ruc_companyia, agmae_companyias.des_companyia, agmae_persona.Nom_Razon_Social, agmae_persona.num_identificacion, AVMOV_MovNotaDespachoCab.des_notadespacho, AIMAR_Almacen.Nom_Ai_Almacen, AVMOV_MovNotaDespachoDet.ctd_Movimiento, AVMOV_MovNotaDespachoDet.cod_producto, AIMAR_Productos.Des_Ai_Produc
+FROM AIMAR_Productos RIGHT JOIN (AIMAR_Almacen RIGHT JOIN ((AgmaeVendedor RIGHT JOIN ((agmae_persona RIGHT JOIN AVMOV_MovNotaDespachoCab ON agmae_persona.cod_persona = AVMOV_MovNotaDespachoCab.cod_persona) LEFT JOIN AVMOV_MovNotaDespachoDet ON AVMOV_MovNotaDespachoCab.num_vale = AVMOV_MovNotaDespachoDet.num_vale) ON AgmaeVendedor.codVendedor = AVMOV_MovNotaDespachoCab.cod_vendedor) LEFT JOIN agmae_companyias ON AVMOV_MovNotaDespachoCab.ruc_companyia = agmae_companyias.ruc_companyia) ON (AIMAR_Almacen.Cod_Ai_Almacen = AVMOV_MovNotaDespachoDet.cod_almacen) AND (AIMAR_Almacen.ruc_companyia = AVMOV_MovNotaDespachoDet.ruc_Companyia)) ON (AIMAR_Productos.ruc_companyia = AVMOV_MovNotaDespachoDet.ruc_Companyia) AND (AIMAR_Productos.Cod_Ai_Produc = AVMOV_MovNotaDespachoDet.cod_producto)
+WHERE ((AVMOV_MovNotaDespachoCab.num_vale=$P{numVale} ));]]>
+	</queryString>
+	<field name="num_vale" class="java.lang.String"/>
+	<field name="fec_vale" class="java.sql.Timestamp"/>
+	<field name="nomVendedor" class="java.lang.String"/>
+	<field name="ruc_companyia" class="java.lang.String"/>
+	<field name="des_companyia" class="java.lang.String"/>
+	<field name="Nom_Razon_Social" class="java.lang.String"/>
+	<field name="num_identificacion" class="java.lang.String"/>
+	<field name="des_notadespacho" class="java.lang.String"/>
+	<field name="Nom_Ai_Almacen" class="java.lang.String"/>
+	<field name="ctd_Movimiento" class="java.lang.Double"/>
+	<field name="cod_producto" class="java.lang.String"/>
+	<field name="Des_Ai_Produc" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="148" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="61" y="116" width="264" height="15" uuid="a3a03f14-2eaf-4f44-bee7-a7be23e6aa1d"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false" pdfFontName="Helvetica-Bold" pdfEncoding="Cp1252"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Nom_Razon_Social}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="61" y="132" width="264" height="15" uuid="48972316-6874-4509-8ab1-803e854b2b3a"/>
+				<textElement verticalAlignment="Middle"/>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="411" y="116" width="117" height="15" uuid="db14ebb0-d3de-4637-ba88-e2912cc5a1e7"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{num_identificacion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="tahoma7" x="411" y="132" width="117" height="15" uuid="8b737fd3-a1b5-4670-9389-49979818ed94"/>
+				<textElement verticalAlignment="Middle"/>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="19" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="15" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="13" splitType="Stretch"/>
+		<band>
+			<printWhenExpression><![CDATA[]]></printWhenExpression>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="148" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

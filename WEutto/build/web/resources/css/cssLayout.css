@@ -1,0 +1,100 @@
+
+
+.topAligned {
+    vertical-align: top;
+}
+
+.ui-dialog .ui-dialog-title {
+    font-size: 14px !important;
+} 
+.ui-dialog .ui-dialog-titlebar {  
+    margin: 0px 0px 0px 0px !important;
+    background: -webkit-linear-gradient(top, #f6f7f9 0%,#ebedf0 100%) !important;
+}
+
+.ui-dialog .ui-dialog-titlebar-close{
+    position: absolute !important;
+    right: 2px !important;
+    top: 2px !important;
+}
+
+.ui-panelgrid td, .ui-panelgrid tr
+{
+    border-style: none !important
+}
+.ui-datatable .ui-datatable-scrollable-body {
+    background: #f7f7f7 !important;
+}
+
+
+#top {
+    position: relative;
+    padding: 5px;
+    margin: 0px 0px 0px 0px;
+    background-color: #EEEEEE;
+}
+
+#bottom {
+    position: absolute;
+    padding: 0.5%;
+    border: none;
+    width: 99%;
+
+
+    color: #EEEEEE;
+    background-color: #222831;
+    bottom: 0 !important;
+    bottom: -1px;
+    height: 33px;
+
+}
+
+/*#left {
+    float: left;
+    background-color: #ece3a5;
+    padding: 5px;
+    width: 50px;
+}*/
+
+/*#right {
+    float: right;
+    background-color: #ece3a5;
+    padding: 5px;
+    width: 150px;
+}*/
+
+.center_content {
+    position: relative;
+
+    padding: 5px;
+}
+
+
+
+/*.left_content {
+
+    padding: 5px;
+    margin-left: 170px;
+}*/
+
+
+/*
+.right_content {
+    background-color: #dddddd;
+    padding: 5px;
+    margin: 0px 170px 0px 170px;
+}
+
+#top a:link, #top a:visited {
+  color: white;
+  font-weight : bold;
+  text-decoration: none;
+}
+
+#top a:link:hover, #top a:visited:hover  {
+  color: black;
+  font-weight : bold;
+  text-decoration : underline;
+}
+*/
+

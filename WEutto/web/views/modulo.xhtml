@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="top">
+                <center>
+                    <h2>
+                        SISTEMA DE FACTURACION
+                    </h2>
+                </center>
+            </ui:define>
+
+            <ui:define name="content">
+                <h:form id="formModulos">
+                    <br/>
+                    <br/>
+                    <h:panelGrid columns="4">
+
+                        <p:outputLabel value="COMPAÑIA: "/>
+                        <p:selectOneMenu id="companya" value="#{loginBean.companya.rucCompanya}"  >
+                            <f:selectItems value="#{loginBean.listaCompanya}" 
+                                           var="c" itemLabel="#{c.desCompanyia}" 
+                                           itemValue="#{c.rucCompanya}" />
+                        </p:selectOneMenu>
+
+                        <p:outputLabel value="AÑO: "/>
+                        <p:inputText value="#{loginBean.anyo}"/>
+
+                    </h:panelGrid>
+                    <center>
+                        <br/>
+                        <br/>
+                        <p:panel header="MODULOS"  style=" width: 845px; text-align: center;" >
+                            <br/>
+                            <h:panelGrid  columns="2" >
+
+                                <p:panel header="MODULO VENTAS"  style=" width: 400px; height: 200px;">
+                                    <p:commandLink process="formModulos" actionListener="#{loginBean.seleccionCompanya()}" action="bienvenido?faces-redirect=true">
+                                        <p:graphicImage name="./images/despacho.png" style="width: 208px;height: 139px " />
+                                    </p:commandLink>
+                                </p:panel>
+
+                                <p:panel header="NUEVO MODULO"  style=" width: 400px; height: 200px; ">
+                                    <br/>
+                                    <p:graphicImage name="./images/factura.png"  style="width: 120px;height: 120px "/>
+                                </p:panel>
+
+
+                            </h:panelGrid>    
+                            <br/>
+                        </p:panel>
+                        <br/>
+                        <br/>
+                        <br/>
+                        <p:commandButton value="Cerrar session" actionListener="#{loginBean.cerrarSession()}" />
+                    </center>
+
+
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

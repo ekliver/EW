@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+
+                <h:form>
+                    <p:commandButton value="Asignar precio a nuevo producto" actionListener="#{productoBean.prepararNuevoProductoPrecio()}"
+                                     oncomplete="PF('dialogAsignarPrecioProducto').show();"
+                                     update=":formAsignarPrecioProducto"/>
+                </h:form>
+
+                <br />
+
+                <h:form id="formMostrarProductos">
+                    <p:growl id="msgs" showDetail="true"/>
+
+                    <p:dataTable id="tablaProductos"  paginator="true"   rows="10"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,15,20"
+                                 var="pro" value="#{productoBean.listaProductoPrecios}" 
+                                 emptyMessage="No hay datos de productos" editable="true" >
+
+                        <p:ajax event="rowEdit" listener="#{productoBean.onRowEdit}"
+                                update=":formMostrarProductos:msgs"  />
+                        <p:ajax event="rowEditCancel" listener="#{productoBean.onRowCacel}"
+                                update=":formMostrarProductos:msgs"  />
+
+
+                        <p:column headerText="Codigo" width="80">
+                            <h:outputText value="#{pro.codProducto}"/>
+                        </p:column>
+
+                        <p:column headerText="Nombre del producto" width="250">
+                            <h:outputText value="#{pro.aimarProductos.desAiProduc}"/>
+                        </p:column>
+
+                        <p:column headerText="Precio" width="70">
+                            <p:cellEditor>
+                                <f:facet name="output"><h:outputText value="#{pro.precioProducto}" /></f:facet>
+                                <f:facet name="input"><p:inputText value="#{pro.precioProducto}" /></f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Fecha creacion" width="70" >
+                            <h:outputText value="#{pro.fecCreacion}"/>
+                        </p:column>
+                        <p:column headerText="Hora creacion" width="70" >
+                            <h:outputText value="#{pro.horCreacion}"/>
+                        </p:column>
+                        <p:column headerText="Usuario creacion" width="70" >
+                            <h:outputText value="#{pro.codUsuarioCreacion}"/>
+                        </p:column>
+                        <p:column headerText="Fecha actualizacion" width="70" >
+                            <h:outputText value="#{pro.fecActualizacion}"/>
+                        </p:column>
+                        <p:column headerText="Hora actualizacion" width="70" >
+                            <h:outputText value="#{pro.horActualizacion}"/>
+                        </p:column>
+                        <p:column headerText="Usuario actualizacion" width="70" >
+                            <h:outputText value="#{pro.codUsuarioActualizacion}"/>
+                        </p:column>
+
+                        <p:column headerText="Editar" width="70">
+                            <p:rowEditor />
+
+                        </p:column>
+
+                    </p:dataTable>
+                </h:form>
+
+                <h:form id="formAsignarPrecioProducto">
+
+                    <p:dialog id="dlgAsignarPrecioProducto" widgetVar="dialogAsignarPrecioProducto" resizable="false" showEffect="explode" hideEffect="explode" modal="true">
+                        <p:panelGrid columns="2" style="margin: 0 auto;">
+
+                            <p:outputLabel for="pro" value="Producto: " />
+                            <p:selectOneMenu id="pro" value="#{productoBean.productoPrecio.codProducto}" filter="true">
+
+                                <f:selectItem itemLabel="Selecciona uno" itemValue="" />
+                                <f:selectItems value="#{productoBean.listaProductos}" 
+                                               var="p" itemLabel="#{p.desAiProduc}" 
+                                               itemValue="#{p.codAiProduc}" />
+
+                            </p:selectOneMenu>
+
+
+                            <p:outputLabel value="Precio: "/>
+                            <p:inputText value="#{productoBean.productoPrecio.precioProducto}"/>
+
+                        </p:panelGrid>
+                        <p:commandButton value="Guardar" actionListener="#{productoBean.nuevoProductoPrecio()}"
+                                         update=":formMostrarProductos:tablaProductos"
+                                         oncomplete="PF('dialogAsignarPrecioProducto').hide();"/>
+
+                        <p:commandButton value="Cancelar" oncomplete="PF('dialogAsignarPrecioProducto').hide();"/>
+
+                    </p:dialog>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

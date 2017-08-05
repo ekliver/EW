@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./../../WEB-INF/plantilla/plantilla.xhtml">
+            <ui:define name="content">
+                <h2>Datos del Cliente</h2>
+                <h:form id="formMostrarClientes">
+                    <p:dataTable id="tablaClientes" paginator="true"   rows="10"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,15,20"
+                                 var="ct" value="#{clienteBean.listaClientes}" emptyMessage="No hay datos de clientes">
+                        
+                        <p:column headerText="Codigo" filterBy="#{ct.codPersona}"
+                                  filterMatchMode="contains" width="120" >
+                            
+                            <h:outputText value="#{ct.codPersona}" style="display:block; text-align:center;" />
+                        </p:column>
+
+                        <p:column headerText="RUC" filterBy="#{ct.numIdentificacion}"
+                                  filterMatchMode="contains"  width="120">
+                            <h:outputText value="#{ct.numIdentificacion}" style="display:block; text-align:center;"/>
+                        </p:column>
+
+                        <p:column headerText="Razon Social" filterBy="#{ct.nomRazonSocial}"
+                                  filterMatchMode="contains" >
+                            <h:outputText value="#{ct.nomRazonSocial}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Nombre" filterBy="#{ct.desApellidoPaterno} #{ct.desApellidoMaterno} #{ct.desNombre}"
+                                  filterMatchMode="contains" >
+                            <h:outputText value="#{ct.desApellidoPaterno} #{ct.desApellidoMaterno} #{ct.desNombre}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Tipo" filterBy="#{ct.agmaeTiposPersona.desTipPersona}"
+                                  filterMatchMode="contains"  width="220">
+                            <h:outputText value="#{ct.agmaeTiposPersona.desTipPersona}"/>
+                        </p:column>
+                        
+                    </p:dataTable>
+
+                </h:form>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

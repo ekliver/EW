@@ -1,0 +1,669 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+    <body>
+
+        <ui:composition template="./../../WEB-INF/plantilla/plantilla.xhtml">
+
+            <ui:define name="content">
+
+
+                <h:form id="formNotaDespachos" style="text-align:center;">
+                    <p:panel header="NOTAS DE DESPACHO" >
+                        <p:growl id="msgs" showDetail="true"/>
+                        <h:panelGrid id="gridNotaDspachos" columns="3" width="100%">
+                            <h:panelGrid  columns="7">
+                                <p:outputLabel for="feDesde" value="Desde:" />
+                                <p:calendar id="feDesde" value="#{notaDespachoBean.feDesde}" 
+                                            pattern="dd/MM/yyyy" />
+                                <p:column style="width:30px;" >
+                                    <p:spacer width="30" />
+                                </p:column>
+                                <p:outputLabel for="feHasta" value="Hasta:" />
+                                <p:calendar id="feHasta" value="#{notaDespachoBean.feHasta}" 
+                                            pattern="dd/MM/yyyy" />
+                                <p:column style="width:30px;" >
+                                    <p:spacer width="30" />
+                                </p:column>
+                                <p:commandButton value="Procesar" icon="ui-icon-play"
+                                                 process="formNotaDespachos" 
+                                                 actionListener="#{notaDespachoBean.consultarPorFechas()}" 
+                                                 update=":formNotaDespachos"/>
+                            </h:panelGrid>
+
+                            <h:column/>
+                        </h:panelGrid>
+                        <p:dataTable id="tablaNotaDespachos" paginator="true" paginatorPosition="bottom" rows="10"
+                                     var="nd" value="#{notaDespachoBean.listaNotaDespacho}"  selectionMode="single"
+                                     selection="#{notaDespachoBean.notaDespacho}" rowKey="#{nd.idMovValeCab}" 
+                                     emptyMessage="No hay datos de nota de despacho" >
+
+                            <f:facet name="header">
+                                <p:commandButton   process="tablaNotaDespachos" icon="ui-icon-plus" value="Nueva Nota de Despacho" 
+                                                   actionListener="#{notaDespachoBean.prepararNuevaNotaDespacho()}"
+                                                   update=":formNuevaNotaDespacho"
+                                                   oncomplete="PF('dialogNuevaNotaDespacho').show();"/>
+                            </f:facet>
+
+                            <p:column   filterBy="#{nd.numVale}" headerText="N. Despacho"  
+                                        filterMatchMode="contains" filterStyle="width:60px" 
+                                        width="60" style="text-align:center;" >
+                                <h:outputText value="#{nd.numVale}"/>
+                            </p:column>
+
+                            <p:column   filterBy="#{nd.fecVale}" headerText="Fecha"  
+                                        filterMatchMode="contains"  filterStyle="width:60px" 
+                                        width="60" style="text-align:center;" >
+                                <h:outputText value="#{nd.fecVale}" />
+                            </p:column>
+
+                            <p:column  filterBy="#{nd.ZRucPersona}" headerText="Ruc Cliente"  
+                                       filterMatchMode="contains"  filterStyle="width:60px" 
+                                       width="60" style="text-align:center;" >
+                                <h:outputText value="#{nd.ZRucPersona}"/>
+                            </p:column>
+                            <p:column filterBy="#{nd.ZNomPersona}" headerText="Cliente" 
+                                      filterMatchMode="contains"  filterStyle="width:220px" 
+                                      width="220">
+                                <h:outputText value="#{nd.ZNomPersona}"/>
+                            </p:column>
+                            <p:column headerText="Ruc Compañia"  width="60" style="text-align:center;"  >
+                                <h:outputText value="#{nd.rucCompanyia}"/>
+                            </p:column>
+                            <p:column headerText="Nombre Compañia"  width="160"  >
+                                <h:outputText value="#{nd.ZNomCompanya.toUpperCase()}"/>
+                            </p:column>
+                            <!--                            <p:column headerText="Localidad"  width="50"  >
+                                                            <h:outputText value="#{nd.ZNomEstablecimiento}"/>
+                                                        </p:column>
+                                                        <p:column headerText="C. Costo"   width="40" >
+                                                            <h:outputText value="#{nd.ZNomCentro}"/>
+                                                        </p:column>
+                                                        <p:column headerText="Area"   width="40" >
+                                                            <h:outputText value="#{nd.ZNomArea}"/>
+                                                        </p:column>
+                                                        <p:column headerText="Almacen"   width="100" >
+                                                            <h:outputText value="#{nd.ZNomAlmacen}"/>
+                                                        </p:column>-->
+                            <p:column headerText="Estado"   width="60" >
+                                <h:outputText value="#{nd.znomEstado}"/>
+                            </p:column>
+                            <p:column headerText="Opciones" width="80" style="text-align:center;" >
+                                <p:commandButton id="vieButton" process="tablaNotaDespachos" 
+                                                 icon="ui-icon-print" title="Imprimir" 
+                                                 disabled="#{nd.zestadoImprimir}"
+                                                 style="width:17px; height: 17px;" 
+                                                 ajax="false"  actionListener="#{notaDespachoBean.verReporteNotaDespacho(nd)}" onclick="form.target = '_blank'"/>
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="ediButton"   process="tablaNotaDespachos" 
+                                                 icon="ui-icon-pencil" title="Editar" 
+                                                 disabled="#{nd.zestadoEditar}"
+                                                 style="width:17px; height: 17px;" 
+                                                 actionListener="#{notaDespachoBean.prepararEditarNotaDespacho(nd)}" 
+                                                 update=":formNuevaNotaDespacho" 
+                                                 oncomplete="PF('dialogNuevaNotaDespacho').show();"/>
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="delButton" process="tablaNotaDespachos" 
+                                                 icon="ui-icon-trash" title="Anular" 
+                                                 disabled="#{nd.zestadoAnular}"
+                                                 style="width:17px; height: 17px; " 
+                                                 actionListener="#{notaDespachoBean.anularNotaDespacho(nd)}" 
+                                                 update=":formNotaDespachos" />
+                            </p:column>
+                            <p:column headerText="Generar" width="50" style="text-align:center;" >
+                                <p:commandButton id="fButton" process="tablaNotaDespachos" 
+                                                 icon="ui-icon-cart" title="Factura" 
+                                                 disabled="#{nd.zestadoFactura}"
+                                                 style="width:17px; height: 17px;" 
+                                                 oncomplete="PF('dialogNuevaFactura').show(); PF('dialogSeleccionND').hide();"
+                                                 update=":formNuevaFactura"
+                                                 actionListener="#{facturaBean.prepararNuevaFactura(nd)}" />
+                                <p:spacer width="10px"/>
+                                <p:commandButton id="grButton"   process="tablaNotaDespachos" 
+                                                 icon="ui-icon-tag" title="Guia de Remision" 
+                                                 disabled="#{nd.zestadoGuiaRemision}"
+                                                 style="width:17px; height: 17px;" 
+                                                 actionListener="#{notaDespachoBean.prepararEditarNotaDespacho(nd)}" 
+                                                 update=":formNuevaNotaDespacho" 
+                                                 oncomplete="PF('dialogNuevaNotaDespacho').show();"/>
+
+                            </p:column>
+
+                        </p:dataTable>
+
+
+                    </p:panel>
+
+
+                </h:form>
+
+
+                <h:form  id="formNuevaNotaDespacho">
+                    <p:growl id="msgs" showDetail="true"/>
+                    <p:dialog id="dlgNuevaNotaDespacho" widgetVar="dialogNuevaNotaDespacho" focus="#{notaDespachoBean.nameFocus}" 
+                              resizable="false"  
+                              modal="true" width="1270" height="410"  header="Registro de Nota de despacho" styleClass=".ui-dialog-title-dialog{ margin:0px;}">
+                        <p:panelGrid  id="gridNotaDespachoCab">
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel for="numND" value="N° Despacho:" style="display:block; width:70px;"  />
+                                </p:column>
+                                <p:column>
+                                    <p:inputText id="numND" value="#{notaDespachoBean.notaDespacho.numVale}" style="width:70px; font-weight:bold;" disabled="#{notaDespachoBean.enabledND}" />
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel for="fecha" value="Fecha:"  />
+                                </p:column>
+                                <p:column>
+                                    <p:calendar id="fecha" value="#{notaDespachoBean.notaDespacho.fecVale}"  pattern="dd/MM/yyyy" size="7" />
+                                </p:column>
+                                <p:column>
+                                    
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="Vendedor:" />
+                                </p:column>
+                                
+                                <p:column>
+                                    <p:inputText value="#{notaDespachoBean.notaDespacho.agmaeVendedor.nomVendedor}" style="width:240px" disabled="true" />        
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton  style="width:30px; height: 17px; " icon="ui-icon-search"  oncomplete="PF('dialogConsultarVendedor').show();" />
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="Prioridad:"  />        
+                                </p:column>
+                                <p:column>
+                                    <p:selectOneMenu value="#{notaDespachoBean.notaDespacho.codPrioridad}" style="width:50px;"  >
+                                        <f:selectItem itemLabel="NORMAL" itemValue="1" />
+                                        <f:selectItem itemLabel="BAJA" itemValue="2" />
+                                        <f:selectItem itemLabel="ALTA" itemValue="3" />
+
+                                    </p:selectOneMenu>
+
+                                </p:column>
+                                 <p:column>
+                                            <p:outputLabel for="estado" value="Estado:"  />
+                                        </p:column>
+                                        <p:column>
+                                            <p:selectOneMenu id="estado" value="#{notaDespachoBean.notaDespacho.flgEstado}" style="width: 70px;"  >
+                                                <f:selectItems value="#{notaDespachoBean.listaEstadoTipoDocumento}" 
+                                                               var="nd" itemLabel="#{nd.desEstado}" 
+                                                               itemValue="#{nd.codEstado}" />
+                                            </p:selectOneMenu>
+                                        </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel value="Cliente:" style="display:block; width:60px;"/>        
+                                </p:column>
+                                <p:column colspan="3">
+                                    <p:inputText id="txtCliente" value="#{notaDespachoBean.notaDespacho.agmaePersona.numIdentificacion}-#{notaDespachoBean.notaDespacho.agmaePersona.nomRazonSocial}" style="width:270px" disabled="true" />
+                                </p:column>
+                                
+                                <p:column>
+                                    <p:commandButton style="width:30px; height: 17px; " icon="ui-icon-search"  oncomplete="PF('dialogConsultarCliente').show();"/>
+                                </p:column>
+                                <p:column>
+                                    <p:outputLabel value="Observacion:"  />        
+                                </p:column>
+                                <p:column colspan="6">
+                                    <p:inputText value="#{notaDespachoBean.notaDespacho.desObservacion}" style="width:100%"/>
+                                </p:column>
+
+                            </p:row>
+                        </p:panelGrid>
+
+
+
+
+                        <p:remoteCommand name="onCellEdit" update=":formNuevaNotaDespacho:tablaNotaDespachoDetalle" />
+                        <p:dataTable id="tablaNotaDespachoDetalle"
+                                     var="ndd" value="#{notaDespachoBean.listaNotaDespachoDetalle}" rowIndexVar="rowIndex"
+                                     emptyMessage="No hay datos de detalle"  scrollable="true" scrollHeight="220"
+                                     editable="true" editMode="cell" >
+
+
+                            <f:facet name="header">
+                                <p:commandButton   process="formNuevaNotaDespacho" icon="ui-icon-plus" 
+                                                   value="Agregar Producto"
+                                                   actionListener="#{notaDespachoBean.prepararAgregarProducto}"
+                                                   update=":formAgregarProducto :formNuevaNotaDespacho:gridNotaDespachoCab :formNuevaNotaDespacho:msgs" />
+                            </f:facet>
+                            <p:ajax  event="cellEdit"   listener="#{notaDespachoBean.onCellEdit(rowIndex, ndd)}"  onstart="onCellEdit()" />
+
+
+<!--<p:ajax event="cellEdit" listener="#{notaDespachoBean.onCellEdit}"  update=":formNuevaNotaDespacho:msgs" />-->
+
+                            <!--<p:ajax event="rowEdit" listener="#{notaDespachoBean.onRowEdit}" update=":formNuevaNotaDespacho:msgs" />-->
+                            <p:column headerText="No" width="15" >
+                                <h:outputText value="#{rowIndex+1}"/>
+                            </p:column>
+
+                            <p:column headerText="Ruc Compañia" width="70" style="align-content:center;">
+                                <h:outputText value="#{ndd.rucCompanyia}" />
+                            </p:column>
+                            <p:column headerText="Nombre de Compañia" width="160">
+                                <h:outputText value="#{ndd.nomCompanya.toUpperCase()}" />
+                            </p:column>
+                            <p:column headerText="Codigo producto" width="60">
+                                <h:outputText value="#{ndd.codProducto}"/>
+                            </p:column>
+                            <p:column headerText="Nombre del producto" width="200">
+                                <h:outputText value="#{ndd.nomProducto}"/>
+                            </p:column>
+                            <p:column headerText="Presentacion" width="60">
+<!--                                <p:outputLabel value="#{ndd.nomPresentacion}" />-->
+
+                                <p:cellEditor>
+                                    <f:facet name="output"><p:outputLabel value="#{ndd.nomPresentacion}" /></f:facet>
+                                    <f:facet name="input">
+                                        <h:selectOneMenu value="#{ndd.nomPresentacion}" style="width:100%">
+                                            <f:selectItem itemLabel="UNIDAD" itemValue="UNIDAD" />
+                                        </h:selectOneMenu>
+                                    </f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Cantidad Presentacion" width="50">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{ndd.numCantidadPresentacion}" /></f:facet>
+                                    <f:facet name="input"><h:inputText value="#{ndd.numCantidadPresentacion}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+                            </p:column>
+                            <p:column headerText="Unidad Medida" width="50">
+                                <p:outputLabel value="#{ndd.nomMedida}" />
+                            </p:column>
+
+                            <p:column headerText="Cantidad" width="40">
+                                <p:cellEditor>
+                                    <f:facet name="output"><h:outputText value="#{ndd.ctdMovimiento}" /></f:facet>
+                                    <f:facet name="input"><h:inputText id="modelInput" value="#{ndd.ctdMovimiento}" style="width:96%"/></f:facet>
+                                </p:cellEditor>
+
+                            </p:column>
+                            <p:column headerText="Stock Fecha" width="40">
+                                <p:outputLabel value="#{ndd.stockFecha}" />
+                            </p:column>
+                            <p:column headerText="Stock Actual" width="40">
+                                <p:outputLabel value="#{ndd.stockActual}" />
+                            </p:column>
+
+                            <p:column headerText="Opciones" width="40" style="text-align:center;" >
+                                <p:commandButton id="delButton" icon="ui-icon-trash" title="Eliminar"  style="width:17px; height: 17px; "  actionListener="#{notaDespachoBean.quitarNotaDespachodetalle(ndd, rowIndex)}" update=":formNuevaNotaDespacho:tablaNotaDespachoDetalle :formNuevaNotaDespacho:gridNotaDespachoCab"/>
+                            </p:column>
+                        </p:dataTable>    
+
+                        <center>
+                            <p:commandButton value="#{notaDespachoBean.nameBtnSave}"  actionListener="#{notaDespachoBean.guardarNotaDespacho()}"
+                                             update=":formNotaDespachos:tablaNotaDespachos :formNuevaNotaDespacho:msgs" />
+                            <p:spacer width="30"/>
+                            <p:commandButton value="Cancelar" oncomplete="PF('dialogNuevaNotaDespacho').hide();" />    
+                        </center>
+                    </p:dialog>
+                </h:form>
+
+
+
+                <h:form  id="formAgregarProducto">
+                    <p:dialog id="dlgAgregarProducto" widgetVar="dialogAgregarProducto" resizable="false"  modal="true" width="1200"  header="Agregar producto">
+                        <p:panel>
+                            <p:dataTable id="tablaStockProducto"  paginator="true"   rows="10"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+
+                                         var="st" value="#{notaDespachoBean.listaProductoStocks}" selection="#{notaDespachoBean.seleccionStockProducto}" rowKey="#{st.codProducto}" 
+                                         emptyMessage="No hay datos de productos" >
+
+                                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                <p:column headerText="Codigo" filterBy="#{st.codProducto}"  filterMatchMode="contains"  filterStyle="width:70px"  width="80">
+                                    <h:outputText value="#{st.codProducto}"/>
+                                </p:column>
+
+                                <p:column headerText="Nombre del producto" filterBy="#{st.nomProducto}"  filterMatchMode="contains"  filterStyle="width:230px" width="250">
+                                    <h:outputText value="#{st.nomProducto}"  />
+                                </p:column>
+                                <p:column headerText="Stock Fecha"  width="40" >
+                                    <h:outputText value="#{st.stockFecha}"/>
+                                </p:column>
+
+                                <p:column headerText="Stock Actual" width="40" >
+                                    <h:outputText value="#{st.stockActual}"/>
+                                </p:column>
+
+                                <p:column headerText="Ruc Compañia" width="60" >
+                                    <h:outputText value="#{st.ruc}"/>
+                                </p:column>
+
+                                <p:column headerText="Nombre Compañia">
+                                    <h:outputText value="#{st.nomCompanya.toUpperCase()}"/>
+                                </p:column>
+
+                                <p:column headerText="Localidad" width="60" >
+                                    <h:outputText value="#{st.nomEstablecimiento}"/>
+                                </p:column>
+
+                                <p:column headerText="Centro" width="60" >
+                                    <h:outputText value="#{st.nomCentro}"/>
+                                </p:column>
+
+                                <p:column headerText="Almacen" width="60" >
+                                    <h:outputText value="#{st.nomAlmacen}"/>
+                                </p:column>
+
+                                <p:column headerText="Area" width="60" >
+                                    <h:outputText value="#{st.nomArea}"/>
+                                </p:column>
+
+                                <f:facet name="footer">
+                                    <p:commandButton process="tablaStockProducto" update=":formNuevaNotaDespacho:tablaNotaDespachoDetalle" icon="ui-icon-add" value="Agregar" oncomplete="PF('dialogAgregarProducto').hide();" action="#{notaDespachoBean.agregarNotasDespachoDetalle()}"/>
+                                </f:facet>
+
+                            </p:dataTable>
+
+
+                        </p:panel>
+                    </p:dialog>
+
+                </h:form>
+
+
+
+                <h:form id="formConsultarVendedor">
+                    <p:dialog id="dlgConsultarVendedor" widgetVar="dialogConsultarVendedor" resizable="false"  modal="true" width="500"  header="Seleccionar vendedor">
+
+                        <p:dataTable id="tableVendedor" value="#{notaDespachoBean.listaVendedores}" var="v"
+                                     selectionMode="single" selection="#{notaDespachoBean.seleccionVendedor}" rowKey="#{v.codVendedor}" >
+                            <p:column headerText="Codigo" filterBy="#{v.codVendedor}" filterMatchMode="contains"   filterStyle="width:45px" width="50"  >
+                                <h:outputText value="#{v.codVendedor}" />
+                            </p:column>
+                            <p:column headerText="Vendedor" filterBy="#{v.nomVendedor}" filterMatchMode="contains"   filterStyle="width:95px" width="150"  >
+                                <h:outputText value="#{v.nomVendedor}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton process="tableVendedor" update=":formNuevaNotaDespacho:gridNotaDespachoCab" icon="ui-icon-add" value="Seleccionar" oncomplete="PF('dialogConsultarVendedor').hide();" action="#{notaDespachoBean.listoVendedor()}"/>
+                            </f:facet>
+                        </p:dataTable>
+
+                    </p:dialog>
+                </h:form>
+
+
+                <h:form id="formConsultarCliente">
+                    <p:dialog id="dlgConsultarCliente" widgetVar="dialogConsultarCliente" resizable="false"  modal="true" width="500"  header="Seleccionar cliente">
+
+                        <p:dataTable id="tableCliente" value="#{clienteBean.listaClientes}" var="ct"
+                                     selectionMode="single" selection="#{notaDespachoBean.seleccionCliente}" rowKey="#{ct.codPersona}" >
+                            <p:column headerText="Codigo" filterBy="#{ct.codPersona}" filterMatchMode="contains"   filterStyle="width:45px" width="50"  >
+                                <h:outputText value="#{ct.codPersona}" />
+                            </p:column>
+                            <p:column headerText="Ruc" filterBy="#{ct.numIdentificacion}" filterMatchMode="contains"   filterStyle="width:95px" width="100"  >
+                                <h:outputText value="#{ct.numIdentificacion}" />
+                            </p:column>
+                            <p:column headerText="Cliente" filterBy="#{ct.nomRazonSocial}" filterMatchMode="contains"   filterStyle="width:220px" width="225"  >
+                                <h:outputText value="#{ct.nomRazonSocial}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton process="tableCliente" update=":formNuevaNotaDespacho:gridNotaDespachoCab" icon="ui-icon-add" value="Seleccionar" oncomplete="PF('dialogConsultarCliente').hide();" action="#{notaDespachoBean.listoCliente()}"/>
+                            </f:facet>
+                        </p:dataTable>
+
+                    </p:dialog>
+                </h:form>
+
+                <!--GENERANDO NUEVA FACTURA-->
+                <h:form  id="formNuevaFactura">
+                    <p:growl id="msgs" showDetail="true"/>
+                    <p:dialog id="dlgNuevaFactura" widgetVar="dialogNuevaFactura" focus="#{facturaBean.nameFocus}"
+                              resizable="false"  
+                              modal="true" width="1170" height="530"  header="Registro de Factura Ventas" styleClass=".ui-dialog-title-dialog{ margin:0px;}"  >
+
+<!--#{facturaBean.factura.rucCompanyia} - #{facturaBean.factura.znomCompanya.toUpperCase()}-->
+
+                        <h:panelGrid id="gridFacturaCab" columns="1" style="vertical-align: top;  "  >
+                            <p:panelGrid>
+
+                                <p:row>
+                                    <p:column >
+                                        <p:outputLabel  value="N° Serie: " style="display: block; width: 45px;"  />
+                                    </p:column>
+                                    <p:remoteCommand name="generarNroFactura" actionListener="#{facturaBean.generarNroFactura()}" update=":formNuevaFactura:numFactura :formNuevaFactura:numSerie" />
+                                    <p:column >
+
+                                        <p:inputText id="numSerie" value="#{facturaBean.factura.numSerie}" maxlength="3" 
+                                                     style="width: 45px; font-weight: bold;" 
+                                                     onkeypress="if (event.keyCode === 13) {
+                                                                 generarNroFactura();
+                                                                 return false;
+                                                             }" disabled="#{facturaBean.estadoNumeroSerie}"/>
+                                    </p:column> 
+
+                                    <p:column>
+                                        <p:outputLabel  value="N° Factura:" style="display: block; width: 60px;"  />    
+                                    </p:column>
+
+                                    <p:column>
+
+
+                                        <p:inputText id="numFactura" value="#{facturaBean.factura.numFactura}" 
+                                                     style="width: 80px; font-weight: bold;" disabled="true"  />
+
+                                    </p:column>
+
+
+                                    <p:column>
+                                        <p:outputLabel for="fecha" value="Fecha: "  />
+                                    </p:column>
+                                    <p:column >
+                                        <p:calendar id="fecha" value="#{facturaBean.factura.fecFactura}"  pattern="dd/MM/yyyy" size="8"  />
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Moneda: "  />
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu  value="#{facturaBean.factura.flgTipoFactura}" style="width: 70px; "  >
+                                            <f:selectItem itemLabel="Soles" itemValue="S" />
+                                            <f:selectItem itemLabel="Dolares" itemValue="D" />
+                                            <p:ajax event="valueChange" listener="#{facturaBean.cambioTipoFactura()}" update=":formNuevaFactura:gridFaturaTotal :formNuevaFactura:tablaFacturaDetalle" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Prioridad: "  />
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu value="#{facturaBean.factura.flgPrioridad}" style="width: 70px;"  >
+                                            <f:selectItem itemLabel="Normal" itemValue="1" />
+                                            <f:selectItem itemLabel="Baja" itemValue="0" />
+                                            <f:selectItem itemLabel="Alta" itemValue="2" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+
+
+                                    <p:column>
+                                        <p:outputLabel for="estado" value="Estado: "   style="display: block; width: 45px;"  />
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="estado" value="#{facturaBean.factura.flgEstado}" style="width: 70px;"  >
+                                            <f:selectItem itemLabel="Pendiente" itemValue="P" />
+                                            <f:selectItem itemLabel="Cancelado" itemValue="C" />
+                                            <f:selectItem itemLabel="Anulado" itemValue="A" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+
+                                    <p:column>
+                                        <p:outputLabel value="Cliente: " style="display: block; width: 45px;"/>
+                                    </p:column>
+                                    <p:column colspan="7" >
+                                        <p:outputLabel  value="#{facturaBean.factura.zrucPersona} - #{facturaBean.factura.znomPersona}" />
+                                    </p:column>
+
+                                </p:row>
+
+
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel value="Direccion: "  />
+                                    </p:column>
+                                    <p:column colspan="5">
+                                        <p:outputLabel value="#{facturaBean.factura.zdirPersona.toUpperCase()} - #{facturaBean.factura.zdisPersona.toUpperCase()}" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <p:outputLabel value="Nº Despacho: " style="display: block; width: 70px;"  />
+                                    </p:column>
+                                    <p:column >
+                                        <p:outputLabel  value="#{facturaBean.factura.numNotaDespacho}" />
+                                    </p:column>
+                                    <p:remoteCommand name="generarNroGuia" actionListener="#{facturaBean.generarNroGuia()}" update=":formNuevaFactura:guiaRemision :formNuevaFactura:numSerieGR" />
+                                    <p:column>
+                                        <p:outputLabel  value="N° Serie GR:" style="display: block; width: 65px;"  />    
+                                    </p:column>
+
+                                    <p:column>
+                                        <p:inputText id="numSerieGR" value="#{facturaBean.factura.numSerieGuiaRemision}" maxlength="3" style="width: 70px"
+                                                     onkeypress="if (event.keyCode === 13) {
+                                                                 generarNroGuia();
+                                                                 return false;
+                                                             }" />
+
+                                    </p:column>
+
+                                    <p:column>
+                                        <p:outputLabel for="guiaRemision" value="N° Guia: " style="display: block; width: 45px;"  />
+                                    </p:column>
+                                    <p:column >
+                                        <p:inputText id="guiaRemision" value="#{facturaBean.factura.numGuiaRemision}" style="width: 90px; " disabled="true" />
+                                    </p:column>
+
+                                </p:row>
+
+                            </p:panelGrid>
+                            <p:dataTable id="tablaFacturaDetalle"
+                                         var="fd" value="#{facturaBean.listaFacturaDetalle}" rowIndexVar="rowIndex"
+                                         emptyMessage="No hay datos de detalle"  scrollable="true" scrollHeight="270"
+                                         >
+
+                                <f:facet name="header">
+                                    <p:commandButton   process="formNuevaFactura" icon="ui-icon-plus" 
+                                                       value="Agregar Producto"
+                                                       actionListener="#{facturaBean.prepararAgregarProducto()}"
+                                                       oncomplete="PF('dialogAgregarProducto').show();" 
+                                                       update=":formAgregarProducto" />
+                                </f:facet>
+
+                                <p:column headerText="No" width="15" >
+                                    <h:outputText value="#{rowIndex+1}"/>
+                                </p:column>
+
+                                <p:column headerText="Cod. producto" width="60">
+                                    <h:outputText value="#{fd.codProducto}"/>
+                                </p:column>
+                                <p:column headerText="Nombre del producto" width="200">
+                                    <h:outputText value="#{fd.znomProducto}"/>
+                                </p:column>
+
+                                <p:column headerText="Cantidad" width="50" style="text-align: center;">                                
+                                    <h:outputText value="#{fd.numCntdProducto}" />
+                                </p:column>
+
+                                <p:column headerText="P. Unitario" width="50">                                
+                                    <h:outputText value="#{fd.numPrecioUnitario}"  style="text-align: right; display: block;">
+                                        <f:convertNumber pattern="##0.00" type="currency"  />
+                                    </h:outputText>
+                                </p:column>
+
+                                <p:column headerText="Total" width="50">                                
+                                    <h:outputText value="#{fd.numImporteProducto}"  style="text-align: right; display: block; font-weight: bold;">
+                                        <f:convertNumber pattern="##0.00" type="currency"  />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column headerText="Opciones" width="20" style="text-align: center;" >
+                                    <p:commandButton id="delButton" icon="ui-icon-trash" title="Eliminar" 
+                                                     style="width: 17px; height:  17px; "  
+                                                     actionListener="#{facturaBean.quitarFacturaDetalle(fd)}" 
+                                                     update=":formNuevaFactura:tablaFacturaDetalle :formNuevaFactura:gridFacturaCab"/>
+                                </p:column>    
+
+                            </p:dataTable>    
+
+                            <h:panelGrid id="gridFaturaTotal" width="100%" bgcolor="#ebedf0" >
+                                <p:row>
+
+                                    <table border="0"  align="right" width="100%">
+                                        <tr>
+                                            <td >
+                                                <h:outputLabel value="SON: #{facturaBean.factura.desImporteTotal}" style="width: auto; text-align: left; display: block; font-size: 15px; font-weight: bold;"  />
+                                            </td>
+                                            <td width="220px">
+                                                <table border="0" style="font-weight: bold;  border-style: solid; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px;"  >
+                                                    <tr>
+                                                        <td width="110px">
+                                                            <h:outputLabel value="Sub Total: " style="width: auto; text-align: left;font-size: 12px;  display: block;"  />    
+                                                        </td>
+                                                        <td width="100px">
+                                                            <p:outputLabel value="#{facturaBean.factura.numImporteSubtotal}" style="width: auto; text-align: right;font-size: 12px;  display: block; " >
+                                                                <f:convertNumber pattern="##0.00" type="currency"  />
+                                                            </p:outputLabel>    
+                                                        </td>
+                                                        <td width="10px"></td>
+                                                    </tr><tr>
+                                                        <td width="110px" style="border-bottom: 1px solid #ccc;">
+                                                            <p:outputLabel value="IGV(% #{facturaBean.factura.valIgv}): " style="width: auto; text-align: left;font-size: 12px;  display: block;"  />    
+                                                        </td>
+
+                                                        <td width="100px" style="border-bottom: 1px solid #ccc;">
+                                                            <p:outputLabel value="#{facturaBean.factura.numImporteIgv}" style="width: auto; text-align: right;font-size: 12px;  display: block;" >
+                                                                <f:convertNumber pattern="##0.00" type="currency"  />
+                                                            </p:outputLabel>
+                                                        </td>
+                                                        <td width="10px"></td>
+                                                    </tr><tr>
+                                                        <td width="110px">
+                                                            <p:outputLabel value="Total: "  style="width: auto; text-align: left;font-size: 12px;  display: block;" />     
+                                                        </td>
+                                                        <td width="100px" >
+                                                            <p:outputLabel value="#{facturaBean.factura.numImporteTotal}" style="width: auto; text-align: right;font-size: 12px;  display: block;" >
+                                                                <f:convertNumber pattern="##0.00" type="currency"  />
+                                                            </p:outputLabel>
+                                                        </td>
+                                                        <td width="10px"></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td width="55px"></td>
+                                        </tr> 
+                                    </table>
+
+
+                                </p:row>
+                            </h:panelGrid>
+                        </h:panelGrid>
+
+
+                        <center>
+
+                            <p:commandButton value="#{facturaBean.nameBtnSave}"  actionListener="#{facturaBean.guardarFactura()}"
+                                             update=":formNotaDespachos:tablaNotaDespachos :formNuevaNotaDespacho:msgs" />
+
+
+                            <p:spacer width="30"/>
+                            <p:commandButton value="Cancelar" oncomplete="PF('dialogNuevaFactura').hide();" />    
+                        </center>
+
+                    </p:dialog>
+                </h:form>
+
+
+                
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
