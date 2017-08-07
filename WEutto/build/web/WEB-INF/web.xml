@@ -24,8 +24,9 @@
     <context-param>
         <param-name>primefaces.THEME</param-name>
         <!--<param-value>Agricola</param-value>-->
-        <param-value>delta</param-value>
-        <!--         <param-value>cupertino</param-value>-->
+        <!--<param-value>delta</param-value>-->
+        
+                 <param-value>start</param-value>
     </context-param>
     
 </web-app>

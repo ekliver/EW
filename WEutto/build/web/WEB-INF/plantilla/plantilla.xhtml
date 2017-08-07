@@ -27,9 +27,10 @@
                         </td>
                         <td>
 
-                            <div id="menuPrincipal">
+                            <div id="menuPrincipal" >
                                 <h:form>
-                                    <p:menubar >
+                                    
+                                    <p:menubar style="color: #ffffff" >
                                         <p:submenu label="Inicio" icon="ui-icon-document">
                                             <p:menuitem value="Pagina de inicio" outcome="/views/bienvenido"/>
                                             <p:separator />
@@ -72,31 +73,31 @@
                         </td></tr></table>
 
                 <h:form id="formCabecera">
-                    <p:panel>
+                    <p:panel style="border: 2px solid #a6c9e2 !important;">
                         <h:panelGrid columns="15" >
                             <p:outputLabel for="localidad" value="Localidad: " />
-                            <p:inputText id="localidad" value="#{loginBean.usuario.agmaeEstablecimiento.nomEstablecimiento}" style="width: 160px;" disabled="true"/>
+                            <p:inputText id="localidad" value="#{loginBean.usuario.agmaeEstablecimiento.nomEstablecimiento}" style="width: 160px;" />
                             <p:commandButton value="..."  oncomplete="PF('dialogConsultarLocalidad').show();" update=":formConsultarLocalidad"/>
                             <p:column style="width: 30px;" >
                                 <p:spacer width="20" />
                             </p:column>
 
                             <p:outputLabel for="centro" value="C. Costo " />
-                            <p:inputText id="centro" value="#{loginBean.usuario.agmaeCentrocosto.desCentroc}" style="width: 160px;" disabled="true"/>
+                            <p:inputText id="centro" value="#{loginBean.usuario.agmaeCentrocosto.desCentroc}" style="width: 160px;" />
                             <p:commandButton value="..."  oncomplete="PF('dialogConsultarCentro').show();" update=":formConsultarCentro"/>
                             <p:column style="width: 30px;" >
                                 <p:spacer width="20" />
                             </p:column>
 
                             <p:outputLabel for="area" value="Area: " />
-                            <p:inputText id="area" value="#{loginBean.usuario.agmaeArea.desArea}" style="width: 160px;" disabled="true"/>
+                            <p:inputText id="area" value="#{loginBean.usuario.agmaeArea.desArea}" style="width: 160px;" />
                             <p:commandButton value="..."  oncomplete="PF('dialogConsultarArea').show();" update=":formConsultarArea"/>
                             <p:column style="width: 30px;" >
                                 <p:spacer width="20" />
                             </p:column>
 
                             <p:outputLabel for="almacen" value="Almacen: " />
-                            <p:inputText id="almacen" value="#{loginBean.usuario.aimarAlmacen.nomAiAlmacen}" style="width: 160px;" disabled="true"/>
+                            <p:inputText id="almacen" value="#{loginBean.usuario.aimarAlmacen.nomAiAlmacen}" style="width: 160px;" />
                             <p:commandButton value="..."  oncomplete="PF('dialogConsultarAlmacen').show();" update=":formConsultarAlmacen"/>
                         </h:panelGrid>
 
@@ -196,6 +197,7 @@
                             </f:facet>
                         </p:dataTable>
                     </p:dialog>
+                    
                 </h:form>
                 <!-- FIN CONSULTAR CABECERA -->
 

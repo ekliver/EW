@@ -134,186 +134,203 @@
                     <p:dialog id="dlgNuevaGuiaRemision" widgetVar="dialogNuevaGuiaRemision"  focus="#{guiaRemisionBean.nameFocus}"
                               resizable="false"  
                               modal="true" width="1170" height="530"  header="Registro de Guia de Remision" styleClass=".ui-dialog-title-dialog{ margin:0px;}">
+                        <p:panel>
 
-                        <p:panelGrid  style="width: 1135px;">
-                            <p:row>
-                                <p:column>
-                                    <p:outputLabel  value="N° Serie:" style="display: block; width: 55px;"  />    
-                                </p:column>
-                                <p:remoteCommand name="generarNroGuia" actionListener="#{guiaRemisionBean.generarNroGuia()}" update=":formNuevaGuiaRemision:numGR :formNuevaGuiaRemision:numSerie" />
-                                <p:column>
-                                    <p:inputText id="numSerie" value="#{guiaRemisionBean.guiaRemision.numSerie}" maxlength="3" 
-                                                 style="width: 30px; font-weight: bold;" 
-                                                 onkeypress="if (event.keyCode === 13) {
-                                                             generarNroGuia();
-                                                             return false;
-                                                         }" disabled="#{guiaRemisionBean.estadoNumeroSerie}"/>
+                            <p:panelGrid  style="width: 1135px;">
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel  value="N° Serie:" style="display: block; width: 55px;"  />    
+                                    </p:column>
+                                    <p:remoteCommand name="generarNroGuia" actionListener="#{guiaRemisionBean.generarNroGuia()}" update=":formNuevaGuiaRemision:numGR :formNuevaGuiaRemision:numSerie" />
+                                    <p:column>
+                                        <p:inputText id="numSerie" value="#{guiaRemisionBean.guiaRemision.numSerie}" maxlength="3" 
+                                                     style="width: 30px; font-weight: bold;" 
+                                                     onkeypress="if (event.keyCode === 13) {
+                                                                 generarNroGuia();
+                                                                 return false;
+                                                             }" disabled="#{guiaRemisionBean.estadoNumeroSerie}"/>
 
-                                </p:column>
-                                <p:column>
-                                    <p:outputLabel  value="N° Guia:" style="display: block; width: 45px;"  />    
-                                </p:column>
-                                <p:column>
-                                    <p:inputText id="numGR" value="#{guiaRemisionBean.guiaRemision.numGuia}" 
-                                                 style="width: 50px; font-weight: bold;" disabled="true"  />
-                                </p:column>
-                                
-                                <p:column>
-                                    <p:outputLabel  value="Emision:" style="width: 45px; display: block;" />
-                                </p:column>
-                                <p:column>
-                                    <p:calendar id="fechaEmision" value="#{guiaRemisionBean.guiaRemision.fecEmision}"   pattern="dd/MM/yyyy"  size="8" />   
-                                </p:column>
-                                <p:column>
-                                    <p:outputLabel  value="Traslado:"  />
-                                </p:column>
-                                <p:column>
-                                    <p:calendar id="fechaTraslado" value="#{guiaRemisionBean.guiaRemision.fecInicioTraslado}"   pattern="dd/MM/yyyy" size="8" />
-                                </p:column>
-                                <p:column>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel  value="N° Guia:" style="display: block; width: 45px;"  />    
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="numGR" value="#{guiaRemisionBean.guiaRemision.numGuia}" 
+                                                     style="width: 50px; font-weight: bold;" disabled="true"  />
+                                    </p:column>
 
-                                </p:column>
-                                <p:column>
-                                    <p:outputLabel for="motivo" value="Motivo:"   />
-                                </p:column>
-                                <p:column>
-                                    <p:selectOneMenu id="motivo" value="#{guiaRemisionBean.guiaRemision.codMotivo}" style="width: 70px;"  >
-                                        <f:selectItem itemLabel="Motivo1" itemValue="1" />
-                                        <f:selectItem itemLabel="Motivo2" itemValue="2" />
-                                        <f:selectItem itemLabel="Motivo3" itemValue="3" />
-                                    </p:selectOneMenu>
-                                </p:column>
-                                <p:column>
-                                    <p:outputLabel for="estado" value="Estado:"  />
-                                </p:column>
-                                <p:column>
-                                    <p:selectOneMenu id="estado" value="#{guiaRemisionBean.guiaRemision.flgEstado}" style="width: 70px;"  >
-                                        <f:selectItems value="#{guiaRemisionBean.listaEstadoTipoDocumento}" 
-                                                       var="ed" itemLabel="#{ed.desEstado}" 
-                                                       itemValue="#{ed.codEstado}" />
-                                    </p:selectOneMenu>
-                                </p:column>
-                            </p:row>
-                            <p:row>
-                                <p:column colspan="8">
+                                    
+                                    <p:column>
 
-                                </p:column>
-                                <p:column >
-                                    <p:outputLabel  value="Partida:" style="width: 45px; display: block;"  />
-                                </p:column>
-                                <p:column colspan="3" >
-                                    <p:inputText value="#{guiaRemisionBean.guiaRemision.desPuntoPartida}" style="width: 100%;"/>
-                                </p:column>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel for="motivo" value="Motivo:"   />
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="motivo" value="#{guiaRemisionBean.guiaRemision.codMotivo}" style="width: 70px;"  >
+                                            <f:selectItem itemLabel="Motivo1" itemValue="1" />
+                                            <f:selectItem itemLabel="Motivo2" itemValue="2" />
+                                            <f:selectItem itemLabel="Motivo3" itemValue="3" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel for="estado" value="Estado:"  />
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectOneMenu id="estado" value="#{guiaRemisionBean.guiaRemision.flgEstado}" style="width: 70px;"  >
+                                            <f:selectItems value="#{guiaRemisionBean.listaEstadoTipoDocumento}" 
+                                                           var="ed" itemLabel="#{ed.desEstado}" 
+                                                           itemValue="#{ed.codEstado}" />
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:panel>
+                        <p:panel style="width: 100%;">
+                            <p:panelGrid>
+                                <p:row>
+                                    <p:column>4
+                                        <p:outputLabel  value="Emision:" style="width: 45px; display: block;" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:calendar id="fechaEmision" value="#{guiaRemisionBean.guiaRemision.fecEmision}"   pattern="dd/MM/yyyy"  size="8" />   
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel  value="Traslado:"  />
+                                    </p:column>
+                                    <p:column>
+                                        <p:calendar id="fechaTraslado" value="#{guiaRemisionBean.guiaRemision.fecInicioTraslado}"   pattern="dd/MM/yyyy" size="8" />
+                                    </p:column>
+                                    <p:column colspan="8">
 
-                            </p:row>
+                                    </p:column>
+                                    <p:column >
+                                        <p:outputLabel  value="Partida:" style="width: 45px; display: block;"  />
+                                    </p:column>
+                                    <p:column colspan="3" >
+                                        <p:inputText value="#{guiaRemisionBean.guiaRemision.desPuntoPartida}" style="width: 100%;"/>
+                                    </p:column>
 
-                            <p:row>
-                                <p:column >
-                                    <p:outputLabel value="Ruc Cliente:"  style="display: block; width: 55px;"   />
-                                </p:column>
-                                <p:column colspan="3">
-                                    <p:inputText  id="ruc" value="#{guiaRemisionBean.guiaRemision.zrucPersona}" style="width: 100%" disabled="true"/>
+                                </p:row>
 
-                                </p:column>
-                                
-                                <p:column >
-                                    <p:outputLabel  value="Cliente:"   />
-                                </p:column>
-                                <p:column colspan="3">
+                                <p:row>
+                                    <p:column >
+                                        <p:outputLabel value="Ruc Cliente:"  style="display: block; width: 55px;"   />
+                                    </p:column>
+                                    <p:column colspan="3">
+                                        <p:inputText  id="ruc" value="#{guiaRemisionBean.guiaRemision.zrucPersona}" style="width: 100%" disabled="true"/>
 
-                                    <p:inputText id="cliente" value="#{guiaRemisionBean.guiaRemision.znomPersona}" style="width: 100%" disabled="true"/>
+                                    </p:column>
 
-                                </p:column>
-<p:column>
-                                    <p:commandButton  style="width: 30px; height:  17px;" icon="ui-icon-search"  oncomplete="PF('dialogConsultarCliente').show();" />
-                                </p:column>
-                                <p:column >
-                                    <p:outputLabel  value="Destino:" style="width: 45px; display: block;" />
-                                </p:column>
-                                <p:column colspan="5">
-                                    <p:inputText value="#{guiaRemisionBean.guiaRemision.desPuntoLlegada}" style="width: 100%;"/>
-                                </p:column>
+                                    <p:column >
+                                        <p:outputLabel  value="Cliente:"   />
+                                    </p:column>
+                                    <p:column colspan="3">
 
-                            </p:row>
-                            <p:row>
-                                <p:column>
-                                    <p:outputLabel  value="Ruc Emp Trans:"  style="display: block; width: 55px;"    />
-                                </p:column>
-                                <p:column colspan="3">
-                                    <p:inputText id="rucEmptransporte" value="#{guiaRemisionBean.guiaRemision.zrucEmpresa}" style="width: 100%;"  disabled="true" />
-                                </p:column>
+                                        <p:inputText id="cliente" value="#{guiaRemisionBean.guiaRemision.znomPersona}" style="width: 100%" disabled="true"/>
 
-                                <p:column>
+                                    </p:column>
+                                    <p:column>
+                                        <p:commandButton  style="width: 30px; height:  17px;" icon="ui-icon-search"  oncomplete="PF('dialogConsultarCliente').show();" />
+                                    </p:column>
+                                    <p:column >
+                                        <p:outputLabel  value="Destino:" style="width: 45px; display: block;" />
+                                    </p:column>
+                                    <p:column colspan="5">
+                                        <p:inputText value="#{guiaRemisionBean.guiaRemision.desPuntoLlegada}" style="width: 100%;"/>
+                                    </p:column>
 
-                                    <p:outputLabel  value="Empresa:" style="display: block; width: 45px;"  />
-                                </p:column>
-                                <p:column colspan="3">
-                                    <p:inputText id="nomEmptransporte" value="#{guiaRemisionBean.guiaRemision.znomEmpresa}" style="width: 100%;" disabled="true"/>
-                                </p:column>
-                                <p:column>
-                                    <p:commandButton  style="width: 30px; height:  17px;  " icon="ui-icon-search"  oncomplete="PF('dialogConsultarEmpresaTransporte').show();" />
-                                </p:column>
-                                <p:column>
-                                    <p:outputLabel  value="Costo Min:" style="width: 53px; display: block;" />
-                                </p:column>
-                                <p:column>
-                                    <p:inputText value="#{guiaRemisionBean.guiaRemision.numCostoMinimo}" style="width: 100%;"/>
-                                </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:panel>
+                        <p:panel style="width: 100%;">
+                            <p:panelGrid>
 
-                            </p:row>
-                            <p:row >
-                                <p:column >
-                                    <p:outputLabel value="Conductor:"   />
-                                </p:column>
-                                <p:column colspan="3" >
-                                    <p:inputText id="conductor"  value="#{guiaRemisionBean.guiaRemision.znomConductor}" style="width: 100%"  disabled="true" />
-                                </p:column>
+                                <p:row>
+                                    <p:column>
+                                        <p:outputLabel  value="Ruc Emp Trans:"  style="display: block; width: 55px;"    />
+                                    </p:column>
+                                    <p:column colspan="3">
+                                        <p:inputText id="rucEmptransporte" value="#{guiaRemisionBean.guiaRemision.zrucEmpresa}" style="width: 100%;"  disabled="true" />
+                                    </p:column>
 
-                                <p:column>
-                                    <p:outputLabel value="Licencia:"  style="display: block; width: 45px;"   />
-                                </p:column>
-                                <p:column >
-                                    <p:inputText id="licencia"  value="#{guiaRemisionBean.guiaRemision.zlicConductor}" style="width: 100%"  disabled="true" />
-                                </p:column>
+                                    <p:column>
 
-                                <p:column>
-                                    <p:outputLabel  value="Telefono:"/>
-                                </p:column>
-                                <p:column  >
-                                    <p:inputText id="tlfEmptransporte" value="#{guiaRemisionBean.guiaRemision.znumTelefono}" style="width: 100%"  disabled="true" /> 
-                                </p:column>
+                                        <p:outputLabel  value="Empresa:" style="display: block; width: 45px;"  />
+                                    </p:column>
+                                    <p:column colspan="3">
+                                        <p:inputText id="nomEmptransporte" value="#{guiaRemisionBean.guiaRemision.znomEmpresa}" style="width: 100%;" disabled="true"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:commandButton  style="width: 30px; height:  17px;  " icon="ui-icon-search"  oncomplete="PF('dialogConsultarEmpresaTransporte').show();" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel  value="Costo Min:" style="width: 53px; display: block;" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{guiaRemisionBean.guiaRemision.numCostoMinimo}" style="width: 100%;"/>
+                                    </p:column>
 
-                                <p:column >
-                                    <p:commandButton  style="width: 30px; height:  17px; " icon="ui-icon-search"  oncomplete="PF('dialogConsultarConductor').show();" />
-                                </p:column>
-                                <p:column>
-                                    <p:outputLabel  value="Placa:"   style="display: block; width: 45px;"   />
-                                </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:panel>
+                        <p:panel style="width: 100%;">
+                            <p:panelGrid>
 
-                                <p:column >
-                                    <p:inputText id="placa" value="#{guiaRemisionBean.guiaRemision.numPlaca}" style="width: 65px; display: block;" disabled="true" />
-                                </p:column>
-                                <p:column>
-                                    <p:commandButton  style="width: 30px; height:  17px; " icon="ui-icon-search"  oncomplete="PF('dialogConsultarUnidadTansporte').show();" />
-                                </p:column>
-                                <p:column>
-                                    <p:outputLabel  value="Marca:" />
-                                </p:column>
+                                <p:row >
+                                    <p:column >
+                                        <p:outputLabel value="Conductor:"   />
+                                    </p:column>
+                                    <p:column colspan="3" >
+                                        <p:inputText id="conductor"  value="#{guiaRemisionBean.guiaRemision.znomConductor}" style="width: 100%"  disabled="true" />
+                                    </p:column>
 
-                                <p:column>
-                                    <p:inputText id="marca" value="#{guiaRemisionBean.guiaRemision.znomMarca}" style="width: 65px; display: block;" disabled="true"/>
-                                </p:column>
-                                <p:column>
-                                    <p:outputLabel  value="Constancia:" />
-                                </p:column>
-                                <p:column>
-                                    <p:inputText id="constancia" value="#{guiaRemisionBean.guiaRemision.znomConstancia}" style="width: 100%;"  disabled="true"/>
-                                </p:column>
+                                    <p:column>
+                                        <p:outputLabel value="Licencia:"  style="display: block; width: 45px;"   />
+                                    </p:column>
+                                    <p:column >
+                                        <p:inputText id="licencia"  value="#{guiaRemisionBean.guiaRemision.zlicConductor}" style="width: 100%"  disabled="true" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <p:outputLabel  value="Telefono:"/>
+                                    </p:column>
+                                    <p:column  >
+                                        <p:inputText id="tlfEmptransporte" value="#{guiaRemisionBean.guiaRemision.znumTelefono}" style="width: 100%"  disabled="true" /> 
+                                    </p:column>
+
+                                    <p:column >
+                                        <p:commandButton  style="width: 30px; height:  17px; " icon="ui-icon-search"  oncomplete="PF('dialogConsultarConductor').show();" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel  value="Placa:"   style="display: block; width: 45px;"   />
+                                    </p:column>
+
+                                    <p:column >
+                                        <p:inputText id="placa" value="#{guiaRemisionBean.guiaRemision.numPlaca}" style="width: 65px; display: block;" disabled="true" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:commandButton  style="width: 30px; height:  17px; " icon="ui-icon-search"  oncomplete="PF('dialogConsultarUnidadTansporte').show();" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel  value="Marca:" />
+                                    </p:column>
+
+                                    <p:column>
+                                        <p:inputText id="marca" value="#{guiaRemisionBean.guiaRemision.znomMarca}" style="width: 65px; display: block;" disabled="true"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:outputLabel  value="Constancia:" />
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText id="constancia" value="#{guiaRemisionBean.guiaRemision.znomConstancia}" style="width: 100%;"  disabled="true"/>
+                                    </p:column>
 
 
-                            </p:row>
+                                </p:row>
 
-                        </p:panelGrid>
+                            </p:panelGrid>
+                        </p:panel>
                         <center>
                             <p:dataTable id="tablaGuiaRemisionDetalle" style="width: 1140px"
                                          var="grd" value="#{guiaRemisionBean.listaGuiaRemisionDetalle}" rowIndexVar="rowIndex"
