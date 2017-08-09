@@ -320,7 +320,7 @@ public class NotaDespachoDetalleDAOImp implements NotaDespachoDetalleDAO {
                 + "ctd_Movimiento=?, pre_vta=?, imp_vta=?, val_vta_sol=?, imp_vta_sol=?, "
                 + "val_vta_dol=?, imp_vta_dol=?, Exportado=?, Importado=?, "
                 + "fec_Importacion=?, hor_Importacion=?, cod_usuario_imp=?, "
-                + "fec_creacion=?, hor_creacion=?, cod_usuario_creacion=?, "
+                
                 + "fec_actualizacion=?, hor_actualizacion=?, cod_usuario_actualizacion=? , cod_presentacion=?, "
                 + "num_cantidad_presentacion=?, flg_estado_factura=? "
                 + "WHERE id_MovValeProducto=?;";
@@ -362,17 +362,14 @@ public class NotaDespachoDetalleDAOImp implements NotaDespachoDetalleDAO {
             ps.setString(24, notaDespachoDetalle.getFecImportacion());
             ps.setString(25, notaDespachoDetalle.getHorImportacion());
             ps.setInt(26, notaDespachoDetalle.getCodUsuarioImp());
-            ps.setString(27, notaDespachoDetalle.getFecCreacion());
-            ps.setString(28, notaDespachoDetalle.getHorCreacion());
-            ps.setInt(29, notaDespachoDetalle.getCodUsuarioCreacion());
-            ps.setString(30, notaDespachoDetalle.getFecActualizacion());
-            ps.setString(31, notaDespachoDetalle.getHorActualizacion());
-            ps.setInt(32, notaDespachoDetalle.getCodUsuarioActualizacion());
-            ps.setInt(33, notaDespachoDetalle.getCodPresentacion());
-            ps.setInt(34, notaDespachoDetalle.getNumCantidadPresentacion());
-            ps.setInt(35, notaDespachoDetalle.getFlgEstadoFactura());
+            ps.setString(27, notaDespachoDetalle.getFecActualizacion());
+            ps.setString(28, notaDespachoDetalle.getHorActualizacion());
+            ps.setInt(29, notaDespachoDetalle.getCodUsuarioActualizacion());
+            ps.setInt(30, notaDespachoDetalle.getCodPresentacion());
+            ps.setInt(31, notaDespachoDetalle.getNumCantidadPresentacion());
+            ps.setInt(32, notaDespachoDetalle.getFlgEstadoFactura());
 
-            ps.setInt(36, notaDespachoDetalle.getIdMovValeProducto());
+            ps.setInt(33, notaDespachoDetalle.getIdMovValeProducto());
 
             ps.executeUpdate();
         } catch (Exception e) {
@@ -387,6 +384,7 @@ public class NotaDespachoDetalleDAOImp implements NotaDespachoDetalleDAO {
         }
     }
 
+    
     @Override
     public void updateFactutacionNotaDespachoDetalle(int idNotaDespachoDet, int flgEstado) {
         Connection cn = null;

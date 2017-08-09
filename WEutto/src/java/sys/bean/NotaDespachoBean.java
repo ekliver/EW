@@ -53,6 +53,7 @@ public class NotaDespachoBean implements Serializable {
 
     private AvmovMovNotaDespachoDet notaDespachoDetalle;
     private List<AvmovMovNotaDespachoDet> listaNotaDespachoDetalle;
+    private List<AvmovMovNotaDespachoDet> listaEliminadoNotaDespachoDetalle;
 
     private AimarStockm stockProducto;
     private List<AimarStockm> seleccionStockProducto;
@@ -252,53 +253,37 @@ public class NotaDespachoBean implements Serializable {
         this.listaEstadoTipoDocumento = listaEstadoTipoDocumento;
     }
 
+    public List<AvmovMovNotaDespachoDet> getListaEliminadoNotaDespachoDetalle() {
+        return listaEliminadoNotaDespachoDetalle;
+    }
+
+    public void setListaEliminadoNotaDespachoDetalle(List<AvmovMovNotaDespachoDet> listaEliminadoNotaDespachoDetalle) {
+        this.listaEliminadoNotaDespachoDetalle = listaEliminadoNotaDespachoDetalle;
+    }
+
     public void agregarNotasDespachoDetalle() {
-        if (isNuevo()) {
-            MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
 
-            for (AimarStockm prod : seleccionStockProducto) {
-                notaDespachoDetalle = new AvmovMovNotaDespachoDet();
-                notaDespachoDetalle.setIdMovValeCab(notaDespacho.getIdMovValeCab());
-                notaDespachoDetalle.setNumVale(notaDespacho.getNumVale());
+        MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
 
-                notaDespachoDetalle.setRucCompanyia(prod.getRuc());
-                notaDespachoDetalle.setCodEstablecimiento(prod.getCodEstablecimiento());
-                notaDespachoDetalle.setCodCentroc(prod.getCodCentro());
-                notaDespachoDetalle.setCodArea(prod.getCodArea());
-                notaDespachoDetalle.setCodProducto(prod.getCodProducto());
-                notaDespachoDetalle.setCodAlmacen(prod.getCodAlmacen());
-                notaDespachoDetalle.setCodPresentacion(prod.getCodPresentacion());
-                notaDespachoDetalle.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
-                
-                mADTDao.newMovimientoAlmacenDetalleTemp(notaDespachoDetalle);
+        for (AimarStockm prod : seleccionStockProducto) {
+            notaDespachoDetalle = new AvmovMovNotaDespachoDet();
+            notaDespachoDetalle.setIdMovValeCab(notaDespacho.getIdMovValeCab());
+            notaDespachoDetalle.setNumVale(notaDespacho.getNumVale());
 
-            }//Actualizacion por consulta
-            listaNotaDespachoDetalle = mADTDao.listarNotaDespachoDetalles(notaDespacho);
-        } else {
-            NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
-            for (AimarStockm prod : seleccionStockProducto) {
-                notaDespachoDetalle = new AvmovMovNotaDespachoDet();
-                notaDespachoDetalle.setIdMovValeCab(notaDespacho.getIdMovValeCab());
-                notaDespachoDetalle.setNumVale(notaDespacho.getNumVale());
+            notaDespachoDetalle.setRucCompanyia(prod.getRuc());
+            notaDespachoDetalle.setCodEstablecimiento(prod.getCodEstablecimiento());
+            notaDespachoDetalle.setCodCentroc(prod.getCodCentro());
+            notaDespachoDetalle.setCodArea(prod.getCodArea());
+            notaDespachoDetalle.setCodProducto(prod.getCodProducto());
+            notaDespachoDetalle.setCodAlmacen(prod.getCodAlmacen());
+            notaDespachoDetalle.setCodPresentacion(prod.getCodPresentacion());
+            notaDespachoDetalle.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
 
-                notaDespachoDetalle.setRucCompanyia(prod.getRuc());
-                notaDespachoDetalle.setCodEstablecimiento(prod.getCodEstablecimiento());
-                notaDespachoDetalle.setCodCentroc(prod.getCodCentro());
-                notaDespachoDetalle.setCodArea(prod.getCodArea());
-                notaDespachoDetalle.setCodProducto(prod.getCodProducto());
-                notaDespachoDetalle.setCodAlmacen(prod.getCodAlmacen());
-                notaDespachoDetalle.setCodPresentacion(prod.getCodPresentacion());
-                notaDespachoDetalle.setNomPresentacion(prod.getNomPresentacion());
-                //notaDespachoDetalle.setCtdMovimiento(1);
-                notaDespachoDetalle.setNuevo(true);
-                notaDespachoDetalle.setEditado(false);
-                
-                nDDDao.newNotaDespachoDetalle(notaDespachoDetalle);
-                //Actualizacion por consulta
-                listaNotaDespachoDetalle = nDDDao.listarNotaDespachoDetalles(notaDespacho);
-            }
+            mADTDao.newMovimientoAlmacenDetalleTemp(notaDespachoDetalle);
 
-        }
+        }//Actualizacion por consulta
+        listaNotaDespachoDetalle = mADTDao.listarNotaDespachoDetalles(notaDespacho);
+
     }
 
     public void anularNotaDespacho(AvmovMovNotaDespachoCab nd) {
@@ -371,9 +356,9 @@ public class NotaDespachoBean implements Serializable {
                             AimarMovAlmacenDet movimientoAlmacenDetalle;
 
                             for (AvmovMovNotaDespachoDet item : listaNotaDespachoDetalle) {
-                                String numMovimieto = mADao.obtenerNroMovimientoRelNdMovInv(item);
+                                String numMovimiento = mADao.obtenerNroMovimientoRelNdMovInv(item);
 
-                                if (numMovimieto.equals("")) {//validar si compañia no tiene movimiento
+                                if (numMovimiento.equals("")) {//validar si compañia no tiene movimiento
                                     mADao.newMovimientoAlmacen(movimientoAlmacen, notaDespacho);
                                 }
                                 mv = mADao.obtenerMovimientoAlmacen(movimientoAlmacen);
@@ -383,6 +368,9 @@ public class NotaDespachoBean implements Serializable {
                                 item.setIdMovValeCab(notaDespacho.getIdMovValeCab());
 
                                 nDDDao.newNotaDespachoDetalle(item);
+
+                                item.setIdMovValeProducto(nDDDao.obtenerIdNotaDespachoDetalle(item).getIdMovValeProducto());
+
                                 movimientoAlmacenDetalle = new AimarMovAlmacenDet();
                                 movimientoAlmacenDetalle.setIdMovAlmCab(movimientoAlmacen.getIdMovAlmCab());
                                 movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
@@ -442,6 +430,98 @@ public class NotaDespachoBean implements Serializable {
                 NotaDespachoDAO nDDao = new NotaDespachoDAOImp();
                 notaDespacho.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
                 nDDao.updateNotaDespacho(notaDespacho);
+                //inicia
+                AimarMovAlmacenCab movimientoAlmacen = new AimarMovAlmacenCab();
+                movimientoAlmacen.setRucCompanyia(notaDespacho.getRucCompanyia());
+                movimientoAlmacen.setAnyo(lBean.getAnyo());
+                movimientoAlmacen.setCodEstablecimiento(notaDespacho.getCodEstablecimiento());
+                movimientoAlmacen.setCodCentroc(notaDespacho.getCodCentroc());
+                movimientoAlmacen.setCodArea(notaDespacho.getCodArea());
+                movimientoAlmacen.setCodAlmacen(notaDespacho.getCodAlmacen());
+                movimientoAlmacen.setCodTipoProducto("MT");
+                movimientoAlmacen.setCodTipoConcepto("S");
+                movimientoAlmacen.setNumDocumento(notaDespacho.getNumVale());
+                movimientoAlmacen.setCodPersona(notaDespacho.getCodPersona());
+                movimientoAlmacen.setFecMovimiento(notaDespacho.getFecVale());
+                movimientoAlmacen.setCodConcepto("24");
+                movimientoAlmacen.setCodDocumento("88");
+                movimientoAlmacen.setCodUsuarioCreacion(notaDespacho.getCodUsuarioCreacion());
+
+                MovimientoAlmacenDAO mADao = new MovimientoAlmacenDAOImp();
+                AimarMovAlmacenCab mv;
+                NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
+                MovimientoAlmacenDetalleDAO mADDao = new MovimientoAlmacenDetalleDAOImp();
+                AimarMovAlmacenDet movimientoAlmacenDetalle;
+
+                for (AvmovMovNotaDespachoDet item : listaNotaDespachoDetalle) {
+                    if (item.getIdMovValeProducto() > 0) {
+                        item.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
+                        nDDDao.updateNotaDespachoDetalle(item);
+                        movimientoAlmacenDetalle = new AimarMovAlmacenDet();
+                        movimientoAlmacenDetalle.setIdMovAlmCab(item.getIdMovValeCab());
+                        movimientoAlmacenDetalle.setIdMovAlmDet(item.getIdMovValeProducto());
+                        movimientoAlmacenDetalle.setNumMovimiento(item.getNumVale());
+                        movimientoAlmacenDetalle.setNumCantidad(item.getCtdMovimiento());
+                        movimientoAlmacenDetalle.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
+                        movimientoAlmacenDetalle.setCodPresentacion(item.getCodPresentacion());
+                        movimientoAlmacenDetalle.setNumCantidadPresentacion(item.getNumCantidadPresentacion());
+                        movimientoAlmacenDetalle.setCodUm(item.getCodMedida());
+                        movimientoAlmacenDetalle.setValEquivalencia(item.getNumPresentacionEquivalencia());
+
+                        movimientoAlmacenDetalle = mADDao.obtenerMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
+                        mADDao.updateMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
+
+                    } else {
+
+                        String numMovimiento = mADao.obtenerNroMovimientoRelNdMovInv(item);
+
+                        if (numMovimiento.equals("")) {//validar si compañia no tiene movimiento
+                            mADao.newMovimientoAlmacen(movimientoAlmacen, notaDespacho);
+                        }
+                        mv = mADao.obtenerMovimientoAlmacen(movimientoAlmacen);
+                        movimientoAlmacen.setIdMovAlmCab(mv.getIdMovAlmCab());
+                        movimientoAlmacen.setNumMovimiento(mv.getNumMovimiento());
+
+                        item.setIdMovValeCab(notaDespacho.getIdMovValeCab());
+
+                        nDDDao.newNotaDespachoDetalle(item);
+
+                        item.setIdMovValeProducto(nDDDao.obtenerIdNotaDespachoDetalle(item).getIdMovValeProducto());
+
+                        movimientoAlmacenDetalle = new AimarMovAlmacenDet();
+                        movimientoAlmacenDetalle.setIdMovAlmCab(movimientoAlmacen.getIdMovAlmCab());
+                        movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
+                        movimientoAlmacenDetalle.setRucCompanyia(movimientoAlmacen.getRucCompanyia());
+                        movimientoAlmacenDetalle.setAnyo(movimientoAlmacen.getAnyo());
+                        movimientoAlmacenDetalle.setCodEstablecimiento(item.getCodEstablecimiento());
+                        movimientoAlmacenDetalle.setCodCentroc(item.getCodCentroc());
+                        movimientoAlmacenDetalle.setCodArea(item.getCodArea());
+                        movimientoAlmacenDetalle.setCodAlmacen(item.getCodAlmacen());
+                        movimientoAlmacenDetalle.setNumMovimiento(movimientoAlmacen.getNumMovimiento());
+                        movimientoAlmacenDetalle.setCodProducto(item.getCodProducto());
+                        movimientoAlmacenDetalle.setCodTipoProducto(movimientoAlmacen.getCodTipoProducto());
+                        movimientoAlmacenDetalle.setNumCantidad(item.getCtdMovimiento());
+                        movimientoAlmacenDetalle.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
+                        movimientoAlmacenDetalle.setCodPresentacion(item.getCodPresentacion());
+                        movimientoAlmacenDetalle.setNumCantidadPresentacion(item.getNumCantidadPresentacion());
+                        movimientoAlmacenDetalle.setCodUm(item.getCodMedida());
+                        movimientoAlmacenDetalle.setValEquivalencia(item.getNumPresentacionEquivalencia());
+                        movimientoAlmacenDetalle.setNumCantidadPresentacion(item.getNumCantidadPresentacion());
+
+                        mADDao.newMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
+
+                    }
+                }
+
+                for (AvmovMovNotaDespachoDet item : listaEliminadoNotaDespachoDetalle) {
+                    nDDDao.deleteNotaDespachoDetalle(item);
+
+                    movimientoAlmacenDetalle = new AimarMovAlmacenDet();
+                    movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
+
+                    mADDao.deleteMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
+                }
+                //termina
                 listaNotaDespacho = nDDao.listarNotaDespachosPorFecha(feDesde, feHasta);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "Informacion", "Se guardo con exito!"));
@@ -519,8 +599,6 @@ public class NotaDespachoBean implements Serializable {
         listaNotaDespachoDetalle = new ArrayList<>();
         listaNotaDespachoDetalle = nDDDao.listarNotaDespachoDetalles(nd);
 
-        
-
         seleccionCliente = new AgmaePersona();
     }
 
@@ -544,7 +622,6 @@ public class NotaDespachoBean implements Serializable {
 
                     ProductoStockMDAO pSMDao = new ProductoStockMDAOImp();
                     listaProductoStocks = pSMDao.listarProductoStocks(notaDespacho.getFecVale());
-                    
 
                     RequestContext.getCurrentInstance().execute("PF('dialogAgregarProducto').show();");
                 } else {
@@ -609,47 +686,28 @@ public class NotaDespachoBean implements Serializable {
 
     public void quitarNotaDespachodetalle(AvmovMovNotaDespachoDet ndd, Integer fila) {
 
-        if (isNuevo()) {
+        MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
 
-            MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
+        int i = 0;
+        for (AvmovMovNotaDespachoDet item : listaNotaDespachoDetalle) {
+            if (i == fila) {
 
-            int i = 0;
-            for (AvmovMovNotaDespachoDet item : listaNotaDespachoDetalle) {
-                if (i == fila) {
-
-                    if (ndd.getRucCompanyia().equals(item.getRucCompanyia())
-                            && ndd.getCodEstablecimiento().equals(item.getCodEstablecimiento())
-                            && ndd.getCodArea() == item.getCodArea() && ndd.getCodCentroc() == item.getCodCentroc()
-                            && ndd.getCodProducto().equals(item.getCodProducto()) && ndd.getCodAlmacen() == item.getCodAlmacen()) {
-
-                        mADTDao.deleteMovimientoAlmacenDetalleTemp(item);
-                        this.listaNotaDespachoDetalle.remove(i);
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Informacion", "Item eliminado"));
-                        break;
+                if (ndd.getRucCompanyia().equals(item.getRucCompanyia())
+                        && ndd.getCodEstablecimiento().equals(item.getCodEstablecimiento())
+                        && ndd.getCodArea() == item.getCodArea() && ndd.getCodCentroc() == item.getCodCentroc()
+                        && ndd.getCodProducto().equals(item.getCodProducto()) && ndd.getCodAlmacen() == item.getCodAlmacen()) {
+                    if (!isNuevo()) {
+                        listaEliminadoNotaDespachoDetalle.add(item);
                     }
 
+                    mADTDao.deleteMovimientoAlmacenDetalleTemp(item);
+                    this.listaNotaDespachoDetalle.remove(i);
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Informacion", "Item eliminado"));
+                    break;
                 }
-                i++;
-            }
-        } else {
-            NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
 
-            int i = 0;
-            for (AvmovMovNotaDespachoDet item : listaNotaDespachoDetalle) {
-                if (i == fila) {
-
-                    if (ndd.getRucCompanyia().equals(item.getRucCompanyia())
-                            && ndd.getCodEstablecimiento().equals(item.getCodEstablecimiento())
-                            && ndd.getCodArea() == item.getCodArea() && ndd.getCodCentroc() == item.getCodCentroc()
-                            && ndd.getCodProducto().equals(item.getCodProducto()) && ndd.getCodAlmacen() == item.getCodAlmacen()) {
-                        nDDDao.deleteNotaDespachoDetalle(item);
-                        this.listaNotaDespachoDetalle.remove(i);
-                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Informacion", "Item eliminado"));
-                        break;
-                    }
-                }
-                i++;
             }
+            i++;
         }
 
     }

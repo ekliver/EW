@@ -55,15 +55,19 @@
                                             <p:menuitem value="Movimientos" outcome="/views/reportes/movimientos"/>
                                         </p:submenu>
                                         <f:facet name="options" >
-                                            <h:panelGrid columns="5">
-                                                <h:outputLabel value="COMPAÑIA: "/>
-                                                <h:outputLabel value="#{loginBean.companya.desCompanyia.toUpperCase()}" style="font-weight: bold;color:#3366CC"/>
+                                            <h:panelGrid columns="4">
+                                                
+                                                <h:outputLabel value="#{loginBean.companya.desCompanyia.toUpperCase()}" />
                                                 <p:column style="width: 30px;" >
                                                     <p:spacer width="20" />
                                                 </p:column>
 
-                                                <h:outputLabel value="AÑO: "/>
-                                                <h:outputLabel value="#{loginBean.anyo}" style="font-weight: bold;color:#3366CC"/>
+                                                
+                                                <h:outputLabel value="#{loginBean.anyo}" />
+                                                <p:column style="width: 30px;" >
+                                                    <p:spacer width="20" />
+                                                </p:column>
+
                                             </h:panelGrid>
                                         </f:facet>
                                     </p:menubar>
