@@ -400,7 +400,7 @@ public class NotaDespachoBean implements Serializable {
                                     "Informacion", "Se guardo con exito!"));
                             RequestContext.getCurrentInstance().execute("PF('dialogNuevaNotaDespacho').hide();");
                             MovimientoAlmacenTempDAO mATDao = new MovimientoAlmacenTempDAOImp();
-                            mATDao.deleteAllMovimientoAlmacen();
+                            mATDao.deleteAllMovimientoAlmacenTemp(lBean.getUsuario());
 
                             MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
                             mADTDao.deleteAllMovimientoAlmacenDetalleTemp(lBean.getUsuario());
@@ -453,13 +453,17 @@ public class NotaDespachoBean implements Serializable {
                 MovimientoAlmacenDetalleDAO mADDao = new MovimientoAlmacenDetalleDAOImp();
                 AimarMovAlmacenDet movimientoAlmacenDetalle;
 
+                //Inicio: Actualizacion  y creacion de nuevos registros de la listaNotaDespachoDetalle
                 for (AvmovMovNotaDespachoDet item : listaNotaDespachoDetalle) {
+                    //Inicio: Actualizacion
                     if (item.getIdMovValeProducto() > 0) {
                         item.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
                         nDDDao.updateNotaDespachoDetalle(item);
+                        //Inicio: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle actualizada
                         movimientoAlmacenDetalle = new AimarMovAlmacenDet();
                         movimientoAlmacenDetalle.setIdMovAlmCab(item.getIdMovValeCab());
-                        movimientoAlmacenDetalle.setIdMovAlmDet(item.getIdMovValeProducto());
+                        movimientoAlmacenDetalle.setIdMovAlmDet(item.getIdMovDet());
+                        movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
                         movimientoAlmacenDetalle.setNumMovimiento(item.getNumVale());
                         movimientoAlmacenDetalle.setNumCantidad(item.getCtdMovimiento());
                         movimientoAlmacenDetalle.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
@@ -469,9 +473,14 @@ public class NotaDespachoBean implements Serializable {
                         movimientoAlmacenDetalle.setValEquivalencia(item.getNumPresentacionEquivalencia());
 
                         movimientoAlmacenDetalle = mADDao.obtenerMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
+                        //Fin: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle actualizada
+                        //Inicio: se actualiza el movimiento de almacen detalle
                         mADDao.updateMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
+                        //Fin: se actualiza el movimiento de almacen detalle
 
-                    } else {
+                    } //Fin: Actualizacion
+                    //Inicio: Creacion
+                    else {
 
                         String numMovimiento = mADao.obtenerNroMovimientoRelNdMovInv(item);
 
@@ -487,7 +496,7 @@ public class NotaDespachoBean implements Serializable {
                         nDDDao.newNotaDespachoDetalle(item);
 
                         item.setIdMovValeProducto(nDDDao.obtenerIdNotaDespachoDetalle(item).getIdMovValeProducto());
-
+                        //Inicio: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle nueva
                         movimientoAlmacenDetalle = new AimarMovAlmacenDet();
                         movimientoAlmacenDetalle.setIdMovAlmCab(movimientoAlmacen.getIdMovAlmCab());
                         movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
@@ -507,12 +516,16 @@ public class NotaDespachoBean implements Serializable {
                         movimientoAlmacenDetalle.setCodUm(item.getCodMedida());
                         movimientoAlmacenDetalle.setValEquivalencia(item.getNumPresentacionEquivalencia());
                         movimientoAlmacenDetalle.setNumCantidadPresentacion(item.getNumCantidadPresentacion());
-
+                        //Fin: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle nueva
+                        //Inicio: Se registra el nuevo movimiento almacen detalle
                         mADDao.newMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
-
+                        //Fin: Se registra el nuevo movimiento almacen detalle
                     }
+                    //Fin: Creacion
                 }
+                //Fin: Actualizacion  y creacion de nuevos registros de la listaNotaDespachoDetalle
 
+                //Inicio: Eliminando Movimientos de almacen detalle y nota de despacho detalle que se registraron en listaEliminadoNotaDespachoDetalle
                 for (AvmovMovNotaDespachoDet item : listaEliminadoNotaDespachoDetalle) {
                     nDDDao.deleteNotaDespachoDetalle(item);
 
@@ -521,16 +534,19 @@ public class NotaDespachoBean implements Serializable {
 
                     mADDao.deleteMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
                 }
-                //termina
+                //Fin: Eliminando Movimientos de almacen detalle y nota de despacho detalle que se registraron en listaEliminadoNotaDespachoDetalle
+
                 listaNotaDespacho = nDDao.listarNotaDespachosPorFecha(feDesde, feHasta);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "Informacion", "Se guardo con exito!"));
                 RequestContext.getCurrentInstance().execute("PF('dialogNuevaNotaDespacho').hide();");
+                //Inicio: Limpiando tabla de datos temporales que registro el usuario activo
                 MovimientoAlmacenTempDAO mATDao = new MovimientoAlmacenTempDAOImp();
-                mATDao.deleteAllMovimientoAlmacen();
+                mATDao.deleteAllMovimientoAlmacenTemp(lBean.getUsuario());
 
                 MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
                 mADTDao.deleteAllMovimientoAlmacenDetalleTemp(lBean.getUsuario());
+                //Fin: Limpiando tabla de datos temporales que registro el usuario activo
             } catch (Exception e) {
 
                 System.out.println(e.getMessage());
@@ -561,7 +577,7 @@ public class NotaDespachoBean implements Serializable {
 
         //Limpieza de tablas temporrales
         MovimientoAlmacenTempDAO mATDao = new MovimientoAlmacenTempDAOImp();
-        mATDao.deleteAllMovimientoAlmacen();
+        mATDao.deleteAllMovimientoAlmacenTemp(lBean.getUsuario());
         MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
         mADTDao.deleteAllMovimientoAlmacenDetalleTemp(lBean.getUsuario());
 
@@ -592,12 +608,33 @@ public class NotaDespachoBean implements Serializable {
 
         NotaDespachoDAO nDDao = new NotaDespachoDAOImp();
         NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
-
+        MovimientoAlmacenTempDAO mATDao = new MovimientoAlmacenTempDAOImp();
+        MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
+        
         notaDespacho = new AvmovMovNotaDespachoCab();
         notaDespacho = nDDao.obtenerNotaDespacho(nd);
 
+        
         listaNotaDespachoDetalle = new ArrayList<>();
         listaNotaDespachoDetalle = nDDDao.listarNotaDespachoDetalles(nd);
+        
+        notaDespacho.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
+        mATDao.newMovimientoAlmacen(notaDespacho);
+
+        notaDespacho.setIdMovValeCab(mATDao.obtenerMovimientoAlmacen(notaDespacho).getIdMovValeCab());
+        
+        for (AvmovMovNotaDespachoDet item : listaNotaDespachoDetalle) {
+            item.setIdMovValeCab(mATDao.obtenerMovimientoAlmacen(notaDespacho).getIdMovValeCab());
+            item.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
+            mADTDao.newMovimientoAlmacenDetalleTemp(item);
+        }
+
+        
+        
+
+        
+        listaNotaDespachoDetalle = new ArrayList<>();
+        listaNotaDespachoDetalle = mADTDao.listarNotaDespachoDetalles(notaDespacho);
 
         seleccionCliente = new AgmaePersona();
     }
@@ -614,10 +651,10 @@ public class NotaDespachoBean implements Serializable {
                     if (notaDespacho.getIdMovValeCab() == 0) {
                         notaDespacho.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
                         notaDespacho.setFlgEstado("P");
-                        MovimientoAlmacenTempDAO mADTDao = new MovimientoAlmacenTempDAOImp();
+                        MovimientoAlmacenTempDAO mATDao = new MovimientoAlmacenTempDAOImp();
 
-                        mADTDao.newMovimientoAlmacen(notaDespacho);
-                        notaDespacho.setIdMovValeCab(mADTDao.obtenerMovimientoAlmacen(notaDespacho).getIdMovValeCab());
+                        mATDao.newMovimientoAlmacen(notaDespacho);
+                        notaDespacho.setIdMovValeCab(mATDao.obtenerMovimientoAlmacen(notaDespacho).getIdMovValeCab());
                     }
 
                     ProductoStockMDAO pSMDao = new ProductoStockMDAOImp();
@@ -664,23 +701,14 @@ public class NotaDespachoBean implements Serializable {
 
                     }
 
-                    if (isNuevo()) {
-                        mADTDao.updateMovimientoAlmacenDetalleTemp(item);
-                    } else {
-                        nDDDao.updateNotaDespachoDetalle(item);
+                    mADTDao.updateMovimientoAlmacenDetalleTemp(item);
 
-                        // mADao.updateMovimientoAlmacen(item);
-                    }
                 }
             }
             i++;
         }
-        if (isNuevo()) {
-            listaNotaDespachoDetalle = mADTDao.listarNotaDespachoDetalles(notaDespacho);
-        } else {
-            listaNotaDespachoDetalle = nDDDao.listarNotaDespachoDetalles(notaDespacho);
 
-        }
+        listaNotaDespachoDetalle = mADTDao.listarNotaDespachoDetalles(notaDespacho);
 
     }
 

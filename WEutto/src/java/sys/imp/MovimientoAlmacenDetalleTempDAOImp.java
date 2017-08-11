@@ -37,7 +37,15 @@ public class MovimientoAlmacenDetalleTempDAOImp implements MovimientoAlmacenDeta
 
         try {
             cn = Service.getConexion();
-            String sql = "SELECT nd.IdMovAlmDet AS codMovDet, nd.IdMovAlmCab AS codMovCab, nd.num_movimiento AS numVale, nd.ruc_Companyia AS ruc, agmae_companyias.des_companyia AS nomCompanya, nd.cod_producto AS codProducto, AIMAR_Productos.Des_Ai_Produc AS nomProducto, nd.cod_presentacion AS codPresentacion, AIMAR_Presentaciones.des_presentacion AS nomPresentacion, AIMAR_Productos_Presentacion.val_equivalencia AS numPresentacionEquivalencia, AIMAR_Productos.Cod_Medida AS codMedida, AIMAR_Unidad_Medida.NomMed_AI_UniMed AS nomMedida, nd.num_cantidad AS ctdMov, stock.stockActual AS sActual, stock.stockFecha AS sFecha, nd.cod_establecimiento AS codEstablecimiento, nd.cod_area AS codArea, nd.cod_almacen AS codAlmacen, nd.cod_centroc AS codCentro, nd.num_cantidad_presentacion AS numCantidadPresentacion\n"
+            String sql = "SELECT nd.IdMovAlmDet AS codMovDet, "
+                    + "nd.IdMovAlmCab AS codMovCab, "
+                    + "nd.idNotaDespachoDet AS codNdDet, "
+                    + "nd.num_movimiento AS numVale, "
+                    + "nd.ruc_Companyia AS ruc, "
+                    + "agmae_companyias.des_companyia AS nomCompanya, "
+                    + "nd.cod_producto AS codProducto, "
+                    + "AIMAR_Productos.Des_Ai_Produc AS nomProducto, nd.cod_presentacion AS codPresentacion, AIMAR_Presentaciones.des_presentacion AS nomPresentacion, AIMAR_Productos_Presentacion.val_equivalencia AS numPresentacionEquivalencia, AIMAR_Productos.Cod_Medida AS codMedida, AIMAR_Unidad_Medida.NomMed_AI_UniMed AS nomMedida, nd.num_cantidad AS ctdMov, stock.stockActual AS sActual, stock.stockFecha AS sFecha, nd.cod_establecimiento AS codEstablecimiento, nd.cod_area AS codArea, nd.cod_almacen AS codAlmacen, nd.cod_centroc AS codCentro, "
+                    + "nd.num_cantidad_presentacion AS numCantidadPresentacion\n"
                     + "FROM (AIMAR_Unidad_Medida RIGHT JOIN (AIMAR_Productos_Presentacion RIGHT JOIN ((AIMAR_Productos RIGHT JOIN (AIMAR_MovAlmacenDet_Temp AS nd LEFT JOIN agmae_companyias ON nd.ruc_Companyia = agmae_companyias.ruc_companyia) ON (AIMAR_Productos.Cod_Ai_Produc = nd.cod_producto) AND (AIMAR_Productos.ruc_companyia = nd.ruc_Companyia)) LEFT JOIN AIMAR_Presentaciones ON nd.cod_presentacion = AIMAR_Presentaciones.cod_presentacion) ON (AIMAR_Productos_Presentacion.cod_producto = nd.cod_producto) AND (AIMAR_Productos_Presentacion.cod_presentacion = nd.cod_presentacion)) ON (AIMAR_Unidad_Medida.ruc_companyia = AIMAR_Productos.ruc_companyia) AND (AIMAR_Unidad_Medida.CodMed_AI_UniMed = AIMAR_Productos.Cod_Medida)) LEFT JOIN (SELECT Sum(IIf([MovCab].[Cod_TipoConcepto]='I', \n"
                     + "[MovDet].[num_cantidad],(-1)*[MovDet].[num_cantidad])) AS stockActual, \n"
                     + "Sum(IIf([MovCab].[fec_movimiento]<=?,IIf ([MovCab].[Cod_TipoConcepto]='I',[MovDet].[num_cantidad],(-1)*[MovDet].[num_cantidad]),0)) AS stockFecha, \n"
@@ -62,8 +70,10 @@ public class MovimientoAlmacenDetalleTempDAOImp implements MovimientoAlmacenDeta
                 existe = true;
                 notaDespachoDetalle = new AvmovMovNotaDespachoDet();
 
-                notaDespachoDetalle.setIdMovValeProducto(rs.getInt("codMovDet"));
+                notaDespachoDetalle.setIdMovValeProducto(rs.getInt("codNdDet"));
                 notaDespachoDetalle.setIdMovValeCab(rs.getInt("codMovCab"));
+                notaDespachoDetalle.setIdMovDet(rs.getInt("codMovDet"));
+                
                 notaDespachoDetalle.setRucCompanyia(rs.getString("ruc"));
                 notaDespachoDetalle.setNumVale(rs.getString("numVale"));
                 notaDespachoDetalle.setCodEstablecimiento(rs.getString("codEstablecimiento"));
@@ -112,6 +122,7 @@ public class MovimientoAlmacenDetalleTempDAOImp implements MovimientoAlmacenDeta
         Connection cn = null;
         PreparedStatement ps = null;
         String sql = "INSERT INTO AIMAR_MovAlmacenDet_Temp ("
+                + "`idNotaDespachoDet`, "
                 + "`IdMovAlmCab`, "
                 + "`ruc_companyia`, "
                 + "`cod_establecimiento`, "
@@ -127,7 +138,7 @@ public class MovimientoAlmacenDetalleTempDAOImp implements MovimientoAlmacenDeta
                 + " `cod_presentacion`, "
                 + " `num_cantidad_presentacion`"
                 + ") "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?); ";
 
         Date fechaActual = new Date();
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
@@ -140,20 +151,22 @@ public class MovimientoAlmacenDetalleTempDAOImp implements MovimientoAlmacenDeta
             cn = Service.getConexion();
             ps = cn.prepareStatement(sql);
 
-            ps.setInt(1, notaDespachoDetalle.getIdMovValeCab());
-            ps.setString(2, notaDespachoDetalle.getRucCompanyia());
-            ps.setString(3, notaDespachoDetalle.getCodEstablecimiento());
-            ps.setInt(4, notaDespachoDetalle.getCodCentroc());
-            ps.setInt(5, notaDespachoDetalle.getCodArea());
-            ps.setInt(6, notaDespachoDetalle.getCodAlmacen());
-            ps.setString(7, notaDespachoDetalle.getNumVale());
-            ps.setString(8, notaDespachoDetalle.getCodProducto());
-            ps.setInt(9, notaDespachoDetalle.getCtdMovimiento());
-            ps.setString(10, notaDespachoDetalle.getFecCreacion());
-            ps.setString(11, notaDespachoDetalle.getHorCreacion());
-            ps.setInt(12, notaDespachoDetalle.getCodUsuarioCreacion());
-            ps.setInt(13, notaDespachoDetalle.getCodPresentacion());
-            ps.setInt(14, notaDespachoDetalle.getNumCantidadPresentacion());
+            ps.setInt(1, notaDespachoDetalle.getIdMovDet());
+            ps.setInt(2, notaDespachoDetalle.getIdMovValeCab());
+            ps.setString(3, notaDespachoDetalle.getRucCompanyia());
+            ps.setString(4, notaDespachoDetalle.getCodEstablecimiento());
+            ps.setInt(5, notaDespachoDetalle.getCodCentroc());
+            ps.setInt(6, notaDespachoDetalle.getCodArea());
+            ps.setInt(7, notaDespachoDetalle.getCodAlmacen());
+            ps.setString(8, notaDespachoDetalle.getNumVale());
+            ps.setString(9, notaDespachoDetalle.getCodProducto());
+            ps.setInt(10, notaDespachoDetalle.getCtdMovimiento());
+            ps.setString(11, notaDespachoDetalle.getFecCreacion());
+            ps.setString(12, notaDespachoDetalle.getHorCreacion());
+            ps.setInt(13, notaDespachoDetalle.getCodUsuarioCreacion());
+            ps.setInt(14, notaDespachoDetalle.getCodPresentacion());
+            ps.setInt(15, notaDespachoDetalle.getNumCantidadPresentacion());
+            
             ps.executeUpdate();
 //              Service.cerrarConexion();
         } catch (Exception e) {
@@ -211,7 +224,7 @@ public class MovimientoAlmacenDetalleTempDAOImp implements MovimientoAlmacenDeta
             ps.setInt(11, notaDespachoDetalle.getCodUsuarioActualizacion());
             ps.setInt(12, notaDespachoDetalle.getCodPresentacion());
             ps.setInt(13, notaDespachoDetalle.getNumCantidadPresentacion());
-            ps.setInt(14, notaDespachoDetalle.getIdMovValeProducto());
+            ps.setInt(14, notaDespachoDetalle.getIdMovDet());
 
             ps.executeUpdate();
         } catch (Exception e) {
@@ -237,7 +250,7 @@ public class MovimientoAlmacenDetalleTempDAOImp implements MovimientoAlmacenDeta
         try {
             cn = Service.getConexion();
             ps = cn.prepareStatement(sql);
-            ps.setInt(1, notaDespachoDetalle.getIdMovValeProducto());
+            ps.setInt(1, notaDespachoDetalle.getIdMovDet());
 
             ps.executeUpdate();
         } catch (Exception e) {

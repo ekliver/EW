@@ -1,6 +1,7 @@
 package sys.dao;
 
 import java.util.List;
+import sys.model.AgmaeUsuario;
 import sys.model.AimarMovAlmacenCab;
 import sys.model.AvmovMovNotaDespachoCab;
 
@@ -14,7 +15,7 @@ public interface MovimientoAlmacenTempDAO {
 
     public void deleteMovimientoAlmacen(AvmovMovNotaDespachoCab notaDespacho);
 
-    public void deleteAllMovimientoAlmacen();
+    public void deleteAllMovimientoAlmacenTemp(AgmaeUsuario usuario);
 
     public AvmovMovNotaDespachoCab obtenerMovimientoAlmacen(AvmovMovNotaDespachoCab notaDespacho);
 }

@@ -49,6 +49,7 @@ public class AvmovMovNotaDespachoDet implements java.io.Serializable {
     //Temp
     private int stockActual;
     private int stockFecha;
+    private int idMovDet;
 
     //Consulta
     private String nomCompanya;
@@ -407,6 +408,16 @@ public class AvmovMovNotaDespachoDet implements java.io.Serializable {
         this.stockFecha = stockFecha;
     }
 
+    public int getIdMovDet() {
+        return idMovDet;
+    }
+
+    public void setIdMovDet(int idMovDet) {
+        this.idMovDet = idMovDet;
+    }
+
+    
+    
     public int getCodPresentacion() {
         return codPresentacion;
     }

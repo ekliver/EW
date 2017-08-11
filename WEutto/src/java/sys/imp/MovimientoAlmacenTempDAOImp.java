@@ -16,6 +16,7 @@ import java.util.List;
 import sys.dao.ClienteDAO;
 import sys.dao.MovimientoAlmacenDAO;
 import sys.dao.MovimientoAlmacenTempDAO;
+import sys.model.AgmaeUsuario;
 import sys.model.AimarMovAlmacenCab;
 import sys.model.AvmovMovNotaDespachoCab;
 import sys.util.Service;
@@ -280,13 +281,16 @@ public class MovimientoAlmacenTempDAOImp implements MovimientoAlmacenTempDAO {
     }
 
     @Override
-    public void deleteAllMovimientoAlmacen() {
+    public void deleteAllMovimientoAlmacenTemp(AgmaeUsuario usuario) {
         Connection cn = null;
         PreparedStatement ps = null;
-        String sql = "DELETE FROM AIMAR_MovAlmacenCab_Temp";
+        String sql = "DELETE FROM AIMAR_MovAlmacenCab_Temp "
+                + "WHERE cod_usuario_creacion=? ";
+        
         try {
             cn = Service.getConexion();
             ps = cn.prepareStatement(sql);
+            ps.setInt(1, usuario.getCodUsuario());
             ps.executeUpdate();
 
         } catch (Exception e) {
