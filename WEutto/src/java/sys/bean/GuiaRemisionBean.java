@@ -615,7 +615,7 @@ public class GuiaRemisionBean implements Serializable {
         guiaRemision.setCodPersona(seleccionCliente.getCodPersona());
         guiaRemision.setZrucPersona(seleccionCliente.getNumIdentificacion());
         guiaRemision.setZnomPersona(seleccionCliente.getNomRazonSocial());
-        
+        guiaRemision.setDesPuntoLlegada(seleccionCliente.getDesDireccionFacturacion());
 
     }
 

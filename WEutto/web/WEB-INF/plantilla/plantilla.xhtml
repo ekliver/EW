@@ -31,18 +31,18 @@
                                 <h:form>
                                     
                                     <p:menubar style="color: #ffffff" >
-                                        <p:submenu label="Inicio" icon="ui-icon-document">
+                                        <p:submenu label="Administracion" icon="ui-icon-document">
                                             <p:menuitem value="Pagina de inicio" outcome="/views/bienvenido"/>
                                             <p:separator />
                                             <p:menuitem value="Cerrar sesion" />
                                         </p:submenu>
-                                        <p:submenu label="Cliente" icon="ui-icon-document">
+                                        <p:submenu label="Administracion" icon="ui-icon-document">
                                             <p:menuitem value="Ver" outcome="/views/cliente/cliente"/>
                                         </p:submenu>
                                         <p:submenu label="Producto" icon="ui-icon-document">
                                             <p:menuitem value="Asignar precio" outcome="/views/producto/producto"/>
                                         </p:submenu>
-                                        <p:submenu label="Operaciones" icon="ui-icon-document">
+                                        <p:submenu label="Movimientos" icon="ui-icon-document">
                                             <p:menuitem value="Nota de despacho" outcome="/views/operaciones/notadespacho"/>
                                             <p:separator />
                                             <p:menuitem value="Factura" outcome="/views/operaciones/factura"/>
@@ -53,6 +53,9 @@
                                             <p:menuitem value="Stock de Productos" outcome="/views/reportes/stock"/>
                                             <p:separator />
                                             <p:menuitem value="Movimientos" outcome="/views/reportes/movimientos"/>
+                                        </p:submenu>
+                                        <p:submenu label="Utilitarios" icon="ui-icon-document">
+                                            
                                         </p:submenu>
                                         <f:facet name="options" >
                                             <h:panelGrid columns="4">

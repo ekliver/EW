@@ -29,14 +29,14 @@
     background: #E3F2FD;
     
 }
+
+.ui-datatable .ui-datatable-scrollable-body {
+    background: #E3F2FD !important;
+}*/
 .ui-panelgrid td, .ui-panelgrid tr
 {
     border-style: none !important
 }
-.ui-datatable .ui-datatable-scrollable-body {
-    background: #E3F2FD !important;
-}*/
-
 
 #top {
     position: relative;

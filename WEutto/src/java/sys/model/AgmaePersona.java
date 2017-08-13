@@ -65,6 +65,7 @@ public class AgmaePersona implements java.io.Serializable {
     private String horActualizacion;
     private int codUsuarioActualizacion;
     
+    private String desDireccionFacturacion;
     
 
     private AgmaeTiposPersona agmaeTiposPersona;
@@ -599,6 +600,14 @@ public class AgmaePersona implements java.io.Serializable {
 
     public void setAgmaeTiposPersona(AgmaeTiposPersona agmaeTiposPersona) {
         this.agmaeTiposPersona = agmaeTiposPersona;
+    }
+
+    public String getDesDireccionFacturacion() {
+        return desDireccionFacturacion;
+    }
+
+    public void setDesDireccionFacturacion(String desDireccionFacturacion) {
+        this.desDireccionFacturacion = desDireccionFacturacion;
     }
 
     
