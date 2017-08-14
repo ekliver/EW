@@ -44,11 +44,14 @@
                                      emptyMessage="No hay datos de factura"   >
 
                             <f:facet name="header">
-                                <p:commandButton   process="tablaFacturas" icon="ui-icon-plus" value="Nueva Factura" 
+                                <p:commandButton   process="tablaFacturas" icon="ui-icon-document" value="Factura" 
+                                                   actionListener="#{facturaBean.prepararNuevaFacturaU()}"
+                                                   update=":formNuevaFactura"
+                                                   oncomplete="PF('dialogNuevaFactura').show();" style="width: 160px;" />
+<p:commandButton   process="tablaFacturas" icon="ui-icon-search" value="Nota Despacho" 
                                                    actionListener="#{facturaBean.listarNDPendientes()}"
                                                    update=":formSeleccionND"
-                                                   oncomplete="PF('dialogSeleccionND').show();"/>
-
+                                                   oncomplete="PF('dialogSeleccionND').show();" style="width: 160px;"/>
                             </f:facet>
 
                             <p:column   filterBy="#{f.numSerie}-#{f.numFactura}" headerText="N. Factura"  
@@ -144,9 +147,9 @@
                                                  icon="ui-icon-tag" title="Guia de Remision" 
                                                  disabled="#{f.zestadoGuiaRemision}"
                                                  style="width: 17px; height:  17px;" 
-                                                 actionListener="#{facturaBean.prepararEditarFactura(f)}" 
-                                                 update=":formNuevaFactura"
-                                                 oncomplete="PF('dialogNuevaFactura').show();"/>
+                                                 actionListener="#{guiaRemisionBean.prepararGenerarGuiaRemisionF(f)}"
+                                                 update=":formNuevaGuiaRemision" 
+                                                 oncomplete="PF('dialogNuevaGuiaRemision').show();"/>
 
 
                             </p:column>
@@ -442,7 +445,6 @@
                             <p:commandButton value="#{facturaBean.nameBtnSave}"  actionListener="#{facturaBean.guardarFactura()}"
                                              update=":formSeleccionND :formSeleccionND:msgs :formFacturas:tablaFacturas" />
 
-
                             <p:spacer width="30"/>
                             <p:commandButton value="Cancelar" oncomplete="PF('dialogNuevaFactura').hide();" />    
                         </center>
@@ -484,6 +486,651 @@
                     </p:dialog>
 
                 </h:form>
+
+                <h:form  id="formNuevaGuiaRemision" >
+                    <p:growl id="msgs" showDetail="true"/>
+                    <p:dialog id="dlgNuevaGuiaRemision" widgetVar="dialogNuevaGuiaRemision"  focus="#{guiaRemisionBean.nameFocus}"
+                              resizable="false"  
+                              modal="true" width="1170" height="530"  header="Registro de Guia de Remision" styleClass=".ui-dialog-title-dialog{ margin:0px;}">
+                        <h:panelGrid>
+                            <p:panel style="width: 1130px;">
+
+                                <p:panelGrid  >
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel  value="N° Serie:" style="display: block; width: 55px;"  />    
+                                        </p:column>
+                                        <p:remoteCommand name="generarNroGuia" actionListener="#{guiaRemisionBean.generarNroGuia()}" update=":formNuevaGuiaRemision:numGR :formNuevaGuiaRemision:numSerie" />
+                                        <p:column>
+                                            <p:inputText id="numSerie" value="#{guiaRemisionBean.guiaRemision.numSerie}" maxlength="3" 
+                                                         style="width: 30px; font-weight: bold;" 
+                                                         onkeypress="if (event.keyCode === 13) {
+                                                                     generarNroGuia();
+                                                                     return false;
+                                                                 }" disabled="#{guiaRemisionBean.estadoNumeroSerie}"/>
+
+                                        </p:column>
+                                        <p:column>
+                                            <p:outputLabel  value="N° Guia:" style="display: block; width: 50px;"  />    
+                                        </p:column>
+                                        <p:column>
+                                            <p:inputText id="numGR" value="#{guiaRemisionBean.guiaRemision.numGuia}" 
+                                                         style="width: 50px; font-weight: bold;" disabled="true"  />
+                                        </p:column>
+
+
+                                        <p:column>
+                                            <p:outputLabel for="motivo" value="Motivo:"   />
+                                        </p:column>
+                                        <p:column>
+                                            <p:selectOneMenu id="motivo" value="#{guiaRemisionBean.guiaRemision.codMotivo}" style="width: 70px;"  >
+                                                <f:selectItem itemLabel="Motivo1" itemValue="1" />
+                                                <f:selectItem itemLabel="Motivo2" itemValue="2" />
+                                                <f:selectItem itemLabel="Motivo3" itemValue="3" />
+                                            </p:selectOneMenu>
+                                        </p:column>
+                                        <p:column>
+                                            <p:outputLabel for="estado" value="Estado:"  />
+                                        </p:column>
+                                        <p:column>
+                                            <p:selectOneMenu id="estado" value="#{guiaRemisionBean.guiaRemision.flgEstado}" style="width: 30px !important"   >
+                                                <f:selectItems value="#{guiaRemisionBean.listaEstadoTipoDocumento}" 
+                                                               var="ed" itemLabel="#{ed.desEstado}" 
+                                                               itemValue="#{ed.codEstado}" />
+                                            </p:selectOneMenu>
+                                        </p:column>
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:panel>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2">
+
+                            <p:panel style="width: 560px;">
+                                <p:panelGrid>
+                                    <p:row>
+                                        <p:column >
+                                            <p:outputLabel  value="Punto Partida:" style="width: 85px; display: block;"  />
+                                        </p:column>
+                                        <p:column colspan="5" >
+                                            <p:inputText value="#{guiaRemisionBean.guiaRemision.desPuntoPartida}" style="width: 100%;"/>
+                                        </p:column>
+
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel  value="Emision:" style="width: 45px; display: block;" />
+                                        </p:column>
+                                        <p:column>
+                                            <p:calendar id="fechaEmision" value="#{guiaRemisionBean.guiaRemision.fecEmision}"   pattern="dd/MM/yyyy"  size="8" />   
+                                        </p:column>
+                                        <p:column>
+                                            <p:outputLabel  value="Traslado:"  />
+                                        </p:column>
+                                        <p:column>
+                                            <p:calendar id="fechaTraslado" value="#{guiaRemisionBean.guiaRemision.fecInicioTraslado}"   pattern="dd/MM/yyyy" size="8" />
+                                        </p:column>
+                                        <p:column>
+                                            <p:outputLabel  value="Costo Min:" style="width: 53px; display: block;" />
+                                        </p:column>
+                                        <p:column>
+                                            <p:inputText value="#{guiaRemisionBean.guiaRemision.numCostoMinimo}" style="width: 100%;"/>
+                                        </p:column>
+
+                                    </p:row>
+
+                                </p:panelGrid>
+                            </p:panel>
+                            <p:panel style="width: 560px;">
+                                <p:panelGrid>
+                                    <p:row>
+                                        <p:column >
+                                            <p:outputLabel  value="Punto Llegada:" style="width: 85px; display: block;" />
+                                        </p:column>
+                                        <p:column colspan="4">
+                                            <p:inputText id="pllegada" value="#{guiaRemisionBean.guiaRemision.desPuntoLlegada}" style="width: 415px;"/>
+                                        </p:column>
+
+                                    </p:row>
+                                    <p:row>
+
+                                        <p:column >
+                                            <p:outputLabel  value="Razon Social:"   />
+                                        </p:column>
+                                        <p:column >
+
+                                            <p:inputText id="cliente" value="#{guiaRemisionBean.guiaRemision.znomPersona}" style="width: 100%" disabled="true"/>
+
+                                        </p:column>
+                                        <p:column >
+                                            <p:outputLabel value="RUC:"    />
+                                        </p:column>
+                                        <p:column >
+                                            <p:inputText  id="ruc" value="#{guiaRemisionBean.guiaRemision.zrucPersona}" style="width: 90px" disabled="true"/>
+
+                                        </p:column>
+
+                                        <p:column>
+                                            <p:commandButton  style="width: 30px; height:  17px;" icon="ui-icon-search"  oncomplete="PF('dialogConsultarClienteGR').show();" />
+                                        </p:column>
+
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:panel>    
+
+
+                            <p:panel header="UNIDAD DE TRANSPORTE Y CONDUCTOR" style="width: 560px;">
+                                <p:panelGrid>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel  value="Placa:"   style="display: block; width: 85px;"   />
+                                        </p:column>
+
+                                        <p:column >
+                                            <p:inputText id="placa" value="#{guiaRemisionBean.guiaRemision.numPlaca}" style="width: 55px; display: block;" disabled="true" />
+                                        </p:column>
+                                        <p:column>
+                                            <p:outputLabel  value="Marca:" />
+                                        </p:column>
+
+                                        <p:column>
+                                            <p:inputText id="marca" value="#{guiaRemisionBean.guiaRemision.znomMarca}" style="width: 55px; display: block;" disabled="true"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:outputLabel  value="Constancia:" />
+                                        </p:column>
+                                        <p:column>
+                                            <p:inputText id="constancia" value="#{guiaRemisionBean.guiaRemision.znomConstancia}" style="width: 100%;"  disabled="true"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:commandButton  style="width: 30px; height:  17px; " icon="ui-icon-search"  oncomplete="PF('dialogConsultarUnidadTansporte').show();" />
+                                        </p:column>
+
+                                    </p:row>
+                                    <p:row >
+                                        <p:column >
+                                            <p:outputLabel value="Conductor:"   />
+                                        </p:column>
+                                        <p:column colspan="3" >
+                                            <p:inputText id="conductor"  value="#{guiaRemisionBean.guiaRemision.znomConductor}" style="width: 100%"  disabled="true" />
+                                        </p:column>
+
+                                        <p:column>
+                                            <p:outputLabel value="Licencia:"  style="display: block; width: 45px;"   />
+                                        </p:column>
+                                        <p:column >
+                                            <p:inputText id="licencia"  value="#{guiaRemisionBean.guiaRemision.zlicConductor}" style="width: 100%"  disabled="true" />
+                                        </p:column>
+
+                                        <p:column >
+                                            <p:commandButton  style="width: 30px; height:  17px; " icon="ui-icon-search"  oncomplete="PF('dialogConsultarConductor').show();" />
+                                        </p:column>
+                                    </p:row>
+
+                                </p:panelGrid>
+                            </p:panel>
+                            <p:panel header="EMPRESA DE TRANSPORTE" style="width: 560px;">
+                                <p:panelGrid>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel  value="Razon Social:" style="display: block; width: 85px;"  />
+                                        </p:column>
+                                        <p:column  >
+                                            <p:inputText id="nomEmptransporte" value="#{guiaRemisionBean.guiaRemision.znomEmpresa}" style="width: 100%;" disabled="true"/>
+                                        </p:column>
+                                        <p:column>
+                                            <p:outputLabel  value="RUC:"  style="display: block; width: 55px;"    />
+                                        </p:column>
+                                        <p:column >
+                                            <p:inputText id="rucEmptransporte" value="#{guiaRemisionBean.guiaRemision.zrucEmpresa}" style="width: 100%;"  disabled="true" />
+                                        </p:column>
+
+                                        <p:column>
+                                            <p:commandButton  style="width: 30px; height:  17px;  " icon="ui-icon-search"  oncomplete="PF('dialogConsultarEmpresaTransporte').show();" />
+                                        </p:column>
+
+                                    </p:row>
+                                    <p:row>
+                                        <p:column>
+                                            <p:outputLabel  value="Telefono:"/>
+                                        </p:column>
+                                        <p:column colspan="4" >
+                                            <p:inputText id="tlfEmptransporte" value="#{guiaRemisionBean.guiaRemision.znumTelefono}" style="width: 100%"  disabled="true" /> 
+                                        </p:column>
+
+                                    </p:row>
+                                </p:panelGrid>
+                            </p:panel>
+
+                        </h:panelGrid>
+                        <center>
+                            <p:dataTable id="tablaGuiaRemisionDetalle" style="width: 1140px"
+                                         var="grd" value="#{guiaRemisionBean.listaGuiaRemisionDetalle}" rowIndexVar="rowIndex"
+                                         emptyMessage="No hay datos de detalle"  scrollable="true" scrollHeight="170" 
+                                         >
+
+                                <f:facet name="header">
+
+                                    <p:commandButton   process="tablaGuiaRemisionDetalle" icon="ui-icon-search" 
+                                                       value="Producto" style="width: 130px"
+                                                       actionListener="#{guiaRemisionBean.prepararAgregarProducto()}"
+                                                       oncomplete="PF('dlgAgregarProd').show();" 
+                                                       update=":formAgregarProd" />
+                                    <p:spacer width="10"/>
+                                    <p:commandButton   process="tablaGuiaRemisionDetalle" icon="ui-icon-search" 
+                                                       value="Factura" style="width: 130px"
+                                                       actionListener="#{guiaRemisionBean.prepararAgregarProductosFactura()}"
+                                                       oncomplete="PF('dialogAgregarProductoFactura').show();" 
+                                                       update=":formAgregarProductoFactura" />
+                                    <p:spacer width="10"/>
+                                    <p:commandButton   process="tablaGuiaRemisionDetalle" icon="ui-icon-search" 
+                                                       value="Nota Despacho" style="width: 130px"
+                                                       actionListener="#{guiaRemisionBean.prepararAgregarProductosNotaDespacho()}"
+                                                       oncomplete="PF('dialogAgregarProductoNotaDespacho').show();" 
+                                                       update=":formAgregarProductoNotaDespacho" />
+
+                                </f:facet>
+
+                                <p:column headerText="No" width="40"  style="text-align: center;">
+                                    <h:outputText value="#{rowIndex+1}"/>
+                                </p:column>
+
+                                <p:column headerText="Cod. producto" width="50" style="text-align: center;">
+                                    <h:outputText value="#{grd.codProducto}"/>
+                                </p:column>
+                                <p:column headerText="Nombre producto" width="350">
+                                    <h:outputText value="#{grd.znomProducto}"/>
+                                </p:column>
+                                <p:column headerText="Unidad Medida" width="60" style="text-align: center;">
+                                    <h:outputText value="#{grd.codMedida}"/>
+                                </p:column>
+
+                                <p:column headerText="Cantidad" width="60" style="text-align: center;">
+                                    <h:outputText value="#{grd.numCantidadProducto}"/>
+                                </p:column>
+                                <p:column headerText="Origen" width="60" style="text-align: center;">
+                                    <h:outputText value="#{grd.znomTipoDocumentoOrigen}"/>
+                                </p:column>
+                                <p:column headerText="Opciones" width="60" style="text-align: center;" >
+                                    <p:commandButton id="delButton" icon="ui-icon-trash" title="Eliminar" 
+                                                     style="width: 17px; height:  17px; "  
+                                                     actionListener="#{guiaRemisionBean.quitarGuiaRemisionDetalle(grd)}" 
+                                                     update=":formNuevaGuiaRemision:tablaGuiaRemisionDetalle"/>
+                                </p:column>    
+
+                            </p:dataTable>
+
+
+                            <p:commandButton value="#{guiaRemisionBean.nameBtnSave}"  actionListener="#{guiaRemisionBean.guardarGuiaRemision()}"
+                                             update=":formNuevaGuiaRemision:msgs :formFacturas:tablaFacturas" />
+
+                            <p:spacer width="30"/>
+                            <p:commandButton value="Cancelar" oncomplete="PF('dialogNuevaGuiaRemision').hide();" />    
+                        </center>
+
+                    </p:dialog>
+                </h:form>
+
+
+                <h:form  id="formAgregarProd">
+                    <p:dialog id="dlgAgregarProd" widgetVar="dialogAgregarProd" resizable="false"  modal="true" width="1200"  header="Agregar producto">
+                        <p:panel>
+                            <p:dataTable id="tablaStockProducto"  paginator="true"   rows="10"
+                                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+
+                                         var="st" value="#{guiaRemisionBean.listaProductoStocks}" selection="#{guiaRemisionBean.seleccionStockProducto}" rowKey="#{st.codProducto}" 
+                                         emptyMessage="No hay datos de productos" >
+
+                                <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                <p:column headerText="Codigo" filterBy="#{st.codProducto}"  filterMatchMode="contains"  filterStyle="width:70px"  width="80">
+                                    <h:outputText value="#{st.codProducto}"/>
+                                </p:column>
+
+                                <p:column headerText="Nombre del producto" filterBy="#{st.nomProducto}"  filterMatchMode="contains"  filterStyle="width:230px" width="250">
+                                    <h:outputText value="#{st.nomProducto}"  />
+                                </p:column>
+                                <p:column headerText="Stock Fecha"  width="40" >
+                                    <h:outputText value="#{st.stockFecha}"/>
+                                </p:column>
+
+                                <p:column headerText="Stock Actual" width="40" >
+                                    <h:outputText value="#{st.stockActual}"/>
+                                </p:column>
+
+                                <p:column headerText="Ruc Compañia" width="60" >
+                                    <h:outputText value="#{st.ruc}"/>
+                                </p:column>
+
+                                <p:column headerText="Nombre Compañia">
+                                    <h:outputText value="#{st.nomCompanya.toUpperCase()}"/>
+                                </p:column>
+
+                                <p:column headerText="Localidad" width="60" >
+                                    <h:outputText value="#{st.nomEstablecimiento}"/>
+                                </p:column>
+
+                                <p:column headerText="Centro" width="60" >
+                                    <h:outputText value="#{st.nomCentro}"/>
+                                </p:column>
+
+                                <p:column headerText="Almacen" width="60" >
+                                    <h:outputText value="#{st.nomAlmacen}"/>
+                                </p:column>
+
+                                <p:column headerText="Area" width="60" >
+                                    <h:outputText value="#{st.nomArea}"/>
+                                </p:column>
+
+                                <f:facet name="footer">
+                                    <p:commandButton process="tablaStockProducto" update="formNuevaGuiaRemision:tablaGuiaRemisionDetalle formNuevaGuiaRemision:msgs" icon="ui-icon-add" value="Agregar" oncomplete="PF('dialogAgregarProd').hide();" action="#{guiaRemisionBean.agregarProductoGuiaRemisionDetalle()}"/>
+                                </f:facet>
+
+                            </p:dataTable>
+
+
+                        </p:panel>
+                    </p:dialog>
+
+                </h:form>
+
+
+
+
+                <h:form id="formAgregarProductoFactura"  >
+                    <p:dialog id="dlgAgregarProductoFactura" widgetVar="dialogAgregarProductoFactura" resizable="false"  modal="true" width="1100"  header="Agregar producto" focus="tablaFacturaDetalle">
+                        <p:panelGrid  style="vertical-align: bottom !important;" >
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel for="feDesdeAgregar" value="Desde:" />
+                                </p:column>
+                                <p:column>
+                                    <p:calendar id="feDesdeAgregar" value="#{guiaRemisionBean.feDesdeAgregar}" 
+                                                pattern="dd/MM/yyyy" size="10"/>
+
+                                </p:column>
+                                <p:column>
+
+                                    <p:outputLabel for="feHastaAgregar" value="Hasta:" />
+                                </p:column>
+                                <p:column>
+                                    <p:calendar id="feHastaAgregar" value="#{guiaRemisionBean.feHastaAgregar}" 
+                                                pattern="dd/MM/yyyy" size="10" />    
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton icon="ui-icon-play"
+                                                     actionListener="#{guiaRemisionBean.consultarFacturasPorFechas()}" 
+                                                     update=":formAgregarProductoFactura:tablaFacturas :formAgregarProductoFactura:tablaFacturaDetalle"/> 
+                                </p:column>
+                                <p:column rowspan="2">
+                                    <p:dataTable id="tablaFacturaDetalle"  paginator="true"  paginatorPosition="bottom"  rows="10" scrollable="true" scrollHeight="270"
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 var="fd" value="#{guiaRemisionBean.listaFacturaDetalle}" selection="#{guiaRemisionBean.seleccionProductoFacturaDetalle}" rowKey="#{fd.idFacturaDet}" 
+                                                 emptyMessage="No hay datos de productos pendietes en la factura" styleClass=".ui-panelgrid td, .ui-panelgrid tr {border-style: 1px !important;}" >
+
+                                        <f:facet name="header">
+                                            <h:outputText value="Detalle de factura"/>
+                                        </f:facet>
+
+                                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                        <p:column headerText="Codigo" filterBy="#{fd.codProducto}"  filterMatchMode="contains"  filterStyle="width:70px"  width="80">
+                                            <h:outputText value="#{fd.codProducto}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Nombre del producto" filterBy="#{fd.znomProducto}"  filterMatchMode="contains"  filterStyle="width:90%" width="250">
+                                            <h:outputText value="#{fd.znomProducto}"  />
+                                        </p:column>
+
+                                        <p:column headerText="Cantidad"  width="40" >
+                                            <h:outputText value="#{fd.numCntdProducto}"/>
+                                        </p:column>
+
+                                        <f:facet name="footer">
+                                            <p:commandButton process="tablaFacturaDetalle" 
+                                                             update="formNuevaGuiaRemision:tablaGuiaRemisionDetalle formNuevaGuiaRemision:msgs" 
+                                                             icon="ui-icon-add" value="Agregar a guia de remision"  
+                                                             actionListener="#{guiaRemisionBean.agregarFacturaDetalleAGuiaRemisionDetalle()}" 
+                                                             oncomplete="PF('dialogAgregarProductoFactura').hide();"/>
+                                        </f:facet>
+
+                                    </p:dataTable>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="5">
+                                    <p:dataTable id="tablaFacturas" 
+                                                 var="f" value="#{guiaRemisionBean.listaFactura}" rowIndexVar="rowIndex"
+                                                 selectionMode="single"
+                                                 selection="#{guiaRemisionBean.factura}" rowKey="#{f.idFacturaCab}"
+                                                 emptyMessage="No hay datos"  scrollable="true" scrollHeight="100%" scrollWidth="410"  >
+
+
+                                        <f:facet name="header">
+                                            <h:outputText value="Facturas"/>
+                                        </f:facet>                                
+                                        <p:ajax event="rowSelect" listener="#{guiaRemisionBean.onRowSelect}" update=":formAgregarProductoFactura:tablaFacturaDetalle" process="tablaFacturas" />
+                                        <p:column headerText="Nro. factura" width="45" filterBy="#{f.numSerie}-#{f.numFactura}" filterMatchMode="contains"  filterStyle="width:90%">
+                                            <h:outputText value="#{f.numSerie}-#{f.numFactura}"/>
+                                        </p:column>
+                                        <p:column headerText="Ruc" width="45" filterBy="#{f.zrucPersona}" filterMatchMode="contains"  filterStyle="width:90%">
+                                            <h:outputText value="#{f.zrucPersona}"/>
+                                        </p:column>
+                                        <p:column headerText="Cliente" width="130" filterBy="#{f.znomPersona}" filterMatchMode="contains"  filterStyle="width:90%">
+                                            <h:outputText value="#{f.znomPersona}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:column>
+
+                            </p:row>
+
+
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="formAgregarProductoNotaDespacho"  >
+                    <p:dialog id="dlgAgregarProductoNotaDespacho" widgetVar="dialogAgregarProductoNotaDespacho" 
+                              resizable="false"  modal="true" width="1100"  
+                              header="Agregar producto" focus="tablaNotaDespachoDetalle">
+                        <p:panelGrid  style="vertical-align: bottom !important;" >
+                            <p:row>
+                                <p:column>
+                                    <p:outputLabel for="feDesdeAgregar" value="Desde:" />
+                                </p:column>
+                                <p:column>
+                                    <p:calendar id="feDesdeAgregar" value="#{guiaRemisionBean.feDesdeAgregar}" 
+                                                pattern="dd/MM/yyyy" size="10"/>
+
+                                </p:column>
+                                <p:column>
+
+                                    <p:outputLabel for="feHastaAgregar" value="Hasta:" />
+                                </p:column>
+                                <p:column>
+                                    <p:calendar id="feHastaAgregar" value="#{guiaRemisionBean.feHastaAgregar}" 
+                                                pattern="dd/MM/yyyy" size="10" />    
+                                </p:column>
+                                <p:column>
+                                    <p:commandButton icon="ui-icon-play"
+                                                     actionListener="#{guiaRemisionBean.consultarNotaDespachosPorFechas()}" 
+                                                     update=":formAgregarProductoNotaDespacho:tablaNotaDespachos :formAgregarProductoNotaDespacho:tablaNotaDespachoDetalle"/> 
+                                </p:column>
+                                <p:column rowspan="2">
+                                    <p:dataTable id="tablaNotaDespachoDetalle"  paginator="true"  paginatorPosition="bottom"  rows="10" scrollable="true" scrollHeight="270"
+                                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                                 var="ndd" value="#{guiaRemisionBean.listaNotaDespachoDetalle}" selection="#{guiaRemisionBean.seleccionProductoNotaDespachoDetalle}" rowKey="#{ndd.idMovValeProducto}" 
+                                                 emptyMessage="No hay datos de productos pendietes en la factura" styleClass=".ui-panelgrid td, .ui-panelgrid tr {border-style: 1px !important;}" >
+
+                                        <f:facet name="header">
+                                            <h:outputText value="Detalle de notaDespacho"/>
+                                        </f:facet>
+
+                                        <p:column selectionMode="multiple" style="width:16px;text-align:center"/>
+                                        <p:column headerText="Codigo" filterBy="#{ndd.codProducto}"  filterMatchMode="contains"  filterStyle="width:70px"  width="80">
+                                            <h:outputText value="#{ndd.codProducto}"/>
+                                        </p:column>
+
+                                        <p:column headerText="Nombre del producto" filterBy="#{ndd.nomProducto}"  filterMatchMode="contains"  filterStyle="width:90%" width="250">
+                                            <h:outputText value="#{ndd.nomProducto}"  />
+                                        </p:column>
+
+                                        <p:column headerText="Cantidad"  width="40" >
+                                            <h:outputText value="#{ndd.ctdMovimiento}"/>
+                                        </p:column>
+
+                                        <f:facet name="footer">
+                                            <p:commandButton process="tablaNotaDespachoDetalle" 
+                                                             update="formNuevaGuiaRemision:tablaGuiaRemisionDetalle formNuevaGuiaRemision:msgs" 
+                                                             icon="ui-icon-add" value="Agregar a guia de remision"  
+                                                             actionListener="#{guiaRemisionBean.agregarNotaDespachoDetalleAGuiaRemisionDetalle()}" 
+                                                             oncomplete="PF('dialogAgregarProductoNotaDespacho').hide();"/>
+                                        </f:facet>
+
+                                    </p:dataTable>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="5">
+                                    <p:dataTable id="tablaNotaDespachos" 
+                                                 var="nd" value="#{guiaRemisionBean.listaNotaDespacho}" rowIndexVar="rowIndex"
+                                                 selectionMode="single"
+                                                 selection="#{guiaRemisionBean.notaDespacho}" rowKey="#{nd.idMovValeCab}"
+                                                 emptyMessage="No hay datos"  scrollable="true" scrollHeight="100%" scrollWidth="410"  >
+
+                                        <f:facet name="header">
+                                            <h:outputText value="NotaDespachos"/>
+                                        </f:facet>                                
+                                        <p:ajax event="rowSelect" listener="#{guiaRemisionBean.onRowSelectND}" update=":formAgregarProductoNotaDespacho:tablaNotaDespachoDetalle" process="tablaNotaDespachos" />
+                                        <p:column headerText="Nro. Despacho" width="45" filterBy="#{nd.numVale}" filterMatchMode="contains"  filterStyle="width:90%">
+                                            <h:outputText value="#{nd.numVale}"/>
+                                        </p:column>
+                                        <p:column headerText="Ruc" width="45" filterBy="#{nd.ZRucPersona}" filterMatchMode="contains"  filterStyle="width:90%">
+                                            <h:outputText value="#{nd.ZRucPersona}"/>
+                                        </p:column>
+                                        <p:column headerText="Cliente" width="130" filterBy="#{nd.ZNomPersona}" filterMatchMode="contains"  filterStyle="width:90%">
+                                            <h:outputText value="#{nd.ZNomPersona}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:column>
+
+                            </p:row>
+
+
+                        </p:panelGrid>
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="formConsultarClienteGR">
+                    <p:dialog id="dlgConsultarClienteGR" widgetVar="dialogConsultarClienteGR" 
+                              resizable="false"  modal="true" width="500"  
+                              header="Seleccionar cliente">
+
+                        <p:dataTable id="tableCliente" value="#{clienteBean.listaClientes}" var="ct"
+                                     selectionMode="single" selection="#{guiaRemisionBean.seleccionCliente}" rowKey="#{ct.codPersona}" >
+                            <p:column headerText="Codigo" filterBy="#{ct.codPersona}" filterMatchMode="contains"   filterStyle="width:45px" width="50"  >
+                                <h:outputText value="#{ct.codPersona}" />
+                            </p:column>
+                            <p:column headerText="Ruc" filterBy="#{ct.numIdentificacion}" filterMatchMode="contains"   filterStyle="width:95px" width="100"  >
+                                <h:outputText value="#{ct.numIdentificacion}" />
+                            </p:column>
+                            <p:column headerText="Cliente" filterBy="#{ct.nomRazonSocial}" filterMatchMode="contains"   filterStyle="width:220px" width="225"  >
+                                <h:outputText value="#{ct.nomRazonSocial}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton process="tableCliente" update=":formNuevaGuiaRemision:cliente :formNuevaGuiaRemision:ruc :formNuevaGuiaRemision:pllegada" icon="ui-icon-add" value="Seleccionar" oncomplete="PF('dialogConsultarClienteGR').hide();" action="#{guiaRemisionBean.listoCliente()}"/>
+                            </f:facet>
+                        </p:dataTable>
+
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="formConsultarTansporte">
+                    <p:dialog id="dlgConsultarTansporte" widgetVar="dialogConsultarUnidadTansporte" resizable="false"  modal="true" 
+                              width="500"  header="Seleccionar unidad de transporte">
+
+                        <p:dataTable id="tableUnidadTansporte" value="#{guiaRemisionBean.listaUnidadTransporte}" var="ut"
+                                     selectionMode="single" selection="#{guiaRemisionBean.seleccionUnidadTransporte}" rowKey="#{ut.placa}" >
+
+                            <p:column headerText="Placa" filterBy="#{ut.placa}" filterMatchMode="contains"   filterStyle="width:90%" width="50"  >
+                                <h:outputText value="#{ut.placa}" />
+                            </p:column>
+                            <p:column headerText="Marca" filterBy="#{ut.marca}" filterMatchMode="contains"   filterStyle="width:90%" width="150"  >
+                                <h:outputText value="#{ut.marca}" />
+                            </p:column>
+                            <p:column headerText="Constancia" filterBy="#{ut.constancia}" filterMatchMode="contains"   filterStyle="width:95%" width="90"  >
+                                <h:outputText value="#{ut.constancia}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton process="tableUnidadTansporte" 
+                                                 update=":formNuevaGuiaRemision:placa :formNuevaGuiaRemision:marca :formNuevaGuiaRemision:constancia " icon="ui-icon-add" value="Seleccionar" oncomplete="PF('dialogConsultarUnidadTansporte').hide();" action="#{guiaRemisionBean.listoUnidadTransporte()}"/>
+                            </f:facet>
+                        </p:dataTable>
+
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="formConsultarConductor">
+                    <p:dialog id="dlgConsultarConductor" widgetVar="dialogConsultarConductor" 
+                              resizable="false"  modal="true" width="500"  
+                              header="Seleccionar conductor">
+
+                        <p:dataTable id="tableConductor" value="#{guiaRemisionBean.listaConductor}" var="cd"
+                                     scrollable="true" scrollHeight="200" 
+                                     selectionMode="single" selection="#{guiaRemisionBean.seleccionConductor}" rowKey="#{cd.dniCon}" >
+
+                            <p:column headerText="DNI" filterBy="#{cd.dniCon}" filterMatchMode="contains"   filterStyle="width:95%" width="30"  >
+                                <h:outputText value="#{cd.dniCon}" />
+                            </p:column>
+
+                            <p:column headerText="Nombre" filterBy="#{cd.desCon}" filterMatchMode="contains"   filterStyle="width:90%" width="150"  >
+                                <h:outputText value="#{cd.desCon}" />
+                            </p:column>
+
+                            <p:column headerText="Licencia" filterBy="#{cd.breCon}" filterMatchMode="contains"   filterStyle="width:90%" width="50"  >
+                                <h:outputText value="#{cd.breCon}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton process="tableConductor" 
+                                                 update=":formNuevaGuiaRemision:conductor :formNuevaGuiaRemision:licencia"
+                                                 icon="ui-icon-add" value="Seleccionar" 
+                                                 oncomplete="PF('dialogConsultarConductor').hide();" 
+                                                 action="#{guiaRemisionBean.listoConductor()}"/>
+                            </f:facet>
+                        </p:dataTable>
+
+                    </p:dialog>
+                </h:form>
+
+                <h:form id="formConsultarEmpresaTransporte">
+                    <p:dialog id="dlgConsultarEmpresaTransporte" widgetVar="dialogConsultarEmpresaTransporte" 
+                              resizable="false"  modal="true" width="500"  
+                              header="Seleccionar empresa de transporte">
+
+                        <p:dataTable id="tableEmpresaTransporte" value="#{guiaRemisionBean.listaEmpresaTransporte}" var="et"
+                                     scrollable="true" scrollHeight="200" 
+                                     selectionMode="single" selection="#{guiaRemisionBean.seleccionEmpresaTransporte}" rowKey="#{et.codEmptransporte}" >
+
+                            <p:column headerText="Ruc" filterBy="#{et.rucEmptransporte}" filterMatchMode="contains"   filterStyle="width:95%" width="30"  >
+                                <h:outputText value="#{et.rucEmptransporte}" />
+                            </p:column>
+
+                            <p:column headerText="Empresa" filterBy="#{et.nomEmptransporte}" filterMatchMode="contains"   filterStyle="width:90%" width="150"  >
+                                <h:outputText value="#{et.nomEmptransporte}" />
+                            </p:column>
+
+                            <p:column headerText="Telefono" filterBy="#{et.numTelefono}" filterMatchMode="contains"   filterStyle="width:90%" width="50"  >
+                                <h:outputText value="#{et.numTelefono}" />
+                            </p:column>
+                            <f:facet name="footer">
+                                <p:commandButton process="tableEmpresaTransporte" 
+                                                 update=":formNuevaGuiaRemision:rucEmptransporte :formNuevaGuiaRemision:nomEmptransporte :formNuevaGuiaRemision:tlfEmptransporte"
+                                                 icon="ui-icon-add" value="Seleccionar" 
+                                                 oncomplete="PF('dialogConsultarEmpresaTransporte').hide();" 
+                                                 action="#{guiaRemisionBean.listoEmpresaTransporte()}"/>
+                            </f:facet>
+                        </p:dataTable>
+
+                    </p:dialog>
+                </h:form>
+
 
             </ui:define>
 

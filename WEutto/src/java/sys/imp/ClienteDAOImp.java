@@ -36,7 +36,7 @@ public class ClienteDAOImp implements ClienteDAO {
                     + "num_edad, cod_pais, cod_departamento_nac, cod_provincia_nac, "
                     + "num_telefono, num_fax, des_email, fec_creacion, hor_creacion, "
                     + "cod_usuario_creacion, fec_actualizacion, hor_actualizacion, "
-                    + "cod_usuario_actualizacion FROM agmae_persona "
+                    + "cod_usuario_actualizacion,des_direccion_facturacion FROM agmae_persona "
                     + "WHERE cod_persona IN (SELECT agmae_persona.cod_persona "
                     + "FROM Agmae_Tipos_Anexos INNER JOIN ((agmae_persona INNER "
                     + "JOIN Agmae_Tipos_Persona ON agmae_persona.tip_persona = "
@@ -79,7 +79,7 @@ public class ClienteDAOImp implements ClienteDAO {
                 cliente.setFecActualizacion(rs.getString("fec_actualizacion"));
                 cliente.setHorActualizacion(rs.getString("hor_actualizacion"));
                 cliente.setCodUsuarioActualizacion(rs.getInt("cod_usuario_actualizacion"));
-
+cliente.setDesDireccionFacturacion(rs.getString("des_direccion_facturacion"));
                 lista.add(cliente);
             }
             if (!existe) {
@@ -162,7 +162,7 @@ public class ClienteDAOImp implements ClienteDAO {
                 cliente.setFecActualizacion(rs.getString("fec_actualizacion"));
                 cliente.setHorActualizacion(rs.getString("hor_actualizacion"));
                 cliente.setCodUsuarioActualizacion(rs.getInt("cod_usuario_actualizacion"));
-                cliente.setDesDireccionFacturacion("des_direccion_facturacion");
+                cliente.setDesDireccionFacturacion(rs.getString("des_direccion_facturacion"));
             }
 //            Service.cerrarConexion();
         } catch (Exception e) {

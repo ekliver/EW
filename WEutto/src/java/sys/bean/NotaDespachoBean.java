@@ -38,6 +38,8 @@ import sys.model.AgmaeVendedor;
 import sys.model.AimarMovAlmacenCab;
 import sys.model.AimarMovAlmacenDet;
 import sys.model.AimarStockm;
+import sys.model.AvmovGuiaRemisionCab;
+import sys.model.AvmovGuiaRemisionDet;
 import sys.model.AvmovMovNotaDespachoCab;
 import sys.model.AvmovMovNotaDespachoDet;
 
@@ -78,6 +80,11 @@ public class NotaDespachoBean implements Serializable {
     private boolean nuevo;
     private String nameBtnSave;
     private String nameFocus;
+    
+    private AvmovGuiaRemisionCab guiaRemision;
+    private List<AvmovGuiaRemisionDet> listaGuiaRemisionDetalle;
+
+    
 
     public NotaDespachoBean() {
         //Filtro de fecha
@@ -260,6 +267,24 @@ public class NotaDespachoBean implements Serializable {
     public void setListaEliminadoNotaDespachoDetalle(List<AvmovMovNotaDespachoDet> listaEliminadoNotaDespachoDetalle) {
         this.listaEliminadoNotaDespachoDetalle = listaEliminadoNotaDespachoDetalle;
     }
+
+    public AvmovGuiaRemisionCab getGuiaRemision() {
+        return guiaRemision;
+    }
+
+    public void setGuiaRemision(AvmovGuiaRemisionCab guiaRemision) {
+        this.guiaRemision = guiaRemision;
+    }
+
+    public List<AvmovGuiaRemisionDet> getListaGuiaRemisionDetalle() {
+        return listaGuiaRemisionDetalle;
+    }
+
+    public void setListaGuiaRemisionDetalle(List<AvmovGuiaRemisionDet> listaGuiaRemisionDetalle) {
+        this.listaGuiaRemisionDetalle = listaGuiaRemisionDetalle;
+    }
+    
+    
 
     public void agregarNotasDespachoDetalle() {
 

@@ -278,6 +278,34 @@ public class FacturaBean implements Serializable {
 
     }
 
+    public void prepararNuevaFacturaU() {
+        estadoNumeroSerie = false;
+        esNuevo = true;
+        nameBtnSave = "Guardar";
+        nameFocus = "numSerie";
+        filtroNroND = "";
+//iniciando Variables de Factura
+        factura = new AvmovFacturaNdCab();
+        facturaDetalle = new AvmovFacturaNdDet();
+
+        factura.setNumSerie("");
+        factura.setNumFactura("");
+        factura.setFecFactura(new Date());
+        factura.setFlgTipoFactura("S");
+        factura.setNumAnyio(lBean.getAnyo());
+        factura.setFlgPrioridad("1");
+        factura.setFlgEstado("P");
+        factura.setCodMoneda("1");
+        factura.setCodTipoDocumento("01");
+
+        factura.setNumImporteSubtotal(factura.getZvalorSubTotalSol());
+        factura.setNumImporteIgv(factura.getZvalorIgvSol());
+        factura.setNumImporteTotal(factura.getZvalorTotalSol());
+        
+
+    }
+
+    
     public void prepararNuevaFactura(AvmovMovNotaDespachoCab nd) {
         estadoNumeroSerie = false;
         esNuevo = true;

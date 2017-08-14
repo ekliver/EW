@@ -252,7 +252,7 @@
                                         </p:column>
 
                                         <p:column>
-                                            <p:commandButton  style="width: 30px; height:  17px;" icon="ui-icon-search"  oncomplete="PF('dialogConsultarCliente').show();" />
+                                            <p:commandButton  style="width: 30px; height:  17px;" icon="ui-icon-search"  oncomplete="PF('dialogConsultarClienteGR').show();" />
                                         </p:column>
 
                                     </p:row>
@@ -355,8 +355,8 @@
                                     <p:commandButton   process="tablaGuiaRemisionDetalle" icon="ui-icon-search" 
                                                        value="Producto" style="width: 130px"
                                                        actionListener="#{guiaRemisionBean.prepararAgregarProducto()}"
-                                                       oncomplete="PF('dlgAgregarProducto').show();" 
-                                                       update=":formAgregarProducto" />
+                                                       oncomplete="PF('dlgAgregarProd').show();" 
+                                                       update=":formAgregarProd" />
                                     <p:spacer width="10"/>
                                     <p:commandButton   process="tablaGuiaRemisionDetalle" icon="ui-icon-search" 
                                                        value="Factura" style="width: 130px"
@@ -413,8 +413,8 @@
                 </h:form>
 
 
-                <h:form  id="formAgregarProducto">
-                    <p:dialog id="dlgAgregarProducto" widgetVar="dialogAgregarProducto" resizable="false"  modal="true" width="1200"  header="Agregar producto">
+                <h:form  id="formAgregarProd">
+                    <p:dialog id="dlgAgregarProd" widgetVar="dialogAgregarProd" resizable="false"  modal="true" width="1200"  header="Agregar producto">
                         <p:panel>
                             <p:dataTable id="tablaStockProducto"  paginator="true"   rows="10"
                                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -463,7 +463,7 @@
                                 </p:column>
 
                                 <f:facet name="footer">
-                                    <p:commandButton process="tablaStockProducto" update="formNuevaGuiaRemision:tablaGuiaRemisionDetalle formNuevaGuiaRemision:msgs" icon="ui-icon-add" value="Agregar" oncomplete="PF('dialogAgregarProducto').hide();" action="#{guiaRemisionBean.agregarProductoGuiaRemisionDetalle()}"/>
+                                    <p:commandButton process="tablaStockProducto" update="formNuevaGuiaRemision:tablaGuiaRemisionDetalle formNuevaGuiaRemision:msgs" icon="ui-icon-add" value="Agregar" oncomplete="PF('dialogAgregarProd').hide();" action="#{guiaRemisionBean.agregarProductoGuiaRemisionDetalle()}"/>
                                 </f:facet>
 
                             </p:dataTable>
@@ -660,8 +660,8 @@
                     </p:dialog>
                 </h:form>
 
-                <h:form id="formConsultarCliente">
-                    <p:dialog id="dlgConsultarCliente" widgetVar="dialogConsultarCliente" 
+                <h:form id="formConsultarClienteGR">
+                    <p:dialog id="dlgConsultarClienteGR" widgetVar="dialogConsultarClienteGR" 
                               resizable="false"  modal="true" width="500"  
                               header="Seleccionar cliente">
 
@@ -677,7 +677,7 @@
                                 <h:outputText value="#{ct.nomRazonSocial}" />
                             </p:column>
                             <f:facet name="footer">
-                                <p:commandButton process="tableCliente" update=":formNuevaGuiaRemision:cliente :formNuevaGuiaRemision:ruc :formNuevaGuiaRemision:pllegada" icon="ui-icon-add" value="Seleccionar" oncomplete="PF('dialogConsultarCliente').hide();" action="#{guiaRemisionBean.listoCliente()}"/>
+                                <p:commandButton process="tableCliente" update=":formNuevaGuiaRemision:cliente :formNuevaGuiaRemision:ruc :formNuevaGuiaRemision:pllegada" icon="ui-icon-add" value="Seleccionar" oncomplete="PF('dialogConsultarClienteGR').hide();" action="#{guiaRemisionBean.listoCliente()}"/>
                             </f:facet>
                         </p:dataTable>
 

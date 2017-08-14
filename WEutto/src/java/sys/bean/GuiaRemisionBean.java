@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.SelectEvent;
 import sys.clasesAuxiliares.reportesNotaDespacho;
+import sys.dao.ClienteDAO;
 import sys.dao.ConductorDAO;
 import sys.dao.EmpresaTransporteDAO;
 import sys.dao.EstadoTipoDocumentoDAO;
@@ -28,6 +29,7 @@ import sys.dao.NotaDespachoDAO;
 import sys.dao.NotaDespachoDetalleDAO;
 import sys.dao.ProductoStockMDAO;
 import sys.dao.UnidadTransporteDAO;
+import sys.imp.ClienteDAOImp;
 import sys.imp.ConductorDAOImp;
 import sys.imp.EmpresaTransporteDAOImp;
 import sys.imp.EstadoTipoDocumentoDAOImp;
@@ -487,6 +489,7 @@ public class GuiaRemisionBean implements Serializable {
     }
 
     public void agregarNotaDespachoDetalleAGuiaRemisionDetalle() {
+        
         for (AvmovMovNotaDespachoDet item : seleccionProductoNotaDespachoDetalle) {
             guiaRemisionDetalle = new AvmovGuiaRemisionDet();
             guiaRemisionDetalle.setNumCantidadProducto(item.getCtdMovimiento());
@@ -658,6 +661,72 @@ public class GuiaRemisionBean implements Serializable {
 
         guiaRemisionDetalle = new AvmovGuiaRemisionDet();
         itemsEliminado = new ArrayList<>();
+    }
+    
+    public void prepararGenerarGuiaRemisionND(AvmovMovNotaDespachoCab nd) {
+        //Tipo de registro
+        setEstadoNumeroSerie(false);
+        setNuevo(true);
+        nameBtnSave = "Guardar";
+        nameFocus = "numSerie";
+
+        guiaRemision = new AvmovGuiaRemisionCab();
+        listaGuiaRemisionDetalle = new ArrayList<>();
+
+        guiaRemision.setFecEmision(new Date());
+        guiaRemision.setFecInicioTraslado(new Date());
+        guiaRemision.setCodTipoDocumento("09");
+        guiaRemision.setRucCompanyia(lBean.getCompanya().getRucCompanya());
+        guiaRemision.setZnomCompanyia(lBean.getCompanya().getDesCompanyia());
+
+        guiaRemisionDetalle = new AvmovGuiaRemisionDet();
+        itemsEliminado = new ArrayList<>();
+        ClienteDAO cDAO=new ClienteDAOImp();
+        seleccionCliente=new  AgmaePersona();
+        seleccionCliente=cDAO.consultarObjCliente(nd.getCodPersona());
+        listoCliente();
+        
+        
+        
+        seleccionProductoNotaDespachoDetalle = new ArrayList<>();
+        NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
+        seleccionProductoNotaDespachoDetalle = nDDDao.listarNotaDespachoDetalleSinGR(nd, listaGuiaRemisionDetalle);
+        
+        agregarNotaDespachoDetalleAGuiaRemisionDetalle();
+        
+    }
+
+    public void prepararGenerarGuiaRemisionF(AvmovFacturaNdCab f) {
+        //Tipo de registro
+        setEstadoNumeroSerie(false);
+        setNuevo(true);
+        nameBtnSave = "Guardar";
+        nameFocus = "numSerie";
+
+        guiaRemision = new AvmovGuiaRemisionCab();
+        listaGuiaRemisionDetalle = new ArrayList<>();
+
+        guiaRemision.setFecEmision(new Date());
+        guiaRemision.setFecInicioTraslado(new Date());
+        guiaRemision.setCodTipoDocumento("09");
+        guiaRemision.setRucCompanyia(lBean.getCompanya().getRucCompanya());
+        guiaRemision.setZnomCompanyia(lBean.getCompanya().getDesCompanyia());
+
+        guiaRemisionDetalle = new AvmovGuiaRemisionDet();
+        itemsEliminado = new ArrayList<>();
+        ClienteDAO cDAO=new ClienteDAOImp();
+        seleccionCliente=new  AgmaePersona();
+        seleccionCliente=cDAO.consultarObjCliente(f.getCodPersona());
+        listoCliente();
+        
+        
+        
+        seleccionProductoFacturaDetalle = new ArrayList<>();
+        FacturaDetalleDAO fDDDao = new FacturaDetalleDAOImp();
+        seleccionProductoFacturaDetalle = fDDDao.listarFacturaDetalleSinGR(f, listaGuiaRemisionDetalle);
+        
+        agregarFacturaDetalleAGuiaRemisionDetalle();
+        
     }
 
     public void prepararEditarGuiaRemision(AvmovGuiaRemisionCab gr) {
