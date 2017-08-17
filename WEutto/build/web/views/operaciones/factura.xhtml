@@ -44,14 +44,11 @@
                                      emptyMessage="No hay datos de factura"   >
 
                             <f:facet name="header">
-                                <p:commandButton   process="tablaFacturas" icon="ui-icon-document" value="Factura" 
+                                <p:commandButton   process="tablaFacturas" icon="ui-icon-plus" value="Nueva Factura" 
                                                    actionListener="#{facturaBean.prepararNuevaFacturaU()}"
                                                    update=":formNuevaFactura"
                                                    oncomplete="PF('dialogNuevaFactura').show();" style="width: 160px;" />
-<p:commandButton   process="tablaFacturas" icon="ui-icon-search" value="Nota Despacho" 
-                                                   actionListener="#{facturaBean.listarNDPendientes()}"
-                                                   update=":formSeleccionND"
-                                                   oncomplete="PF('dialogSeleccionND').show();" style="width: 160px;"/>
+
                             </f:facet>
 
                             <p:column   filterBy="#{f.numSerie}-#{f.numFactura}" headerText="N. Factura"  
@@ -223,29 +220,33 @@
 
                                 <p:row>
                                     <p:column >
-                                        <p:outputLabel  value="N° Serie: " style="display: block; width: 45px;"  />
+                                        <p:outputLabel  value="FACTURA:" style="display: block; width: 45px;"  />
                                     </p:column>
                                     <p:remoteCommand name="generarNroFactura" actionListener="#{facturaBean.generarNroFactura()}" update=":formNuevaFactura:numFactura :formNuevaFactura:numSerie" />
-                                    <p:column >
+                                    <p:column colspan="4" >
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <p:outputLabel  value="Serie:"   />
+                                                </td>
+                                                <td>
+                                                    <p:inputText id="numSerie" value="#{facturaBean.factura.numSerie}" maxlength="3" 
+                                                                 style="width: 45px; font-weight: bold;" 
+                                                                 onkeypress="if (event.keyCode === 13) {
+                                                                             generarNroFactura();
+                                                                             return false;
+                                                                         }" disabled="#{facturaBean.estadoNumeroSerie}"/>
+                                                </td>
+                                                <td>
+                                                    <p:outputLabel  value="Nro:"  />    
+                                                </td>
+                                                <td>
+                                                    <p:inputText id="numFactura" value="#{facturaBean.factura.numFactura}" 
+                                                                 style="width: 80px; font-weight: bold;" disabled="true"  />
+                                                </td>
 
-                                        <p:inputText id="numSerie" value="#{facturaBean.factura.numSerie}" maxlength="3" 
-                                                     style="width: 45px; font-weight: bold;" 
-                                                     onkeypress="if (event.keyCode === 13) {
-                                                                 generarNroFactura();
-                                                                 return false;
-                                                             }" disabled="#{facturaBean.estadoNumeroSerie}"/>
-                                    </p:column> 
-
-                                    <p:column>
-                                        <p:outputLabel  value="N° Factura:" style="display: block; width: 60px;"  />    
-                                    </p:column>
-
-                                    <p:column>
-
-
-                                        <p:inputText id="numFactura" value="#{facturaBean.factura.numFactura}" 
-                                                     style="width: 80px; font-weight: bold;" disabled="true"  />
-
+                                            </tr>
+                                        </table>
                                     </p:column>
 
 
@@ -256,7 +257,7 @@
                                         <p:calendar id="fecha" value="#{facturaBean.factura.fecFactura}"  pattern="dd/MM/yyyy" size="8"  />
                                     </p:column>
                                     <p:column>
-                                        <p:outputLabel value="Moneda: "  />
+                                        <p:outputLabel value="Moneda:"  />
                                     </p:column>
                                     <p:column>
                                         <p:selectOneMenu  value="#{facturaBean.factura.flgTipoFactura}" style="width: 70px; "  >
@@ -304,35 +305,60 @@
                                     <p:column>
                                         <p:outputLabel value="Direccion: "  />
                                     </p:column>
-                                    <p:column colspan="5">
+                                    <p:column colspan="6">
                                         <p:outputLabel value="#{facturaBean.factura.zdirPersona.toUpperCase()} - #{facturaBean.factura.zdisPersona.toUpperCase()}" />
                                     </p:column>
 
                                     <p:column>
-                                        <p:outputLabel value="Nº Despacho: " style="display: block; width: 70px;"  />
+                                        <p:outputLabel value="Nº Despacho:" style="display: block; width: 80px;"  />
                                     </p:column>
                                     <p:column >
-                                        <p:outputLabel  value="#{facturaBean.factura.numNotaDespacho}" />
+                                        <table>
+                                            <tr>
+                                                <td width="55">
+                                                    <p:outputLabel  value="#{facturaBean.factura.numNotaDespacho}" /> 
+                                                </td>
+                                                <td>
+                                                    <p:commandButton   icon="ui-icon-search"  
+                                                                       actionListener="#{facturaBean.listarNDPendientes()}"
+                                                                       update=":formSeleccionND"
+                                                                       oncomplete="PF('dialogSeleccionND').show();"  style="width: 30px; height:  17px;"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+
                                     </p:column>
                                     <p:remoteCommand name="generarNroGuia" actionListener="#{facturaBean.generarNroGuia()}" update=":formNuevaFactura:guiaRemision :formNuevaFactura:numSerieGR" />
-                                    <p:column>
-                                        <p:outputLabel  value="N° Serie GR:" style="display: block; width: 65px;"  />    
-                                    </p:column>
+                                    <p:column colspan="4" >
+                                        <table>
+                                            <tr>
+                                                <td>
+                                                    <p:outputLabel  value="GUIA REMISION:"   />    
+                                                </td>
+                                                <td width="20">
 
-                                    <p:column>
-                                        <p:inputText id="numSerieGR" value="#{facturaBean.factura.numSerieGuiaRemision}" maxlength="3" style="width: 70px"
-                                                     onkeypress="if (event.keyCode === 13) {
-                                                                 generarNroGuia();
-                                                                 return false;
-                                                             }" />
+                                                </td>
+                                                <td>
 
-                                    </p:column>
+                                                    <p:outputLabel  value="Serie:"   />    
+                                                </td>
+                                                <td>
+                                                    <p:inputText id="numSerieGR" value="#{facturaBean.factura.numSerieGuiaRemision}" maxlength="3" style="width: 45px"
+                                                                 onkeypress="if (event.keyCode === 13) {
+                                                                             generarNroGuia();
+                                                                             return false;
+                                                                         }" />
+                                                </td>
+                                                <td>
+                                                    <p:outputLabel for="guiaRemision" value="Nro:"   />    
+                                                </td>
+                                                <td>
+                                                    <p:inputText id="guiaRemision" value="#{facturaBean.factura.numGuiaRemision}" style="width: 90px; " disabled="true" />
+                                                </td>
 
-                                    <p:column>
-                                        <p:outputLabel for="guiaRemision" value="N° Guia: " style="display: block; width: 45px;"  />
-                                    </p:column>
-                                    <p:column >
-                                        <p:inputText id="guiaRemision" value="#{facturaBean.factura.numGuiaRemision}" style="width: 90px; " disabled="true" />
+                                            </tr>
+                                        </table>
                                     </p:column>
 
                                 </p:row>
@@ -340,7 +366,7 @@
                             </p:panelGrid>
                             <p:dataTable id="tablaFacturaDetalle"
                                          var="fd" value="#{facturaBean.listaFacturaDetalle}" rowIndexVar="rowIndex"
-                                         emptyMessage="No hay datos de detalle"  scrollable="true" scrollHeight="270"
+                                         emptyMessage="No hay datos de detalle"  scrollable="true" scrollHeight="250"
                                          >
 
                                 <f:facet name="header">
