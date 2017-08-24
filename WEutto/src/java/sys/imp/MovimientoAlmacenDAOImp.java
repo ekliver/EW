@@ -392,68 +392,11 @@ public class MovimientoAlmacenDAOImp implements MovimientoAlmacenDAO {
         Connection cn = null;
         PreparedStatement ps = null;
         String sql = "UPDATE AIMAR_MovAlmacenCab SET "
-                + "ruc_companyia=?, \n"
-                + "Anyo=?, \n"
-                + "cod_establecimiento=?, \n"
-                + "cod_centroc=?, \n"
-                + "Cod_Area=?, \n"
-                + "cod_almacen=?, \n"
-                + "Cod_TipoProducto=?, \n"
-                + "num_movimiento=?, \n"
-                + "Cod_TipoConcepto=?, \n"
-                + "num_documento=?, \n"
                 + "cod_persona=?, \n"
                 + "fec_movimiento=?, \n"
-                + "cod_concepto=?, \n"
-                + "cod_documento=?, \n"
-                + "tip_cambio=?, \n"
-                + "cod_moneda=?, \n"
-                + "F1TIPPRV=?, \n"
-                + "cod_establecimiento_des=?, \n"
-                + "cod_centroc_des=?, \n"
-                + "cod_almacen_des=?, \n"
-                + "cod_area_des=?, \n"
-                + "num_movimiento_des=?, \n"
-                + "num_factura=?, \n"
-                + "num_orden=?, \n"
-                + "num_imp=?, \n"
-                + "partida=?, \n"
-                + "F4ORDTRA=?, \n"
-                + "F4FECULT=?, \n"
-                + "F2CODUSE=?, \n"
-                + "Refere=?, \n"
-                + "F4CONTABLE=?, \n"
-                + "F4CORRELATIVO=?, \n"
-                + "flg_Origen=?, \n"
                 + "fec_actualizacion=?, \n"
                 + "hor_actualizacion=?, \n"
-                + "cod_usuario_actualizacion=?, \n"
-                + "Exportado=?, \n"
-                + "Importado=?, \n"
-                + "fec_importacion=?, \n"
-                + "hor_importacion=?, \n"
-                + "cod_usuario_imp=?, \n"
-                + "num_mov_importado=?, \n"
-                + "flg_formVoucher=?, \n"
-                + "cod_sub_concepto=?, \n"
-                + "flg_AsientoContable=?, \n"
-                + "id_activofijo=?, \n"
-                + "fec_asiento=?, \n"
-                + "anno_asiento=?, \n"
-                + "mes_asiento=?, \n"
-                + "tipo_asiento=?, \n"
-                + "num_asiento=?, \n"
-                + "fec_creacion_asiento=?, \n"
-                + "hor_creacion_asiento=?, \n"
-                + "cod_usuario_asiento=?, \n"
-                + "cod_centron=?, \n"
-                + "des_Glosa=?, \n"
-                + "flg_transcodigos=?, \n"
-                + "flg_editando=?, \n"
-                + "des_observacion=?, \n"
-                + "cod_usuario_editando=?, \n"
-                + "fec_usuario_editando=?, \n"
-                + "hor_usuario_editando=? "
+                + "cod_usuario_actualizacion=? \n"
                 + "WHERE num_documento=?; ";
 
         Date fechaActual = new Date();
@@ -466,69 +409,12 @@ public class MovimientoAlmacenDAOImp implements MovimientoAlmacenDAO {
         try {
             cn = Service.getConexion();
             ps = cn.prepareStatement(sql);
-            ps.setString(1, movimientoAlmacen.getRucCompanyia());
-            ps.setString(2, movimientoAlmacen.getAnyo());
-            ps.setString(3, movimientoAlmacen.getCodEstablecimiento());
-            ps.setInt(4, movimientoAlmacen.getCodCentroc());
-            ps.setInt(5, movimientoAlmacen.getCodArea());
-            ps.setInt(6, movimientoAlmacen.getCodAlmacen());
-            ps.setString(7, movimientoAlmacen.getCodTipoProducto());
-            ps.setString(8, movimientoAlmacen.getNumMovimiento());
-            ps.setString(9, movimientoAlmacen.getCodTipoConcepto());
-            ps.setString(10, movimientoAlmacen.getNumDocumento());
-            ps.setInt(11, movimientoAlmacen.getCodPersona());
-            ps.setDate(12, convertJavaDateToSqlDate(movimientoAlmacen.getFecMovimiento()));
-            ps.setString(13, movimientoAlmacen.getCodConcepto());
-            ps.setString(14, movimientoAlmacen.getCodDocumento());
-            ps.setDouble(15, movimientoAlmacen.getTipCambio());
-            ps.setString(16, movimientoAlmacen.getCodMoneda());
-            ps.setString(17, movimientoAlmacen.getF1tipprv());
-            ps.setString(18, movimientoAlmacen.getCodEstablecimientoDes());
-            ps.setInt(19, movimientoAlmacen.getCodCentrocDes());
-            ps.setInt(20, movimientoAlmacen.getCodAlmacenDes());
-            ps.setInt(21, movimientoAlmacen.getCodAreaDes());
-            ps.setString(22, movimientoAlmacen.getNumMovimientoDes());
-            ps.setString(23, movimientoAlmacen.getNumFactura());
-            ps.setString(24, movimientoAlmacen.getNumOrden());
-            ps.setString(25, movimientoAlmacen.getNumImp());
-            ps.setString(26, movimientoAlmacen.getPartida());
-            ps.setString(27, movimientoAlmacen.getF4ordtra());
-            ps.setString(28, movimientoAlmacen.getF4fecult());
-            ps.setString(29, movimientoAlmacen.getF2coduse());
-            ps.setString(30, movimientoAlmacen.getRefere());
-            ps.setString(31, movimientoAlmacen.getF4contable());
-            ps.setInt(32, movimientoAlmacen.getF4correlativo());
-            ps.setString(33, movimientoAlmacen.getFlgOrigen());
-            ps.setString(34, movimientoAlmacen.getFecActualizacion());
-            ps.setString(35, movimientoAlmacen.getHorActualizacion());
-            ps.setInt(36, movimientoAlmacen.getCodUsuarioActualizacion());
-            ps.setString(37, movimientoAlmacen.getExportado());
-            ps.setString(38, movimientoAlmacen.getImportado());
-            ps.setString(39, movimientoAlmacen.getFecImportacion());
-            ps.setString(40, movimientoAlmacen.getHorImportacion());
-            ps.setInt(41, movimientoAlmacen.getCodUsuarioImp());
-            ps.setString(42, movimientoAlmacen.getNumMovImportado());
-            ps.setString(43, movimientoAlmacen.getFlgFormVoucher());
-            ps.setString(44, movimientoAlmacen.getCodSubConcepto());
-            ps.setString(45, movimientoAlmacen.getFlgAsientoContable());
-            ps.setInt(46, movimientoAlmacen.getIdActivofijo());
-            ps.setString(47, movimientoAlmacen.getFecAsiento());
-            ps.setString(48, movimientoAlmacen.getAnnoAsiento());
-            ps.setString(49, movimientoAlmacen.getMesAsiento());
-            ps.setString(50, movimientoAlmacen.getTipoAsiento());
-            ps.setInt(51, movimientoAlmacen.getNumAsiento());
-            ps.setString(52, movimientoAlmacen.getFecCreacionAsiento());
-            ps.setString(53, movimientoAlmacen.getHorCreacionAsiento());
-            ps.setInt(54, movimientoAlmacen.getCodUsuarioAsiento());
-            ps.setString(55, movimientoAlmacen.getCodCentron());
-            ps.setString(56, movimientoAlmacen.getDesGlosa());
-            ps.setString(57, movimientoAlmacen.getFlgTranscodigos());
-            ps.setString(58, movimientoAlmacen.getFlgEditando());
-            ps.setString(59, movimientoAlmacen.getDesObservacion());
-            ps.setInt(60, movimientoAlmacen.getCodUsuarioEditando());
-            ps.setString(61, movimientoAlmacen.getFecUsuarioEditando());
-            ps.setString(62, movimientoAlmacen.getHorUsuarioEditando());
-            ps.setString(63, movimientoAlmacen.getNumDocumento());
+            ps.setInt(1, movimientoAlmacen.getCodPersona());
+            ps.setDate(2, convertJavaDateToSqlDate(movimientoAlmacen.getFecMovimiento()));
+            ps.setString(3, movimientoAlmacen.getFecActualizacion());
+            ps.setString(4, movimientoAlmacen.getHorActualizacion());
+            ps.setInt(5, movimientoAlmacen.getCodUsuarioActualizacion());
+            ps.setString(6, movimientoAlmacen.getNumDocumento());
             ps.executeUpdate();
 
         } catch (Exception e) {

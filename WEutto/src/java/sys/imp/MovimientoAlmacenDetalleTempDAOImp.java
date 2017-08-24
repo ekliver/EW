@@ -151,7 +151,7 @@ public class MovimientoAlmacenDetalleTempDAOImp implements MovimientoAlmacenDeta
             cn = Service.getConexion();
             ps = cn.prepareStatement(sql);
 
-            ps.setInt(1, notaDespachoDetalle.getIdMovDet());
+            ps.setInt(1, notaDespachoDetalle.getIdMovValeProducto());
             ps.setInt(2, notaDespachoDetalle.getIdMovValeCab());
             ps.setString(3, notaDespachoDetalle.getRucCompanyia());
             ps.setString(4, notaDespachoDetalle.getCodEstablecimiento());

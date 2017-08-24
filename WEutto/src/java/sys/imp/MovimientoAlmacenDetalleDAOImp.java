@@ -161,16 +161,16 @@ public class MovimientoAlmacenDetalleDAOImp implements MovimientoAlmacenDetalleD
             cn = Service.getConexion();
             ps = cn.prepareStatement(sql);
             
-            ps.setString(8, movimientoAlmacenDetalle.getNumMovimiento());
-            ps.setInt(13, movimientoAlmacenDetalle.getNumCantidad());            
-            ps.setString(33, movimientoAlmacenDetalle.getFecActualizacion());
-            ps.setString(34, movimientoAlmacenDetalle.getHorActualizacion());
-            ps.setInt(35, movimientoAlmacenDetalle.getCodUsuarioActualizacion());
-            ps.setInt(50, movimientoAlmacenDetalle.getCodPresentacion());
-            ps.setInt(51, movimientoAlmacenDetalle.getNumCantidadPresentacion());
-            ps.setString(52, movimientoAlmacenDetalle.getCodUm());
-            ps.setInt(53, movimientoAlmacenDetalle.getValEquivalencia());
-            ps.setInt(60, movimientoAlmacenDetalle.getIdMovAlmDet());
+            ps.setString(1, movimientoAlmacenDetalle.getNumMovimiento());
+            ps.setInt(2, movimientoAlmacenDetalle.getNumCantidad());            
+            ps.setString(3, movimientoAlmacenDetalle.getFecActualizacion());
+            ps.setString(4, movimientoAlmacenDetalle.getHorActualizacion());
+            ps.setInt(5, movimientoAlmacenDetalle.getCodUsuarioActualizacion());
+            ps.setInt(6, movimientoAlmacenDetalle.getCodPresentacion());
+            ps.setInt(7, movimientoAlmacenDetalle.getNumCantidadPresentacion());
+            ps.setString(8, movimientoAlmacenDetalle.getCodUm());
+            ps.setInt(9, movimientoAlmacenDetalle.getValEquivalencia());
+            ps.setInt(10, movimientoAlmacenDetalle.getIdMovAlmDet());
 
             ps.executeUpdate();
         } catch (Exception e) {

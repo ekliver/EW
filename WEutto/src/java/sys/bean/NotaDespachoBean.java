@@ -80,11 +80,9 @@ public class NotaDespachoBean implements Serializable {
     private boolean nuevo;
     private String nameBtnSave;
     private String nameFocus;
-    
+
     private AvmovGuiaRemisionCab guiaRemision;
     private List<AvmovGuiaRemisionDet> listaGuiaRemisionDetalle;
-
-    
 
     public NotaDespachoBean() {
         //Filtro de fecha
@@ -283,8 +281,6 @@ public class NotaDespachoBean implements Serializable {
     public void setListaGuiaRemisionDetalle(List<AvmovGuiaRemisionDet> listaGuiaRemisionDetalle) {
         this.listaGuiaRemisionDetalle = listaGuiaRemisionDetalle;
     }
-    
-    
 
     public void agregarNotasDespachoDetalle() {
 
@@ -455,10 +451,11 @@ public class NotaDespachoBean implements Serializable {
                 NotaDespachoDAO nDDao = new NotaDespachoDAOImp();
                 notaDespacho.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
                 nDDao.updateNotaDespacho(notaDespacho);
+                notaDespacho.setIdMovValeCab(nDDao.obtenerNotaDespacho(notaDespacho).getIdMovValeCab());
                 //inicia
                 AimarMovAlmacenCab movimientoAlmacen = new AimarMovAlmacenCab();
+
                 movimientoAlmacen.setRucCompanyia(notaDespacho.getRucCompanyia());
-                movimientoAlmacen.setAnyo(lBean.getAnyo());
                 movimientoAlmacen.setCodEstablecimiento(notaDespacho.getCodEstablecimiento());
                 movimientoAlmacen.setCodCentroc(notaDespacho.getCodCentroc());
                 movimientoAlmacen.setCodArea(notaDespacho.getCodArea());
@@ -470,108 +467,144 @@ public class NotaDespachoBean implements Serializable {
                 movimientoAlmacen.setFecMovimiento(notaDespacho.getFecVale());
                 movimientoAlmacen.setCodConcepto("24");
                 movimientoAlmacen.setCodDocumento("88");
-                movimientoAlmacen.setCodUsuarioCreacion(notaDespacho.getCodUsuarioCreacion());
+                movimientoAlmacen.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
 
                 MovimientoAlmacenDAO mADao = new MovimientoAlmacenDAOImp();
+
                 AimarMovAlmacenCab mv;
+                mADao.updateMovimientoAlmacen(movimientoAlmacen);
                 NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
                 MovimientoAlmacenDetalleDAO mADDao = new MovimientoAlmacenDetalleDAOImp();
                 AimarMovAlmacenDet movimientoAlmacenDetalle;
 
-                //Inicio: Actualizacion  y creacion de nuevos registros de la listaNotaDespachoDetalle
-                for (AvmovMovNotaDespachoDet item : listaNotaDespachoDetalle) {
-                    //Inicio: Actualizacion
-                    if (item.getIdMovValeProducto() > 0) {
-                        item.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
-                        nDDDao.updateNotaDespachoDetalle(item);
-                        //Inicio: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle actualizada
-                        movimientoAlmacenDetalle = new AimarMovAlmacenDet();
-                        movimientoAlmacenDetalle.setIdMovAlmCab(item.getIdMovValeCab());
-                        movimientoAlmacenDetalle.setIdMovAlmDet(item.getIdMovDet());
-                        movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
-                        movimientoAlmacenDetalle.setNumMovimiento(item.getNumVale());
-                        movimientoAlmacenDetalle.setNumCantidad(item.getCtdMovimiento());
-                        movimientoAlmacenDetalle.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
-                        movimientoAlmacenDetalle.setCodPresentacion(item.getCodPresentacion());
-                        movimientoAlmacenDetalle.setNumCantidadPresentacion(item.getNumCantidadPresentacion());
-                        movimientoAlmacenDetalle.setCodUm(item.getCodMedida());
-                        movimientoAlmacenDetalle.setValEquivalencia(item.getNumPresentacionEquivalencia());
+                int validarCantidad = 0;
+                String itemsSinCantidad = "";
 
-                        movimientoAlmacenDetalle = mADDao.obtenerMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
-                        //Fin: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle actualizada
-                        //Inicio: se actualiza el movimiento de almacen detalle
-                        mADDao.updateMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
-                        //Fin: se actualiza el movimiento de almacen detalle
+                if (notaDespacho.getCodPersona() > 0) {
+                    int i = 0;
+                    for (AvmovMovNotaDespachoDet it : listaNotaDespachoDetalle) {
+                        i++;
+                        if (it.getCtdMovimiento() <= 0) {
 
-                    } //Fin: Actualizacion
-                    //Inicio: Creacion
-                    else {
+                            validarCantidad += 1;
+                            if (validarCantidad == 1) {
+                                itemsSinCantidad = String.valueOf(i);
+                            } else {
+                                itemsSinCantidad = itemsSinCantidad + ", " + i;
+                            }
 
-                        String numMovimiento = mADao.obtenerNroMovimientoRelNdMovInv(item);
-
-                        if (numMovimiento.equals("")) {//validar si compañia no tiene movimiento
-                            mADao.newMovimientoAlmacen(movimientoAlmacen, notaDespacho);
                         }
-                        mv = mADao.obtenerMovimientoAlmacen(movimientoAlmacen);
-                        movimientoAlmacen.setIdMovAlmCab(mv.getIdMovAlmCab());
-                        movimientoAlmacen.setNumMovimiento(mv.getNumMovimiento());
-
-                        item.setIdMovValeCab(notaDespacho.getIdMovValeCab());
-
-                        nDDDao.newNotaDespachoDetalle(item);
-
-                        item.setIdMovValeProducto(nDDDao.obtenerIdNotaDespachoDetalle(item).getIdMovValeProducto());
-                        //Inicio: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle nueva
-                        movimientoAlmacenDetalle = new AimarMovAlmacenDet();
-                        movimientoAlmacenDetalle.setIdMovAlmCab(movimientoAlmacen.getIdMovAlmCab());
-                        movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
-                        movimientoAlmacenDetalle.setRucCompanyia(movimientoAlmacen.getRucCompanyia());
-                        movimientoAlmacenDetalle.setAnyo(movimientoAlmacen.getAnyo());
-                        movimientoAlmacenDetalle.setCodEstablecimiento(item.getCodEstablecimiento());
-                        movimientoAlmacenDetalle.setCodCentroc(item.getCodCentroc());
-                        movimientoAlmacenDetalle.setCodArea(item.getCodArea());
-                        movimientoAlmacenDetalle.setCodAlmacen(item.getCodAlmacen());
-                        movimientoAlmacenDetalle.setNumMovimiento(movimientoAlmacen.getNumMovimiento());
-                        movimientoAlmacenDetalle.setCodProducto(item.getCodProducto());
-                        movimientoAlmacenDetalle.setCodTipoProducto(movimientoAlmacen.getCodTipoProducto());
-                        movimientoAlmacenDetalle.setNumCantidad(item.getCtdMovimiento());
-                        movimientoAlmacenDetalle.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
-                        movimientoAlmacenDetalle.setCodPresentacion(item.getCodPresentacion());
-                        movimientoAlmacenDetalle.setNumCantidadPresentacion(item.getNumCantidadPresentacion());
-                        movimientoAlmacenDetalle.setCodUm(item.getCodMedida());
-                        movimientoAlmacenDetalle.setValEquivalencia(item.getNumPresentacionEquivalencia());
-                        movimientoAlmacenDetalle.setNumCantidadPresentacion(item.getNumCantidadPresentacion());
-                        //Fin: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle nueva
-                        //Inicio: Se registra el nuevo movimiento almacen detalle
-                        mADDao.newMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
-                        //Fin: Se registra el nuevo movimiento almacen detalle
                     }
-                    //Fin: Creacion
+                    if (validarCantidad == 0) {
+
+                        //Inicio: Actualizacion  y creacion de nuevos registros de la listaNotaDespachoDetalle
+                        for (AvmovMovNotaDespachoDet item : listaNotaDespachoDetalle) {
+                            //Inicio: Actualizacion
+                            if (item.getIdMovValeProducto() > 0) {
+                                item.setIdMovValeCab(notaDespacho.getIdMovValeCab());
+                                item.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
+                                nDDDao.updateNotaDespachoDetalle(item);
+                                //Inicio: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle actualizada
+                                movimientoAlmacenDetalle = new AimarMovAlmacenDet();
+                                movimientoAlmacenDetalle.setIdMovAlmCab(item.getIdMovValeCab());
+                                movimientoAlmacenDetalle.setIdMovAlmDet(item.getIdMovDet());
+                                movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
+                                movimientoAlmacenDetalle.setNumMovimiento(item.getNumVale());
+                                movimientoAlmacenDetalle.setNumCantidad(item.getCtdMovimiento());
+                                movimientoAlmacenDetalle.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
+                                movimientoAlmacenDetalle.setCodPresentacion(item.getCodPresentacion());
+                                movimientoAlmacenDetalle.setNumCantidadPresentacion(item.getNumCantidadPresentacion());
+                                movimientoAlmacenDetalle.setCodUm(item.getCodMedida());
+                                movimientoAlmacenDetalle.setValEquivalencia(item.getNumPresentacionEquivalencia());
+
+                                movimientoAlmacenDetalle = mADDao.obtenerMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
+                                //Fin: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle actualizada
+                                //Inicio: se actualiza el movimiento de almacen detalle
+                                mADDao.updateMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
+                                //Fin: se actualiza el movimiento de almacen detalle
+
+                            } //Fin: Actualizacion
+                            //Inicio: Creacion
+                            else {
+
+                                String numMovimiento = mADao.obtenerNroMovimientoRelNdMovInv(item);
+
+                                if (numMovimiento.equals("")) {//validar si compañia no tiene movimiento
+                                    mADao.newMovimientoAlmacen(movimientoAlmacen, notaDespacho);
+                                }
+                                mv = mADao.obtenerMovimientoAlmacen(movimientoAlmacen);
+                                movimientoAlmacen.setIdMovAlmCab(mv.getIdMovAlmCab());
+                                movimientoAlmacen.setNumMovimiento(mv.getNumMovimiento());
+
+                                item.setIdMovValeCab(notaDespacho.getIdMovValeCab());
+
+                                nDDDao.newNotaDespachoDetalle(item);
+
+                                item.setIdMovValeProducto(nDDDao.obtenerIdNotaDespachoDetalle(item).getIdMovValeProducto());
+                                //Inicio: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle nueva
+                                movimientoAlmacenDetalle = new AimarMovAlmacenDet();
+                                movimientoAlmacenDetalle.setIdMovAlmCab(movimientoAlmacen.getIdMovAlmCab());
+                                movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
+                                movimientoAlmacenDetalle.setRucCompanyia(movimientoAlmacen.getRucCompanyia());
+                                movimientoAlmacenDetalle.setAnyo(movimientoAlmacen.getAnyo());
+                                movimientoAlmacenDetalle.setCodEstablecimiento(item.getCodEstablecimiento());
+                                movimientoAlmacenDetalle.setCodCentroc(item.getCodCentroc());
+                                movimientoAlmacenDetalle.setCodArea(item.getCodArea());
+                                movimientoAlmacenDetalle.setCodAlmacen(item.getCodAlmacen());
+                                movimientoAlmacenDetalle.setNumMovimiento(movimientoAlmacen.getNumMovimiento());
+                                movimientoAlmacenDetalle.setCodProducto(item.getCodProducto());
+                                movimientoAlmacenDetalle.setCodTipoProducto(movimientoAlmacen.getCodTipoProducto());
+                                movimientoAlmacenDetalle.setNumCantidad(item.getCtdMovimiento());
+                                movimientoAlmacenDetalle.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
+                                movimientoAlmacenDetalle.setCodPresentacion(item.getCodPresentacion());
+                                movimientoAlmacenDetalle.setNumCantidadPresentacion(item.getNumCantidadPresentacion());
+                                movimientoAlmacenDetalle.setCodUm(item.getCodMedida());
+                                movimientoAlmacenDetalle.setValEquivalencia(item.getNumPresentacionEquivalencia());
+                                movimientoAlmacenDetalle.setNumCantidadPresentacion(item.getNumCantidadPresentacion());
+                                //Fin: Se llenan datos del movimientoAlmacenDetalle obteniendolos de la nota de despacho detalle nueva
+                                //Inicio: Se registra el nuevo movimiento almacen detalle
+                                mADDao.newMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
+                                //Fin: Se registra el nuevo movimiento almacen detalle
+                            }
+                            //Fin: Creacion
+                        }
+                        //Fin: Actualizacion  y creacion de nuevos registros de la listaNotaDespachoDetalle
+
+                        //Inicio: Eliminando Movimientos de almacen detalle y nota de despacho detalle que se registraron en listaEliminadoNotaDespachoDetalle
+                        for (AvmovMovNotaDespachoDet item : listaEliminadoNotaDespachoDetalle) {
+                            nDDDao.deleteNotaDespachoDetalle(item);
+
+                            movimientoAlmacenDetalle = new AimarMovAlmacenDet();
+                            movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
+
+                            mADDao.deleteMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
+                        }
+                        //Fin: Eliminando Movimientos de almacen detalle y nota de despacho detalle que se registraron en listaEliminadoNotaDespachoDetalle
+
+                        
+                            listaNotaDespacho = nDDao.listarNotaDespachosPorFecha(feDesde, feHasta);
+                            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                                    "Informacion", "Se guardo con exito!"));
+                            RequestContext.getCurrentInstance().execute("PF('dialogNuevaNotaDespacho').hide();");
+                            
+                        //Inicio: Limpiando tabla de datos temporales que registro el usuario activo
+                        MovimientoAlmacenTempDAO mATDao = new MovimientoAlmacenTempDAOImp();
+                        mATDao.deleteAllMovimientoAlmacenTemp(lBean.getUsuario());
+
+                        MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
+                        mADTDao.deleteAllMovimientoAlmacenDetalleTemp(lBean.getUsuario());
+                        //Fin: Limpiando tabla de datos temporales que registro el usuario activo
+
+                    } else {
+                        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                                "Informacion", "Debe indicar cantidad para los siguientes items:\n" + itemsSinCantidad));
+                    }
+
+                } else {
+                    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                            "Informacion", "Debe seleccionar un cliente"));
+
                 }
-                //Fin: Actualizacion  y creacion de nuevos registros de la listaNotaDespachoDetalle
-
-                //Inicio: Eliminando Movimientos de almacen detalle y nota de despacho detalle que se registraron en listaEliminadoNotaDespachoDetalle
-                for (AvmovMovNotaDespachoDet item : listaEliminadoNotaDespachoDetalle) {
-                    nDDDao.deleteNotaDespachoDetalle(item);
-
-                    movimientoAlmacenDetalle = new AimarMovAlmacenDet();
-                    movimientoAlmacenDetalle.setIdNotaDespachoDet(item.getIdMovValeProducto());
-
-                    mADDao.deleteMovimientoAlmacenDetalle(movimientoAlmacenDetalle);
-                }
-                //Fin: Eliminando Movimientos de almacen detalle y nota de despacho detalle que se registraron en listaEliminadoNotaDespachoDetalle
-
-                listaNotaDespacho = nDDao.listarNotaDespachosPorFecha(feDesde, feHasta);
-                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Informacion", "Se guardo con exito!"));
-                RequestContext.getCurrentInstance().execute("PF('dialogNuevaNotaDespacho').hide();");
-                //Inicio: Limpiando tabla de datos temporales que registro el usuario activo
-                MovimientoAlmacenTempDAO mATDao = new MovimientoAlmacenTempDAOImp();
-                mATDao.deleteAllMovimientoAlmacenTemp(lBean.getUsuario());
-
-                MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
-                mADTDao.deleteAllMovimientoAlmacenDetalleTemp(lBean.getUsuario());
-                //Fin: Limpiando tabla de datos temporales que registro el usuario activo
             } catch (Exception e) {
 
                 System.out.println(e.getMessage());
@@ -631,33 +664,32 @@ public class NotaDespachoBean implements Serializable {
         nameBtnSave = "Actualizar";
         nameFocus = "tablaNotaDespachoDetalle";
 
+        //Limpieza de tablas temporrales
+        MovimientoAlmacenTempDAO mATDao = new MovimientoAlmacenTempDAOImp();
+        mATDao.deleteAllMovimientoAlmacenTemp(lBean.getUsuario());
+        MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
+        mADTDao.deleteAllMovimientoAlmacenDetalleTemp(lBean.getUsuario());
+
         NotaDespachoDAO nDDao = new NotaDespachoDAOImp();
         NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
-        MovimientoAlmacenTempDAO mATDao = new MovimientoAlmacenTempDAOImp();
-        MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
-        
+
         notaDespacho = new AvmovMovNotaDespachoCab();
         notaDespacho = nDDao.obtenerNotaDespacho(nd);
 
-        
         listaNotaDespachoDetalle = new ArrayList<>();
         listaNotaDespachoDetalle = nDDDao.listarNotaDespachoDetalles(nd);
-        
+
         notaDespacho.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
         mATDao.newMovimientoAlmacen(notaDespacho);
 
         notaDespacho.setIdMovValeCab(mATDao.obtenerMovimientoAlmacen(notaDespacho).getIdMovValeCab());
-        
+
         for (AvmovMovNotaDespachoDet item : listaNotaDespachoDetalle) {
             item.setIdMovValeCab(mATDao.obtenerMovimientoAlmacen(notaDespacho).getIdMovValeCab());
             item.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
             mADTDao.newMovimientoAlmacenDetalleTemp(item);
         }
 
-        
-        
-
-        
         listaNotaDespachoDetalle = new ArrayList<>();
         listaNotaDespachoDetalle = mADTDao.listarNotaDespachoDetalles(notaDespacho);
 
