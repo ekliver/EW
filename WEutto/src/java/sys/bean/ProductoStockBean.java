@@ -5,7 +5,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import sys.dao.ProductoStockDAO;
-import sys.imp.ProductoStockDAOImp;
+import sys.imp.ProductoStockDAOImpl;
 import sys.model.AimarStockActual;
 
 @ManagedBean
@@ -17,7 +17,7 @@ public class ProductoStockBean implements Serializable {
 
     public ProductoStockBean() {
         productoStock = new AimarStockActual();
-        ProductoStockDAO pDDao = new ProductoStockDAOImp();
+        ProductoStockDAO pDDao = new ProductoStockDAOImpl();
         listaProductoStocks = pDDao.listarProductoStocks();
 
     }

@@ -29,20 +29,20 @@ import sys.dao.NotaDespachoDAO;
 import sys.dao.NotaDespachoDetalleDAO;
 import sys.dao.ProductoStockMDAO;
 import sys.dao.UnidadTransporteDAO;
-import sys.imp.ClienteDAOImp;
-import sys.imp.ConductorDAOImp;
-import sys.imp.EmpresaTransporteDAOImp;
-import sys.imp.EstadoTipoDocumentoDAOImp;
-import sys.imp.FacturaDAOImp;
-import sys.imp.FacturaDetalleDAOImp;
-import sys.imp.GuiaRemisionDAOImp;
-import sys.imp.GuiaRemisionDetalleDAOImp;
-import sys.imp.MovimientoAlmacenDetalleDAOImp;
-import sys.imp.MovimientoAlmacenDetalleTempDAOImp;
-import sys.imp.NotaDespachoDAOImp;
-import sys.imp.NotaDespachoDetalleDAOImp;
-import sys.imp.ProductoStockMDAOImp;
-import sys.imp.UnidadTransporteDAOImp;
+import sys.imp.ClienteDAOImpl;
+import sys.imp.ConductorDAOImpl;
+import sys.imp.EmpresaTransporteDAOImpl;
+import sys.imp.EstadoTipoDocumentoDAOImpl;
+import sys.imp.FacturaDAOImpl;
+import sys.imp.FacturaDetalleDAOImpl;
+import sys.imp.GuiaRemisionDAOImpl;
+import sys.imp.GuiaRemisionDetalleDAOImpl;
+import sys.imp.MovimientoAlmacenDetalleDAOImpl;
+import sys.imp.MovimientoAlmacenDetalleTempDAOImpl;
+import sys.imp.NotaDespachoDAOImpl;
+import sys.imp.NotaDespachoDetalleDAOImpl;
+import sys.imp.ProductoStockMDAOImpl;
+import sys.imp.UnidadTransporteDAOImpl;
 import sys.model.AgmaeEstadoTipoDocumento;
 import sys.model.AgmaePersona;
 import sys.model.AimarConductores;
@@ -131,7 +131,7 @@ public class GuiaRemisionBean implements Serializable {
 
         //Listado
         listaGuiaRemision = new ArrayList<>();
-        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImp();
+        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImpl();
         listaGuiaRemision = gRDao.listarGuiasRemisionPorFecha(feDesde, feHasta);
     }
 
@@ -250,7 +250,7 @@ public class GuiaRemisionBean implements Serializable {
     
     
     public List<AgmaeEstadoTipoDocumento> getListaEstadoTipoDocumento() {
-        EstadoTipoDocumentoDAO eTDDao = new EstadoTipoDocumentoDAOImp();
+        EstadoTipoDocumentoDAO eTDDao = new EstadoTipoDocumentoDAOImpl();
         listaEstadoTipoDocumento = eTDDao.listarEstadoTipoDocumento("09");
         return listaEstadoTipoDocumento;
     }
@@ -260,7 +260,7 @@ public class GuiaRemisionBean implements Serializable {
     }
 
     public List<AimarUnidadTransporte> getListaUnidadTransporte() {
-        UnidadTransporteDAO uTDao = new UnidadTransporteDAOImp();
+        UnidadTransporteDAO uTDao = new UnidadTransporteDAOImpl();
         listaUnidadTransporte = uTDao.listarUnidadTransporte();
         return listaUnidadTransporte;
     }
@@ -278,7 +278,7 @@ public class GuiaRemisionBean implements Serializable {
     }
 
     public List<AimarConductores> getListaConductor() {
-        ConductorDAO cDao = new ConductorDAOImp();
+        ConductorDAO cDao = new ConductorDAOImpl();
         listaConductor = cDao.listarConductores();
         return listaConductor;
     }
@@ -296,7 +296,7 @@ public class GuiaRemisionBean implements Serializable {
     }
 
     public List<AimarEmpresaTransporte> getListaEmpresaTransporte() {
-        EmpresaTransporteDAO eTDao = new EmpresaTransporteDAOImp();
+        EmpresaTransporteDAO eTDao = new EmpresaTransporteDAOImpl();
         listaEmpresaTransporte = eTDao.listarEmpresaTransporte();
         return listaEmpresaTransporte;
     }
@@ -430,7 +430,7 @@ public class GuiaRemisionBean implements Serializable {
     }
 
     public void agregarProductoGuiaRemisionDetalle() {
-        MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImp();
+        MovimientoAlmacenDetalleTempDAO mADTDao = new MovimientoAlmacenDetalleTempDAOImpl();
 
         AvmovMovNotaDespachoCab nd=new AvmovMovNotaDespachoCab();
        nd.setIdMovValeCab(1);
@@ -507,7 +507,7 @@ public class GuiaRemisionBean implements Serializable {
     }
 
     public void anularGuiaRemision(AvmovGuiaRemisionCab gr) {
-        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImp();
+        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImpl();
         gr = gRDao.obtenerGuiaRemisionPorIdGuiaRemision(gr);
         gr.setFlgEstado("A");
         gr.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
@@ -517,27 +517,27 @@ public class GuiaRemisionBean implements Serializable {
     }
 
     public void consultarFacturasPorFechas() {
-        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImp();
+        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImpl();
         listaFactura = gRDao.listaFacturas(feDesdeAgregar, feHastaAgregar, listaGuiaRemisionDetalle);
     }
 
     public void consultarNotaDespachosPorFechas() {
-        NotaDespachoDAO nDDao = new NotaDespachoDAOImp();
+        NotaDespachoDAO nDDao = new NotaDespachoDAOImpl();
         listaNotaDespacho = nDDao.listaNotaDespachos(feDesdeAgregar, feHastaAgregar, listaGuiaRemisionDetalle);
     }
 
     public void consultarPorFechas() {
-        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImp();
+        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImpl();
         listaGuiaRemision = gRDao.listarGuiasRemisionPorFecha(feDesde, feHasta);
     }
 
     public void guardarGuiaRemision() {
-        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImp();
-        GuiaRemisionDetalleDAO gRDDao = new GuiaRemisionDetalleDAOImp();
+        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImpl();
+        GuiaRemisionDetalleDAO gRDDao = new GuiaRemisionDetalleDAOImpl();
 
-//        MovimientoAlmacenDetalleDAO mADDao = new MovimientoAlmacenDetalleDAOImp();
+//        MovimientoAlmacenDetalleDAO mADDao = new MovimientoAlmacenDetalleDAOImpl();
 //        AimarMovAlmacenDet mAD = new AimarMovAlmacenDet();
-//        NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
+//        NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImpl();
         if (isNuevo()) {
             if (guiaRemision.getNumSerie().length() > 0) {
 
@@ -596,7 +596,7 @@ public class GuiaRemisionBean implements Serializable {
 
     public void generarNroGuia() {
         estadoNumeroSerie = true;
-        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImp();
+        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImpl();
         guiaRemision.setNumGuia(gRDao.generarNroGuiaRemision(guiaRemision));
 
     }
@@ -604,13 +604,13 @@ public class GuiaRemisionBean implements Serializable {
 
     public void listarProductosFacturaDetalle(AvmovFacturaNdCab factura) {
         listaFacturaDetalle = new ArrayList<>();
-        FacturaDetalleDAO fDDao = new FacturaDetalleDAOImp();
+        FacturaDetalleDAO fDDao = new FacturaDetalleDAOImpl();
         listaFacturaDetalle = fDDao.listarFacturaDetalleSinGR(factura, listaGuiaRemisionDetalle);
     }
 
     public void listarProductosNotaDespachoDetalle(AvmovMovNotaDespachoCab notaDespacho) {
         listaNotaDespachoDetalle = new ArrayList<>();
-        NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
+        NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImpl();
         listaNotaDespachoDetalle = nDDDao.listarNotaDespachoDetalleSinGR(notaDespacho, listaGuiaRemisionDetalle);
     }
 
@@ -681,7 +681,7 @@ public class GuiaRemisionBean implements Serializable {
 
         guiaRemisionDetalle = new AvmovGuiaRemisionDet();
         itemsEliminado = new ArrayList<>();
-        ClienteDAO cDAO=new ClienteDAOImp();
+        ClienteDAO cDAO=new ClienteDAOImpl();
         seleccionCliente=new  AgmaePersona();
         seleccionCliente=cDAO.consultarObjCliente(nd.getCodPersona());
         listoCliente();
@@ -689,7 +689,7 @@ public class GuiaRemisionBean implements Serializable {
         
         
         seleccionProductoNotaDespachoDetalle = new ArrayList<>();
-        NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
+        NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImpl();
         seleccionProductoNotaDespachoDetalle = nDDDao.listarNotaDespachoDetalleSinGR(nd, listaGuiaRemisionDetalle);
         
         agregarNotaDespachoDetalleAGuiaRemisionDetalle();
@@ -714,7 +714,7 @@ public class GuiaRemisionBean implements Serializable {
 
         guiaRemisionDetalle = new AvmovGuiaRemisionDet();
         itemsEliminado = new ArrayList<>();
-        ClienteDAO cDAO=new ClienteDAOImp();
+        ClienteDAO cDAO=new ClienteDAOImpl();
         seleccionCliente=new  AgmaePersona();
         seleccionCliente=cDAO.consultarObjCliente(f.getCodPersona());
         listoCliente();
@@ -722,7 +722,7 @@ public class GuiaRemisionBean implements Serializable {
         
         
         seleccionProductoFacturaDetalle = new ArrayList<>();
-        FacturaDetalleDAO fDDDao = new FacturaDetalleDAOImp();
+        FacturaDetalleDAO fDDDao = new FacturaDetalleDAOImpl();
         seleccionProductoFacturaDetalle = fDDDao.listarFacturaDetalleSinGR(f, listaGuiaRemisionDetalle);
         
         agregarFacturaDetalleAGuiaRemisionDetalle();
@@ -735,8 +735,8 @@ public class GuiaRemisionBean implements Serializable {
         nameBtnSave = "Actualizar";
         nameFocus = "tablaGuiaRemisionDetalle";
 
-        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImp();
-        GuiaRemisionDetalleDAO gRDDao = new GuiaRemisionDetalleDAOImp();
+        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImpl();
+        GuiaRemisionDetalleDAO gRDDao = new GuiaRemisionDetalleDAOImpl();
 
         guiaRemision = new AvmovGuiaRemisionCab();
         guiaRemision = gRDao.obtenerGuiaRemisionPorIdGuiaRemision(gr);
@@ -748,7 +748,7 @@ public class GuiaRemisionBean implements Serializable {
     }
 
     public void prepararAgregarProducto() {
-                    ProductoStockMDAO pSMDao = new ProductoStockMDAOImp();
+                    ProductoStockMDAO pSMDao = new ProductoStockMDAOImpl();
                     listaProductoStocks = pSMDao.listarProductoStocks(guiaRemision.getFecEmision());
 
     }
@@ -757,7 +757,7 @@ public class GuiaRemisionBean implements Serializable {
         factura = new AvmovFacturaNdCab();
         listaFactura = new ArrayList<>();
         listaFacturaDetalle = new ArrayList<>();
-        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImp();
+        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImpl();
         listaFactura = gRDao.listaFacturas(feDesdeAgregar, feHastaAgregar, listaGuiaRemisionDetalle);
 
     }
@@ -766,7 +766,7 @@ public class GuiaRemisionBean implements Serializable {
         notaDespacho = new AvmovMovNotaDespachoCab();
         listaNotaDespacho = new ArrayList<>();
         listaNotaDespachoDetalle = new ArrayList<>();
-        NotaDespachoDAO nDDao = new NotaDespachoDAOImp();
+        NotaDespachoDAO nDDao = new NotaDespachoDAOImpl();
         listaNotaDespacho = nDDao.listaNotaDespachos(feDesdeAgregar, feHastaAgregar, listaGuiaRemisionDetalle);
 
     }

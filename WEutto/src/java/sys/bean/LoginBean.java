@@ -26,12 +26,12 @@ import sys.dao.CentroCostoDAO;
 import sys.dao.CompanyaDAO;
 import sys.dao.LocalidadDAO;
 import sys.dao.UsuarioDAO;
-import sys.imp.AlmacenDAOImp;
-import sys.imp.AreaDAOImp;
-import sys.imp.CentroCostoDAOImp;
-import sys.imp.CompanyaDAOImp;
-import sys.imp.LocalidadDAOImp;
-import sys.imp.UsuarioDAOImp;
+import sys.imp.AlmacenDAOImpl;
+import sys.imp.AreaDAOImpl;
+import sys.imp.CentroCostoDAOImpl;
+import sys.imp.CompanyaDAOImpl;
+import sys.imp.LocalidadDAOImpl;
+import sys.imp.UsuarioDAOImpl;
 import sys.model.AgmaeArea;
 import sys.model.AgmaeCentrocosto;
 import sys.model.AgmaeCompanya;
@@ -101,7 +101,7 @@ public class LoginBean implements Serializable {
     }
 
     public List<AgmaeCompanya> getListaCompanya() {
-        CompanyaDAO compDAO = new CompanyaDAOImp();
+        CompanyaDAO compDAO = new CompanyaDAOImpl();
         setListaCompanya(compDAO.listarCompanyas());
         return listaCompanya;
     }
@@ -145,7 +145,7 @@ public class LoginBean implements Serializable {
     
   
     public List<AgmaeEstablecimiento> getListaLocalidad() {
-        LocalidadDAO lDao = new LocalidadDAOImp();
+        LocalidadDAO lDao = new LocalidadDAOImpl();
         listaLocalidad = lDao.listarEstablecimientos(usuario);
         return listaLocalidad;
     }
@@ -163,7 +163,7 @@ public class LoginBean implements Serializable {
     }
 
     public List<AgmaeArea> getListaArea() {
-        AreaDAO aDao = new AreaDAOImp();
+        AreaDAO aDao = new AreaDAOImpl();
         listaArea = aDao.listarAreas(usuario);
         return listaArea;
     }
@@ -181,7 +181,7 @@ public class LoginBean implements Serializable {
     }
 
     public List<AgmaeCentrocosto> getListaCentro() {
-        CentroCostoDAO cCDao = new CentroCostoDAOImp();
+        CentroCostoDAO cCDao = new CentroCostoDAOImpl();
         listaCentro = cCDao.listarCentros(usuario);
         return listaCentro;
     }
@@ -199,7 +199,7 @@ public class LoginBean implements Serializable {
     }
 
     public List<AimarAlmacen> getListaAlmacen() {
-        AlmacenDAO almDao = new AlmacenDAOImp();
+        AlmacenDAO almDao = new AlmacenDAOImpl();
         listaAlmacen = almDao.listarAlmacenes(usuario);
         return listaAlmacen;
     }
@@ -251,7 +251,7 @@ public class LoginBean implements Serializable {
 
         String ruta = "";
 
-        UsuarioDAO uDao = new UsuarioDAOImp();
+        UsuarioDAO uDao = new UsuarioDAOImpl();
         this.usuario = uDao.login(this.usuario);
 
         if (this.usuario != null) {
@@ -281,7 +281,7 @@ public class LoginBean implements Serializable {
     }
 
     public void seleccionCompanya() {
-        CompanyaDAO compDAO = new CompanyaDAOImp();
+        CompanyaDAO compDAO = new CompanyaDAOImpl();
         this.companya = compDAO.consultarObjCompanya(companya.getRucCompanya());
 
     }

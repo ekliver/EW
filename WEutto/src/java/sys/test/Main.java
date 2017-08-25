@@ -11,9 +11,9 @@ import sys.clasesAuxiliares.Funciones;
 import sys.dao.FacturaDAO;
 import sys.dao.GuiaRemisionDAO;
 import sys.dao.UnidadTransporteDAO;
-import sys.imp.FacturaDAOImp;
-import sys.imp.GuiaRemisionDAOImp;
-import sys.imp.UnidadTransporteDAOImp;
+import sys.imp.FacturaDAOImpl;
+import sys.imp.GuiaRemisionDAOImpl;
+import sys.imp.UnidadTransporteDAOImpl;
 import sys.model.AimarUnidadTransporte;
 import sys.model.AvmovFacturaNdCab;
 
@@ -25,7 +25,7 @@ public class Main {
 
     public static void main(String[] args) {
         List<AimarUnidadTransporte> listaUnidadTransporte = new ArrayList<>();
-        UnidadTransporteDAO uTDao = new UnidadTransporteDAOImp();
+        UnidadTransporteDAO uTDao = new UnidadTransporteDAOImpl();
         listaUnidadTransporte = uTDao.listarUnidadTransporte();
         for (AimarUnidadTransporte aimarUnidadTransporte : listaUnidadTransporte) {
             System.out.println( aimarUnidadTransporte.getPlaca());

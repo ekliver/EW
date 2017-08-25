@@ -7,7 +7,7 @@ package sys.bean;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import sys.imp.ProductoDAOImp;
+import sys.imp.ProductoDAOImpl;
 import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -17,7 +17,7 @@ import javax.faces.context.FacesContext;
 import org.primefaces.event.RowEditEvent;
 import sys.dao.ProductoDAO;
 import sys.dao.ProductoPrecioDAO;
-import sys.imp.ProductoPrecioDAOImp;
+import sys.imp.ProductoPrecioDAOImpl;
 import sys.model.AimarProductos;
 import sys.model.ZProductoPrecio;
 
@@ -41,7 +41,7 @@ public class ProductoBean implements Serializable {
         listaProductoPrecios = new ArrayList<>();
         
 
-        ProductoPrecioDAO proPreDao = new ProductoPrecioDAOImp();
+        ProductoPrecioDAO proPreDao = new ProductoPrecioDAOImpl();
         listaProductoPrecios = proPreDao.listarProductoPrecios();
 
     }
@@ -55,7 +55,7 @@ public class ProductoBean implements Serializable {
     }
 
     public List<AimarProductos> getListaProductos() {
-        ProductoDAO pDao = new ProductoDAOImp();
+        ProductoDAO pDao = new ProductoDAOImpl();
         listaProductos = pDao.listarProductos();
         return listaProductos;
     }
@@ -94,7 +94,7 @@ public class ProductoBean implements Serializable {
     }
 
     public void nuevoProductoPrecio() {
-        ProductoPrecioDAO pPDao = new ProductoPrecioDAOImp();
+        ProductoPrecioDAO pPDao = new ProductoPrecioDAOImpl();
         productoPrecio.setCodUsuarioCreacion(lBean.getUsuario().getCodUsuario());
         pPDao.newProductoPrecio(productoPrecio);
         listaProductoPrecios= pPDao.listarProductoPrecios();
@@ -102,7 +102,7 @@ public class ProductoBean implements Serializable {
 
     public void modificarProductoPrecio() {
 
-        ProductoPrecioDAO pPDao = new ProductoPrecioDAOImp();
+        ProductoPrecioDAO pPDao = new ProductoPrecioDAOImpl();
         productoPrecio.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
         pPDao.updateProductoPrecio(productoPrecio);
         listaProductoPrecios = pPDao.listarProductoPrecios();
@@ -110,7 +110,7 @@ public class ProductoBean implements Serializable {
     }
 
     public void eliminarProductoPrecio() {
-        ProductoPrecioDAO pPDao = new ProductoPrecioDAOImp();
+        ProductoPrecioDAO pPDao = new ProductoPrecioDAOImpl();
         pPDao.deleteProductoPrecio(productoPrecio);
         listaProductoPrecios = pPDao.listarProductoPrecios();
         productoPrecio = new ZProductoPrecio();

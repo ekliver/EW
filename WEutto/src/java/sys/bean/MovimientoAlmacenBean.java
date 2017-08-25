@@ -4,7 +4,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import sys.dao.MovimientoAlmacenDAO;
-import sys.imp.MovimientoAlmacenDAOImp;
+import sys.imp.MovimientoAlmacenDAOImpl;
 import sys.model.AimarMovAlmacenCab;
 
 @ManagedBean
@@ -27,7 +27,7 @@ public class MovimientoAlmacenBean {
     }
 
     public List<AimarMovAlmacenCab> getListaMovimientosAlmacen() {
-        MovimientoAlmacenDAO mADao = new MovimientoAlmacenDAOImp();
+        MovimientoAlmacenDAO mADao = new MovimientoAlmacenDAOImpl();
         listaMovimientosAlmacen = mADao.listarMovimientosAlmacen();
 
         return listaMovimientosAlmacen;

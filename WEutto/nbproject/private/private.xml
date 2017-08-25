@@ -4,11 +4,14 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Proyecto/2017-04-20/WEutto/src/java/sys/bean/FacturaBean.java</file>
-            <file>file:/C:/Proyecto/2017-04-20/WEutto/src/java/sys/imp/MovimientoAlmacenDetalleDAOImp.java</file>
+            <file>file:/C:/Proyecto/2017-04-20/WEutto/web/WEB-INF/plantilla/plantilla.xhtml</file>
+            <file>file:/C:/Proyecto/2017-04-20/WEutto/src/java/sys/bean/GuiaRemisionBean.java</file>
             <file>file:/C:/Proyecto/2017-04-20/WEutto/web/views/operaciones/notadespacho.xhtml</file>
-            <file>file:/C:/Proyecto/2017-04-20/WEutto/src/java/sys/imp/MovimientoAlmacenDAOImp.java</file>
-            <file>file:/C:/Proyecto/2017-04-20/WEutto/src/java/sys/dao/MovimientoAlmacenDAO.java</file>
+            <file>file:/C:/Proyecto/2017-04-20/WEutto/web/views/operaciones/factura.xhtml</file>
+            <file>file:/C:/Proyecto/2017-04-20/WEutto/src/java/sys/imp/PresentacionDAOImpl.java</file>
+            <file>file:/C:/Proyecto/2017-04-20/WEutto/src/java/sys/bean/LoginBean.java</file>
             <file>file:/C:/Proyecto/2017-04-20/WEutto/src/java/sys/bean/NotaDespachoBean.java</file>
+            <file>file:/C:/Proyecto/2017-04-20/WEutto/web/views/operaciones/guiaremision.xhtml</file>
         </group>
     </open-files>
 </project-private>

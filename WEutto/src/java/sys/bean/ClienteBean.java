@@ -10,7 +10,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import sys.imp.ClienteDAOImp;
+import sys.imp.ClienteDAOImpl;
 import sys.dao.ClienteDAO;
 import sys.model.AgmaePersona;
 
@@ -28,7 +28,7 @@ public class ClienteBean implements Serializable {
     }
 
     public List<AgmaePersona> getListaClientes() {
-        ClienteDAO cDao = new ClienteDAOImp();
+        ClienteDAO cDao = new ClienteDAOImpl();
         listaClientes = cDao.listarClientes();
         return listaClientes;
     }

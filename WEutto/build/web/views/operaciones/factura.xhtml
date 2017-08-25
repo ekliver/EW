@@ -282,10 +282,11 @@
                                         <p:outputLabel for="estado" value="Estado: "   style="display: block; width: 45px;"  />
                                     </p:column>
                                     <p:column>
+                                        
                                         <p:selectOneMenu id="estado" value="#{facturaBean.factura.flgEstado}" style="width: 70px;"  >
-                                            <f:selectItem itemLabel="Pendiente" itemValue="P" />
-                                            <f:selectItem itemLabel="Cancelado" itemValue="C" />
-                                            <f:selectItem itemLabel="Anulado" itemValue="A" />
+                                            <f:selectItems value="#{facturaBean.listaEstadoTipoDocumento}" 
+                                                               var="ed" itemLabel="#{ed.desEstado}" 
+                                                               itemValue="#{ed.codEstado}" />
                                         </p:selectOneMenu>
                                     </p:column>
                                 </p:row>

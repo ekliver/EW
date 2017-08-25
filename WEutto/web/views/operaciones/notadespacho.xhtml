@@ -180,6 +180,7 @@
                                     <p:outputLabel value="Prioridad:"  />        
                                 </p:column>
                                 <p:column>
+                                    
                                     <p:selectOneMenu value="#{notaDespachoBean.notaDespacho.codPrioridad}" style="width:50px;"  >
                                         <f:selectItem itemLabel="NORMAL" itemValue="1" />
                                         <f:selectItem itemLabel="BAJA" itemValue="2" />
@@ -264,8 +265,11 @@
                                 <p:cellEditor>
                                     <f:facet name="output"><p:outputLabel value="#{ndd.nomPresentacion}" /></f:facet>
                                     <f:facet name="input">
-                                        <h:selectOneMenu value="#{ndd.nomPresentacion}" style="width:100%">
-                                            <f:selectItem itemLabel="UNIDAD" itemValue="UNIDAD" />
+                                        
+                                        <h:selectOneMenu value="#{ndd.codPresentacion}" style="width:100%">
+                                            <f:selectItems value="#{notaDespachoBean.listarPresentacion(ndd.codProducto) }" 
+                                                           var="p" itemLabel="#{p.desPresentacion}" 
+                                                           itemValue="#{p.codPresentacion}" />
                                         </h:selectOneMenu>
                                     </f:facet>
                                 </p:cellEditor>
@@ -475,6 +479,7 @@
                                         <p:outputLabel value="Prioridad: "  />
                                     </p:column>
                                     <p:column>
+                                        
                                         <p:selectOneMenu value="#{facturaBean.factura.flgPrioridad}" style="width: 70px;"  >
                                             <f:selectItem itemLabel="Normal" itemValue="1" />
                                             <f:selectItem itemLabel="Baja" itemValue="0" />
@@ -488,9 +493,9 @@
                                     </p:column>
                                     <p:column>
                                         <p:selectOneMenu id="estado" value="#{facturaBean.factura.flgEstado}" style="width: 70px;"  >
-                                            <f:selectItem itemLabel="Pendiente" itemValue="P" />
-                                            <f:selectItem itemLabel="Cancelado" itemValue="C" />
-                                            <f:selectItem itemLabel="Anulado" itemValue="A" />
+                                            <f:selectItems value="#{facturaBean.listaEstadoTipoDocumento}" 
+                                                               var="ed" itemLabel="#{ed.desEstado}" 
+                                                               itemValue="#{ed.codEstado}" />
                                         </p:selectOneMenu>
                                     </p:column>
                                 </p:row>

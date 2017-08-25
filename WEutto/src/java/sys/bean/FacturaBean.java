@@ -20,18 +20,21 @@ import javax.servlet.ServletContext;
 import org.primefaces.context.RequestContext;
 import sys.clasesAuxiliares.Funciones;
 import sys.clasesAuxiliares.reportesNotaDespacho;
+import sys.dao.EstadoTipoDocumentoDAO;
 import sys.dao.FacturaDAO;
 import sys.dao.FacturaDetalleDAO;
 import sys.dao.GuiaRemisionDAO;
 import sys.dao.MovimientoAlmacenDetalleDAO;
 import sys.dao.NotaDespachoDAO;
 import sys.dao.NotaDespachoDetalleDAO;
-import sys.imp.FacturaDAOImp;
-import sys.imp.FacturaDetalleDAOImp;
-import sys.imp.GuiaRemisionDAOImp;
-import sys.imp.MovimientoAlmacenDetalleDAOImp;
-import sys.imp.NotaDespachoDAOImp;
-import sys.imp.NotaDespachoDetalleDAOImp;
+import sys.imp.EstadoTipoDocumentoDAOImpl;
+import sys.imp.FacturaDAOImpl;
+import sys.imp.FacturaDetalleDAOImpl;
+import sys.imp.GuiaRemisionDAOImpl;
+import sys.imp.MovimientoAlmacenDetalleDAOImpl;
+import sys.imp.NotaDespachoDAOImpl;
+import sys.imp.NotaDespachoDetalleDAOImpl;
+import sys.model.AgmaeEstadoTipoDocumento;
 import sys.model.AimarMovAlmacenDet;
 import sys.model.AvmovFacturaNdCab;
 import sys.model.AvmovFacturaNdDet;
@@ -73,6 +76,8 @@ public class FacturaBean implements Serializable {
     private boolean estadoNumeroSerie;
 
     private String filtroNroND;
+    
+    private List<AgmaeEstadoTipoDocumento> listaEstadoTipoDocumento;
 
     public FacturaBean() {
 
@@ -86,7 +91,7 @@ public class FacturaBean implements Serializable {
 //        notaDespacho = new AvmovMovNotaDespachoCab();
 //        listaNotaDespachoPendientes = new ArrayList<>();
 
-        FacturaDAO fDao = new FacturaDAOImp();
+        FacturaDAO fDao = new FacturaDAOImpl();
 
         factura = new AvmovFacturaNdCab();
         listaFactura = new ArrayList<>();
@@ -258,22 +263,34 @@ public class FacturaBean implements Serializable {
         this.filtroNroND = filtroNroND;
     }
 
+    public List<AgmaeEstadoTipoDocumento> getListaEstadoTipoDocumento() {
+        EstadoTipoDocumentoDAO eTDDao = new EstadoTipoDocumentoDAOImpl();
+        listaEstadoTipoDocumento = eTDDao.listarEstadoTipoDocumento("01");
+        return listaEstadoTipoDocumento;
+    }
+
+    public void setListaEstadoTipoDocumento(List<AgmaeEstadoTipoDocumento> listaEstadoTipoDocumento) {
+        this.listaEstadoTipoDocumento = listaEstadoTipoDocumento;
+    }
+    
+    
+
 // </editor-fold>
     public void listarNDPendientes() {
-        NotaDespachoDAO nDDao = new NotaDespachoDAOImp();
+        NotaDespachoDAO nDDao = new NotaDespachoDAOImpl();
         listaNotaDespachoPendientes = nDDao.listarNotaDespachosAFactura();
 
     }
 
     public void consultarPorFechas() {
-        FacturaDAO fDao = new FacturaDAOImp();
+        FacturaDAO fDao = new FacturaDAOImpl();
         listaFactura = fDao.listarFacturasPorFecha(feDesde, feHasta);
 
     }
 
     public void generarNroFactura() {
         estadoNumeroSerie = true;
-        FacturaDAO fDao = new FacturaDAOImp();
+        FacturaDAO fDao = new FacturaDAOImpl();
         factura.setNumFactura(fDao.generarNroFactura(factura));
 
     }
@@ -317,7 +334,7 @@ public class FacturaBean implements Serializable {
         facturaDetalle = new AvmovFacturaNdDet();
         notaDespacho = new AvmovMovNotaDespachoCab();
         notaDespacho = nd;
-        FacturaDAO fDao = new FacturaDAOImp();
+        FacturaDAO fDao = new FacturaDAOImpl();
         factura = fDao.obtenerFacturaPorND(nd);
         factura.setNumSerie("");
         factura.setNumFactura("");
@@ -332,7 +349,7 @@ public class FacturaBean implements Serializable {
         factura.setNumImporteSubtotal(factura.getZvalorSubTotalSol());
         factura.setNumImporteIgv(factura.getZvalorIgvSol());
         factura.setNumImporteTotal(factura.getZvalorTotalSol());
-        FacturaDetalleDAO fDDao = new FacturaDetalleDAOImp();
+        FacturaDetalleDAO fDDao = new FacturaDetalleDAOImpl();
         listaFacturaDetalle = fDDao.obtenerListaFacturaDetallePorND(notaDespacho);
 
         Funciones fun = new Funciones();
@@ -353,10 +370,10 @@ public class FacturaBean implements Serializable {
         factura = new AvmovFacturaNdCab();
         facturaDetalle = new AvmovFacturaNdDet();
 
-        FacturaDAO fDao = new FacturaDAOImp();
+        FacturaDAO fDao = new FacturaDAOImpl();
         factura = fDao.obtenerFacturaPorIdFactura(f);
 
-        FacturaDetalleDAO fDDao = new FacturaDetalleDAOImp();
+        FacturaDetalleDAO fDDao = new FacturaDetalleDAOImpl();
         listaFacturaDetalle = fDDao.obtenerListaFacturaDetallePorIdFactura(factura);
         itemsEliminado = new ArrayList();
     }
@@ -407,7 +424,7 @@ public class FacturaBean implements Serializable {
 
     public void prepararAgregarProducto() {
         listaProductosPendientes = new ArrayList<>();
-        FacturaDetalleDAO fDDao = new FacturaDetalleDAOImp();
+        FacturaDetalleDAO fDDao = new FacturaDetalleDAOImpl();
         listaProductosPendientes = fDDao.obtenerListaProductoPendientesPorIdRel(notaDespacho, listaFacturaDetalle);
     }
 
@@ -446,12 +463,12 @@ public class FacturaBean implements Serializable {
     }
 
     public void guardarFactura() {
-        FacturaDAO fDao = new FacturaDAOImp();
-        FacturaDetalleDAO fDDao = new FacturaDetalleDAOImp();
-        MovimientoAlmacenDetalleDAO mADDao = new MovimientoAlmacenDetalleDAOImp();
+        FacturaDAO fDao = new FacturaDAOImpl();
+        FacturaDetalleDAO fDDao = new FacturaDetalleDAOImpl();
+        MovimientoAlmacenDetalleDAO mADDao = new MovimientoAlmacenDetalleDAOImpl();
         AimarMovAlmacenDet mAD = new AimarMovAlmacenDet();
 
-        NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImp();
+        NotaDespachoDetalleDAO nDDDao = new NotaDespachoDetalleDAOImpl();
 
         if (esNuevo) {
             if (factura.getNumFactura().length() > 4) {
@@ -579,7 +596,7 @@ public class FacturaBean implements Serializable {
     }
 
     public void anularFactura(AvmovFacturaNdCab f) {
-        FacturaDAO fDao = new FacturaDAOImp();
+        FacturaDAO fDao = new FacturaDAOImpl();
         f = fDao.obtenerFacturaPorIdFactura(f);
         f.setFlgEstado("A");
         f.setCodUsuarioActualizacion(lBean.getUsuario().getCodUsuario());
@@ -593,7 +610,7 @@ public class FacturaBean implements Serializable {
         AvmovGuiaRemisionCab guiaRemision=new AvmovGuiaRemisionCab();
         guiaRemision.setRucCompanyia(lBean.getCompanya().getRucCompanya());
         guiaRemision.setNumSerie(factura.getNumSerieGuiaRemision());
-        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImp();
+        GuiaRemisionDAO gRDao = new GuiaRemisionDAOImpl();
         
         factura.setNumGuiaRemision(gRDao.generarNroGuiaRemision(guiaRemision));
         
